@@ -1,5 +1,6 @@
 import { prisma } from "@/utils/db";
-export async function users() {
+
+async function users() {
   'use server'
   const artists = await prisma.artist.findMany({});
   console.log({artists});
