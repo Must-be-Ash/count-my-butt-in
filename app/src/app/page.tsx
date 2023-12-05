@@ -1,4 +1,6 @@
 import { prisma } from "@/utils/db";
+import LoginButton from "./components/LoginButton";
+import UserInfo from "./components/UserInfo";
 
 async function users() {
   'use server'
@@ -17,6 +19,8 @@ export default async function Home() {
           <div className="text-white text-sm">Powered by Binder</div>
         </div>
       </div>
+      <LoginButton />
+      <UserInfo />
     </main>
   )
 }
