@@ -18,7 +18,7 @@ const LoginOrUserWidget = () => {
     return <LoginButton />
   }
   return (
-    <div className="flex flex-row gap-2 items-center w-full justify-between p-4">
+    <div className="flex flex-row gap-2 items-center w-full justify-between py-4">
       <span className="flex flex-row gap-2 items-center">
         <Image src={DefaultPfp} alt="profile picture" className="rounded-full w-8 h-8" />
         <span>
