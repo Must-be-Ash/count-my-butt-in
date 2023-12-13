@@ -9,8 +9,8 @@ export default function Orders() {
         Order List
       </div>
       <div>
-          hello
-        </div>
+        hello
+      </div>
     </Main>
   );
 }
