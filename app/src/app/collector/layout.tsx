@@ -25,7 +25,6 @@ export default function CollectorsLayout({
 
   return (
     <main className="max-w-3xl flex flex-col items-center w-full mx-auto my-auto h-screen font-avenir">
-      <TopNav />
       {children}
     </main>
   );

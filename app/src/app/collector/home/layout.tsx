@@ -4,6 +4,7 @@ import { usePrivy } from "@privy-io/react-auth";
 import { useRouter } from "next/navigation";
 import Loader from "@/app/components/loader";
 import { useEffect } from "react";
+import TopNav from "@/app/components/topNav";
 
 export default function CollectorsLayout({
   children,
@@ -17,5 +18,10 @@ export default function CollectorsLayout({
     if (ready && !authenticated) router.push("/collector");
   }, [ready, authenticated, router]);
 
-  return <main className="h-full">{children}</main>;
+  return (
+    <main>
+      <TopNav />
+      {children}
+    </main>
+  );
 }

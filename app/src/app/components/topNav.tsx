@@ -1,26 +1,42 @@
 import { useSteps } from "@/context/StepsContext";
 import LogoutButton from "./logoutButton";
-import { useEffect } from "react";
-
-const steps = [
-  { id: "Step 1", status: "current" },
-  { id: "Step 2", status: "upcoming" },
-  { id: "Step 3", status: "upcoming" },
-];
+import { useEffect, useState } from "react";
+import { ArrowLeftIcon } from "@heroicons/react/20/solid";
 
 export default function CollectorTopNav() {
-  const { currentStepIndex } = useSteps();
+  const { currentStepIndex, setCurrentStepIndex } = useSteps();
+
+  const [allSteps, setAllSteps] = useState([
+    { id: "Step 1", status: "current" },
+    { id: "Step 2", status: "upcoming" },
+    { id: "Step 3", status: "upcoming" },
+  ]);
+
   useEffect(() => {
-    steps.forEach((step, index) => {
-      if (currentStepIndex > index) step.status = "complete";
-      if (currentStepIndex < index) step.status = "upcoming";
-      if (currentStepIndex === index) step.status = "current";
+    const nextSteps = [...allSteps];
+    nextSteps.forEach((step, index) => {
+      if (currentStepIndex > index) nextSteps[index].status = "complete";
+      if (currentStepIndex < index) nextSteps[index].status = "upcoming";
+      if (currentStepIndex === index) nextSteps[index].status = "current";
+      setAllSteps(nextSteps);
     });
-  });
+  }, [currentStepIndex]);
+
   return (
     <nav aria-label="Progress" className="py-4">
-      <ol role="list" className="space-y-4 md:flex md:space-x-2 md:space-y-0">
-        {steps.map((step) => (
+      <div className="flex flex-row justify-between mb-5">
+        {currentStepIndex > 0 ? (
+          <ArrowLeftIcon
+            className="h-5 w-5 cursor-pointer"
+            onClick={() => setCurrentStepIndex(0)}
+          />
+        ) : (
+          <div />
+        )}
+        <LogoutButton />
+      </div>
+      <ol role="list" className=" md:flex md:space-x-2 grow pt-2">
+        {allSteps.map((step) => (
           <li key={step.id} className="md:flex-1">
             {step.status === "complete" ? (
               <div className="group flex flex-col border-l-4 border-green-400 py-2 pl-4 hover:border-indigo-800 md:border-l-0 md:border-t-4 md:pb-0 md:pl-0 md:pt-4">
@@ -42,9 +58,6 @@ export default function CollectorTopNav() {
           </li>
         ))}
       </ol>
-      <div className="absolute right-0 top-0">
-        <LogoutButton />
-      </div>
     </nav>
   );
 }

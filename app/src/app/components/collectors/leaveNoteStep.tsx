@@ -1,14 +1,17 @@
 "use client";
 
 import { useState } from "react";
+import BinderButton from "../binderButton";
+import { useSteps } from "@/context/StepsContext";
 
 export default function CollectorNote() {
   const [note, setNote] = useState<string>("");
+  const { setCurrentStepIndex } = useSteps();
   return (
-    <div className="flex flex-col justify-between h-full py-4">
+    <div className="flex flex-col justify-between h-full">
       <div className="flex flex-col gap-4 grow">
         <h1>Leave a note for the artist (optional)</h1>
-        <div>
+        <div className="text-sm text-neutral-500">
           What do you want the artist to draw, write or sign? Who do you want
           them to make it out to?
         </div>
@@ -21,14 +24,22 @@ export default function CollectorNote() {
               id="note"
               name="note"
               rows={3}
+              placeholder="Enter a note"
               maxLength={140}
-              className="block w-full max-w-2xl rounded-md border-0 py-1.5 text-white bg-neutral-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
+              className="block w-full max-w-2xl placeholder:pl-2 rounded-md border-0 py-1.5 text-white bg-neutral-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
               defaultValue={""}
               onChange={(e) => setNote(e.target.value)}
             />
           </div>
         </div>
+        <div className="text-sm text-neutral-500 ml-auto">0/140</div>
       </div>
+
+      <BinderButton
+        primary={false}
+        title="Next"
+        onClick={() => setCurrentStepIndex(2)}
+      />
     </div>
   );
 }

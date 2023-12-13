@@ -229,7 +229,10 @@ const NFTFeedProfile = ({
                             onClickCallback(
                               nft.networkId,
                               nft.contract.address,
-                              nft.tokenId
+                              nft.tokenId,
+                              nft?.media[0].thumbnail ||
+                                nft?.media[0].gateway ||
+                                nft?.media[0].raw
                             );
                           }}
                           className="cursor-pointer hover:opacity-80"

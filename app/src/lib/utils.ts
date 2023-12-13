@@ -7,6 +7,9 @@ export function capitalizeFirstLetter(word: string): string {
   }
   return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
 }
+export const shortenAddress = (address: string): string => {
+  return `${address.substring(0, 5)}...${address.substring(39, 42)}`;
+};
 
 const charset = "abcdefghijklmnopqrstuvwxyz0123456789";
 

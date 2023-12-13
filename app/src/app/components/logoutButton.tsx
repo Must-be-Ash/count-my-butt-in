@@ -29,5 +29,4 @@ export default function LogoutButton({
       {withText && "Logout"}
     </div>
   )
-
 }
