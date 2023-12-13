@@ -4,7 +4,7 @@ import NFTFeedProfile from "@/app/components/nftFeedProfile";
 import { useState } from "react";
 import { isAddress } from "@ethersproject/address";
 import ErrorDisplay from "@/app/components/errorDisplay";
-import { useSelectedNft } from "@/context/SelectedNftContext";
+import { useInstance } from "@/context/InstanceContext";
 import { useSteps } from "@/context/StepsContext";
 
 export default function EnterWalletStep() {
@@ -12,7 +12,7 @@ export default function EnterWalletStep() {
   // search by collection name
   const [searhWord, setSearchword] = useState<string>("");
   const [error, setError] = useState<string>("");
-  const { setNft } = useSelectedNft();
+  const { setNft } = useInstance();
   const { setCurrentStepIndex } = useSteps();
 
   function selectAddress(address: string) {
@@ -61,13 +61,15 @@ export default function EnterWalletStep() {
               networkId: string,
               contractAddress: string,
               tokenId: string,
-              imageUrl: string
+              imageUrl: string,
+              name: string
             ) => {
               setNft({
                 nftNetworkId: parseInt(networkId),
                 contractAddress,
                 tokenId,
                 nftUrl: imageUrl,
+                name
               });
               setCurrentStepIndex(1);
             }}

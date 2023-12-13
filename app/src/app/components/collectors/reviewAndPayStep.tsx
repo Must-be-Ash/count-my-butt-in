@@ -5,6 +5,7 @@ import BinderButton from "../binderButton";
 import { useSteps } from "@/context/StepsContext";
 import { getOpenseaLink, shortenAddress } from "@/lib/utils";
 import Image from "next/image";
+import { useInstance } from "@/context/InstanceContext";
 
 export default function ReviewAndPayStep({
   nft,
@@ -14,11 +15,11 @@ export default function ReviewAndPayStep({
     contractAddress: string;
     tokenId: string;
     nftUrl: string;
+    name: string;
   };
 }) {
-  console.log(nft);
-  const [note, setNote] = useState<string>("");
-  const { setCurrentStepIndex } = useSteps();
+  const { setCurrentStepIndex, } = useSteps();
+  const { note } = useInstance();
 
   return (
     <div className="flex flex-col justify-between h-full">
@@ -48,7 +49,7 @@ export default function ReviewAndPayStep({
             />
             <div className="inline-flex flex-col items-start gap-[4px] relative flex-[0_0_auto]">
               <div className="relative w-fit mt-[-1.00px] [font-family:'Inter-SemiBold',Helvetica] font-semibold text-white text-[16px] tracking-[0] leading-[24px] whitespace-nowrap">
-                {`${"Doodle"} #${"1234"}`}
+                {`${nft.name}`}
               </div>
               <div className="relative w-fit [font-family:'Inter-Regular',Helvetica] font-normal text-grey-200 text-[14px] tracking-[0] leading-[20px] whitespace-nowrap">
                 Token ID: {nft.tokenId}
@@ -61,8 +62,7 @@ export default function ReviewAndPayStep({
           </a>
           <div className="text-neutral-400 text-sm">Note for the artist</div>
           <div>
-            Hi Vinnie! Big fan of Letters! Been a holder since mint. Could you
-            draw a letter for me and make it out to Ash please? Thanks!
+            {note || "No note for you sorry. I'm a busy collector."}
           </div>
         </div>
         <div className="inline-flex bg-black p-4 rounded-md flex-col items-start gap-[8px] relative flex-[0_0_auto]">

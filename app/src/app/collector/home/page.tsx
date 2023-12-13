@@ -4,10 +4,10 @@ import EnterWalletStep from "@/app/components/collectors/enterWalletStep";
 import LeaveNoteStep from "@/app/components/collectors/leaveNoteStep";
 import ReviewAndPayStep from "@/app/components/collectors/reviewAndPayStep";
 import { useSteps } from "@/context/StepsContext";
-import { useSelectedNft } from "@/context/SelectedNftContext";
+import { useInstance } from "@/context/InstanceContext";
 
 export default function CollectorHome() {
-  const { nft } = useSelectedNft();
+  const { nft } = useInstance();
   const { currentStepIndex } = useSteps();
   return (
     <>

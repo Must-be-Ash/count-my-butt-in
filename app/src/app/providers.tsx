@@ -2,7 +2,7 @@
 
 import { PrivyProvider } from "@privy-io/react-auth";
 import { StepProvider } from "@/context/StepsContext";
-import { SelectedNftProvider } from "@/context/SelectedNftContext";
+import { InstanceProvider } from "@/context/InstanceContext";
 const PRIVY_APP_ID = process.env.NEXT_PUBLIC_PRIVY_APP_ID;
 
 export function Providers({ children }: { children: React.ReactNode }) {
@@ -26,7 +26,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
       }}
     >
       <StepProvider>
-        <SelectedNftProvider>{children}</SelectedNftProvider>
+        <InstanceProvider>{children}</InstanceProvider>
       </StepProvider>
     </PrivyProvider>
   );

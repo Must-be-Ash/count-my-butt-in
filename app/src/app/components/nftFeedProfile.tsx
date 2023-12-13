@@ -26,7 +26,11 @@ const NFTFeedProfile = ({
   addresses: string[];
   searchWord: string;
   unclickable?: boolean;
-  onClickCallback?: any;
+  onClickCallback?: ( networkId: string,
+    contractAddress: string,
+    tokenId: string,
+    nftUrl: string,
+    name: string) => void;
   networkId?: number;
 }) => {
   const [ownedNfts, setOwnedNfts] = useState<
@@ -232,7 +236,8 @@ const NFTFeedProfile = ({
                               nft.tokenId,
                               nft?.media[0].thumbnail ||
                                 nft?.media[0].gateway ||
-                                nft?.media[0].raw
+                                nft?.media[0].raw,
+                              nft.title || nft?.rawMetadata?.name || nft.contract.name || 'Unamed'
                             );
                           }}
                           className="cursor-pointer hover:opacity-80"
