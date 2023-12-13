@@ -3,9 +3,10 @@
 import { useState } from "react";
 import BinderButton from "../binderButton";
 import { useSteps } from "@/context/StepsContext";
+import { useInstance } from "@/context/InstanceContext";
 
 export default function CollectorNote() {
-  const [note, setNote] = useState<string>("");
+  const { setNote } = useInstance();
   const { setCurrentStepIndex } = useSteps();
   return (
     <div className="flex flex-col justify-between h-full">
@@ -26,7 +27,7 @@ export default function CollectorNote() {
               rows={3}
               placeholder="Enter a note"
               maxLength={140}
-              className="block w-full max-w-2xl placeholder:pl-2 rounded-md border-0 py-1.5 text-white bg-neutral-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
+              className="block w-full max-w-2xl pl-2 placeholder:pl-2 rounded-md border-0 py-1.5 text-white bg-neutral-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
               defaultValue={""}
               onChange={(e) => setNote(e.target.value)}
             />

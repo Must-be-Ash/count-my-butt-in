@@ -33,7 +33,7 @@ export default function CollectorTopNav() {
         ) : (
           <div />
         )}
-        <LogoutButton />
+        <LogoutButton size="lg"/>
       </div>
       <ol role="list" className=" md:flex md:space-x-2 grow pt-2">
         {allSteps.map((step) => (
