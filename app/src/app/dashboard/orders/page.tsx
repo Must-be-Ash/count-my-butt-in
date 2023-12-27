@@ -1,20 +1,35 @@
+"use client"
+
 import LoginOrUserWidget from "@/app/components/LoginOrUserWidget";
+import { SignaturePadTest } from "@/app/components/SignaturePad/SignaturePad";
 import BinderButton from "@/app/components/binderButton";
 import Main from "@/app/layouts/Main";
 import mockOrders from "@/utils/mocks/orders";
 import Image from "next/image";
-import type Order from "util/types";
+import { useState } from "react";
+import Modal from 'react-modal';
 
-const StatusButton = ({orderStatus}:{orderStatus: Order["status"]}) => {
+const StatusButton = ({
+  orderStatus,
+  triggerAutograph
+}:{
+  orderStatus: Order["status"],
+  triggerAutograph: () => void
+}) => {
+
   switch (orderStatus) {
     case "AUTOGRAPHED": {
       return (
-        <BinderButton className="w-full mt-2" disabled primary>Done</BinderButton>
+        <BinderButton className="w-full mt-2" disabled primary>
+          Done
+        </BinderButton>
       )
     }
     case "PENDING": {
       return (
-        <BinderButton className="w-full mt-2">Fill Order</BinderButton>
+        <BinderButton className="w-full mt-2" onClick={triggerAutograph}>
+          Fill Order
+        </BinderButton>
       )
     }
   }
@@ -30,9 +45,61 @@ const SubmitStickyButton = () => {
   )
 }
 
+const AutographModal = ({
+  closeModal
+}: {
+  closeModal: () => void
+}) => {
+  return (
+    <div className="text-black flex flex-col gap-3 items-center">
+    {/* top navigation */}
+    <div className="flex flex-row justify-between w-full">
+      <h2>Hello</h2>
+      <button onClick={closeModal}>close</button>
+    </div>
+    {/* signature pad */}
+    <div className="border border-black">
+      <SignaturePadTest />
+    </div>
+    <BinderButton className="w-3/4 bg-black" primary>
+      Submit
+    </BinderButton>
+  </div>
+  )
+}
+
+const customStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+  },
+};
+
+
 export default function Orders() {
+  const triggerAutograph = async () => {
+    openModal()
+  }
+  const [modalIsOpen, setModalOpen] = useState<boolean>(false);
+  function openModal() {
+    setModalOpen(true);
+  }
+  function closeModal() {
+    setModalOpen(false);
+  }
   return (
     <Main>
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        style={customStyles}
+      >
+        <AutographModal closeModal={closeModal} />
+      </Modal>
       <LoginOrUserWidget />
       <div className="self-start">
         Order List
@@ -52,7 +119,7 @@ export default function Orders() {
                     {`${order.collectionTitle} #${order.tokenId}`}
                   </div>
                   <div>
-                    <StatusButton orderStatus={order.status} />
+                    <StatusButton orderStatus={order.status} triggerAutograph={triggerAutograph} />
                   </div>
                 </div>
               </div>
