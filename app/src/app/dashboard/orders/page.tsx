@@ -9,7 +9,7 @@ const StatusButton = ({orderStatus}:{orderStatus: Order["status"]}) => {
   switch (orderStatus) {
     case "AUTOGRAPHED": {
       return (
-        <BinderButton className="w-full mt-2" disabled>Done</BinderButton>
+        <BinderButton className="w-full mt-2" disabled primary>Done</BinderButton>
       )
     }
     case "PENDING": {
