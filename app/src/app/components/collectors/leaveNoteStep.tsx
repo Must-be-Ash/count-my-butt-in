@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import BinderButton from "../binderButton";
+import BinderButton from "@/app/components/BinderButton";
 import { useSteps } from "@/context/StepsContext";
 import { useInstance } from "@/context/InstanceContext";
 

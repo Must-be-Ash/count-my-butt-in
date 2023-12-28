@@ -1,38 +1,6 @@
 import React from "react";
 import { networkToName } from "@/lib/utils";
 
-export interface AlchemyMedia {
-  gateway: string;
-  raw: string;
-  thumbnail: string;
-  format: string;
-  bytes: number;
-}
-export interface AlchemyNFT {
-  blockHash: string;
-  contract: {
-    address: string;
-  };
-  contractMetadata: {
-    name: string;
-    symbol: string;
-  };
-  id: {
-    tokenId: string;
-  };
-  media: AlchemyMedia[];
-  title: string;
-  metadata: {
-    name: string;
-  };
-  tokenUri: {
-    gateway?: string;
-    raw: string;
-  };
-  timeLastUpdated: string;
-  tokenId: string;
-}
-
 const NFTDisplay = ({
   imageUrl,
   title,

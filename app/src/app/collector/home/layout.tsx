@@ -2,9 +2,9 @@
 
 import { usePrivy } from "@privy-io/react-auth";
 import { useRouter } from "next/navigation";
-import Loader from "@/app/components/loader";
+import Loader from "@/app/components/Loader";
 import { useEffect } from "react";
-import TopNav from "@/app/components/topNav";
+import TopNav from "@/app/components/TopNav";
 
 export default function CollectorsLayout({
   children,

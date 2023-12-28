@@ -3,6 +3,9 @@
 import { PrivyProvider } from "@privy-io/react-auth";
 import { StepProvider } from "@/context/StepsContext";
 import { InstanceProvider } from "@/context/InstanceContext";
+import { PrivyWagmiConnector } from "@privy-io/wagmi-connector";
+import { configureChainsConfig } from "@/lib/wagmi";
+
 const PRIVY_APP_ID = process.env.NEXT_PUBLIC_PRIVY_APP_ID;
 
 export function Providers({ children }: { children: React.ReactNode }) {
@@ -25,9 +28,11 @@ export function Providers({ children }: { children: React.ReactNode }) {
         },
       }}
     >
-      <StepProvider>
-        <InstanceProvider>{children}</InstanceProvider>
-      </StepProvider>
+      <PrivyWagmiConnector wagmiChainsConfig={configureChainsConfig}>
+        <StepProvider>
+          <InstanceProvider>{children}</InstanceProvider>
+        </StepProvider>
+      </PrivyWagmiConnector>
     </PrivyProvider>
   );
 }

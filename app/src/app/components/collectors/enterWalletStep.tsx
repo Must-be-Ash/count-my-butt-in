@@ -1,9 +1,9 @@
 "use client";
 
-import NFTFeedProfile from "@/app/components/nftFeedProfile";
+import NFTFeedProfile from "@/app/components/NftFeedProfile";
 import { useState } from "react";
 import { isAddress } from "@ethersproject/address";
-import ErrorDisplay from "@/app/components/errorDisplay";
+import ErrorDisplay from "@/app/components/ErrorDisplay";
 import { useInstance } from "@/context/InstanceContext";
 import { useSteps } from "@/context/StepsContext";
 
@@ -16,7 +16,8 @@ export default function EnterWalletStep() {
   const { setCurrentStepIndex } = useSteps();
 
   function selectAddress(address: string) {
-    if (!isAddress(address)) {
+    setError("");
+    if (!isAddress(address) && !address.endsWith(".eth")) {
       setError("Invalid wallet address");
       return;
     }
@@ -69,7 +70,7 @@ export default function EnterWalletStep() {
                 contractAddress,
                 tokenId,
                 nftUrl: imageUrl,
-                name
+                name,
               });
               setCurrentStepIndex(1);
             }}

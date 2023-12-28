@@ -1,7 +1,7 @@
 "use client";
 
 import { usePrivy } from "@privy-io/react-auth";
-import BinderButton from "@/app/components/binderButton";
+import BinderButton from "@/app/components/BinderButton";
 
 export default function LoginButton() {
   const { login } = usePrivy();

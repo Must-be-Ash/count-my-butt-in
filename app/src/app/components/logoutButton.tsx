@@ -1,32 +1,29 @@
 "use client";
 
 import { usePrivy } from "@privy-io/react-auth";
-import BinderButton from "@/app/components/binderButton";
 import { ArrowRightOnRectangleIcon } from "@heroicons/react/24/outline";
 import { classNames } from "@/utils/styling";
 
 const sizeClass = {
   default: "h-2 w-2",
   sm: "h-4 w-4",
-  lg: "h-6 w-6"
-}
-type Size = "default" | "sm" | "lg"
+  lg: "h-6 w-6",
+};
+type Size = "default" | "sm" | "lg";
 
 const sizeToClass = (size: Size) => sizeClass[size];
 export default function LogoutButton({
   size = "default",
-  withText = false
+  withText = false,
 }: {
-  size?: Size,
-  withText?: boolean
+  size?: Size;
+  withText?: boolean;
 }) {
   const { logout } = usePrivy();
-  return(
+  return (
     <div className="flex flex-row gap-2 cursor-pointer" onClick={logout}>
-      <ArrowRightOnRectangleIcon
-        className={classNames(sizeToClass(size))}
-      />
+      <ArrowRightOnRectangleIcon className={classNames(sizeToClass(size))} />
       {withText && "Logout"}
     </div>
-  )
+  );
 }

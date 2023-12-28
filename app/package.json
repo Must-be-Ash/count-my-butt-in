@@ -14,13 +14,19 @@
     "@prisma/client": "^5.7.1",
     "@privy-io/react-auth": "^1.49.2",
     "alchemy-sdk": "^2.10.1",
+    "clsx": "^2.0.0",
     "next": "14.0.1",
     "prop-types": "^15.8.1",
     "react": "^18",
     "react-canvas-draw": "^1.2.1",
     "react-dom": "^18",
     "react-loader-spinner": "^6.1.0",
-    "react-modal": "^3.16.1"
+    "tailwind-merge": "^2.1.0",
+    "@privy-io/wagmi-connector": "^0.1.9",
+    "@wagmi/chains": "^1.8.0",
+    "wagmi": "^1.4.12",
+    "react-modal": "^3.16.1",
+    "react-signature-canvas": "^1.0.6"
   },
   "devDependencies": {
     "@types/node": "^20",

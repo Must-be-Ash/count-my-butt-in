@@ -1,12 +1,9 @@
 "use client";
 
-import BinderButton from "@/app/components/binderButton";
-import LogoutButton from "@/app/components/logoutButton";
-import NFTFeedProfile from "@/app/components/nftFeedProfile";
-import { usePrivy } from "@privy-io/react-auth";
+import NFTFeedProfile from "@/app/components/NftFeedProfile";
 import { useState } from "react";
 import { isAddress } from "@ethersproject/address";
-import ErrorDisplay from "@/app/components/errorDisplay";
+import ErrorDisplay from "@/app/components/ErrorDisplay";
 
 export default function WalletInputStep() {
   const [selectedAddress, setSelectedAddress] = useState<string>("");

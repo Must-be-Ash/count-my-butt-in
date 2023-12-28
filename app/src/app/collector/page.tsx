@@ -27,7 +27,7 @@ export default function Collector() {
       <div className="flex flex-col items-center justify-center mt-16">
         <LoginButton />
       </div>
-      <div className="absolute bottom-5 right-50 flex flex-row items-center text-[10px] sm:text-sm break-words">
+      <div className="absolute bottom-5 right-1/3 flex flex-row items-center text-[10px] sm:text-sm break-words">
         By signing in you agreed to the
         <a
           className="mr-1 ml-1 font-bold flex flex-row"

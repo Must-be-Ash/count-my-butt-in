@@ -1,5 +1,5 @@
 import { useSteps } from "@/context/StepsContext";
-import LogoutButton from "./logoutButton";
+import LogoutButton from "./LogoutButton";
 import { useEffect, useState } from "react";
 import { ArrowLeftIcon } from "@heroicons/react/20/solid";
 
@@ -33,7 +33,7 @@ export default function CollectorTopNav() {
         ) : (
           <div />
         )}
-        <LogoutButton size="lg"/>
+        <LogoutButton size="lg" />
       </div>
       <ol role="list" className=" md:flex md:space-x-2 grow pt-2">
         {allSteps.map((step) => (

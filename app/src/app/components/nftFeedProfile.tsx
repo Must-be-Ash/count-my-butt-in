@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
-import NFTDisplay from "@/app/components/nftDisplay";
+import NFTDisplay from "@/app/components/NftDisplay";
 import Link from "next/link";
 import { ThreeDots } from "react-loader-spinner";
-import { Nft, OwnedNft, OwnedNftsResponse } from "alchemy-sdk";
-import ErrorDisplay from "@/app/components/errorDisplay";
+import { OwnedNft, OwnedNftsResponse } from "alchemy-sdk";
+import ErrorDisplay from "@/app/components/ErrorDisplay";
 import { getNftsForOwner } from "@/lib/alchemy";
-import BinderButton from "@/app/components/binderButton";
-import { usePrivy, useWallets } from "@privy-io/react-auth";
-
+import BinderButton from "@/app/components/BinderButton";
 export interface PageToKeyMapping {
   [address: string]: {
     [page: number]: string | null;
@@ -26,11 +24,13 @@ const NFTFeedProfile = ({
   addresses: string[];
   searchWord: string;
   unclickable?: boolean;
-  onClickCallback?: ( networkId: string,
+  onClickCallback?: (
+    networkId: string,
     contractAddress: string,
     tokenId: string,
     nftUrl: string,
-    name: string) => void;
+    name: string
+  ) => void;
   networkId?: number;
 }) => {
   const [ownedNfts, setOwnedNfts] = useState<
@@ -237,7 +237,10 @@ const NFTFeedProfile = ({
                               nft?.media[0].thumbnail ||
                                 nft?.media[0].gateway ||
                                 nft?.media[0].raw,
-                              nft.title || nft?.rawMetadata?.name || nft.contract.name || 'Unamed'
+                              nft.title ||
+                                nft?.rawMetadata?.name ||
+                                nft.contract.name ||
+                                "Unamed"
                             );
                           }}
                           className="cursor-pointer hover:opacity-80"

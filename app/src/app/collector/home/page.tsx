@@ -1,10 +1,11 @@
 "use client";
 
-import EnterWalletStep from "@/app/components/collectors/enterWalletStep";
-import LeaveNoteStep from "@/app/components/collectors/leaveNoteStep";
-import ReviewAndPayStep from "@/app/components/collectors/reviewAndPayStep";
+import EnterWalletStep from "@/app/components/collectors/EnterWalletStep";
+import LeaveNoteStep from "@/app/components/collectors/LeaveNoteStep";
+import ReviewAndPayStep from "@/app/components/collectors/ReviewAndPayStep";
 import { useSteps } from "@/context/StepsContext";
 import { useInstance } from "@/context/InstanceContext";
+import { SuccessStep } from "@/app/components/collectors/SuccessStep";
 
 export default function CollectorHome() {
   const { nft } = useInstance();
@@ -15,8 +16,10 @@ export default function CollectorHome() {
         <EnterWalletStep />
       ) : currentStepIndex === 1 ? (
         <LeaveNoteStep />
-      ) : (
+      ) : currentStepIndex === 2 ? (
         <ReviewAndPayStep nft={nft} />
+      ) : (
+        <SuccessStep nft={nft} />
       )}
     </>
   );
