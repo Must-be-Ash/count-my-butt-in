@@ -16,3 +16,35 @@ model Artist {
   email         String?
   walletAddress String?
 }
+enum Network {
+  ETHEREUM
+  POLYGON
+  GNOSIS
+  BASE
+}
+
+enum NetworkStatus {
+  PENDING
+  CONFIRMED
+  FAILED
+}
+
+model Order {
+  orderId String @id @default(uuid())
+  campaignId String
+  collectionNetwork Network
+  collectionAddress String
+  selectedTokenId String
+  personalNote String?
+  transactionId String?
+  mintedTokenId String?
+  mintedNetworkId Network?
+
+  // cron job updates the following, based on the txId
+  status NetworkStatus?
+
+  // FULFILMENT ATTRIBUTES
+  autographData String?
+  autographDataURL String?
+  metadataUrl String? // after uploading to a decentralised storage
+}
