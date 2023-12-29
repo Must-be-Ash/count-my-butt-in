@@ -1,20 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import BinderButton from "@/app/components/BinderButton";
 import { useSteps } from "@/context/StepsContext";
 import { getOpenseaLink, shortenAddress } from "@/lib/utils";
 import Image from "next/image";
 import { useInstance } from "@/context/InstanceContext";
-import {
-  usePrepareContractWrite,
-  useContractWrite,
-  useWaitForTransaction,
-} from "wagmi";
 import ErrorDisplay from "@/app/components/ErrorDisplay";
 import { BINDER_DROP_ABI } from "@/abi";
-import { useWallets } from "@privy-io/react-auth";
-import { NETWORK_ID, networkIdToString } from "@/utils/common";
+import { NETWORK_ID } from "@/utils/common";
+import { useWrite } from "@/hooks/web3";
 
 export default function ReviewAndPayStep({
   nft,
@@ -27,53 +22,38 @@ export default function ReviewAndPayStep({
     name: string;
   };
 }) {
-  const { wallets } = useWallets();
   const {
-    config,
-    error: prepareError,
+    write,
+    error,
     isLoading,
-  } = usePrepareContractWrite({
-    address: "0xecb504d39723b0be0e3a9aa33d646642d1051ee1",
+    data,
+    switchCorrectNetwork,
+    wrongNetwork,
+    isSuccess,
+  } = useWrite({
+    networkId: NETWORK_ID,
+    contractAddress: "0xecb504d39723b0be0e3a9aa33d646642d1051ee1",
     abi: BINDER_DROP_ABI,
+    functionName: "mintTo",
     args: [
       "0x128f606874e46e38192fF8D50331e967f99863c6",
       "115792089237316195423570985008687907853269984665640564039457584007913129639935",
       "ipfs://QmX48MqNwx1EBCVwqWByLWCpunF7fvQxLG5SjieQFnNuxk/0",
       100,
     ],
-    functionName: "mintTo",
   });
-  const {
-    write,
-    error: mintError,
-    isLoading: isWriteLoading,
-    data,
-  } = useContractWrite(config);
+
   const { setCurrentStepIndex } = useSteps();
   const { note } = useInstance();
-  const { isLoading: isMintLoading, isSuccess } = useWaitForTransaction({
-    hash: data?.hash,
-  });
+
   const gasFee = 0.1;
   const platformFee = 0.9;
+
   useEffect(() => {
     if (isSuccess) {
       setCurrentStepIndex(3);
     }
   }, [isSuccess, setCurrentStepIndex]);
-
-  const wallet = wallets[0];
-  const wrongNetwork = wallet?.chainId !== networkIdToString(NETWORK_ID);
-
-  useEffect(() => {
-    if (wrongNetwork) {
-      wallet.switchChain(NETWORK_ID);
-    }
-  }, [wallet, wrongNetwork]);
-
-  const errorMessage = wrongNetwork
-    ? "Please switch your network"
-    : prepareError || mintError;
 
   return (
     <div className="flex flex-col justify-between h-full">
@@ -138,13 +118,13 @@ export default function ReviewAndPayStep({
 
       <BinderButton
         primary={false}
-        title={write ? "Mint" : "Switch network"}
-        onClick={write ? () => write() : () => wallet.switchChain(NETWORK_ID)}
-        isLoading={isLoading || isWriteLoading || isMintLoading}
+        title={wrongNetwork ? "Switch network" : "Mint"}
+        onClick={write ? () => write() : () => switchCorrectNetwork()}
+        isLoading={isLoading}
         className="w-1/2 mx-auto mb-2"
       />
 
-      <ErrorDisplay error={errorMessage} />
+      <ErrorDisplay error={error} />
     </div>
   );
 }

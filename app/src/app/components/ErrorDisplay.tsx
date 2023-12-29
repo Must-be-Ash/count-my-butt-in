@@ -2,6 +2,8 @@ export default function ErrorDisplay({ error }: { error: any }) {
   let errorMessage;
   if (typeof error === "string") {
     errorMessage = error.slice(0, 500);
+  } else if (error?.message) {
+    errorMessage = error.message.slice(0, 500);
   } else {
     errorMessage = `${error}`.slice(0, 500);
   }
