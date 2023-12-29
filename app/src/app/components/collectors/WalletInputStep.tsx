@@ -7,8 +7,6 @@ import ErrorDisplay from "@/app/components/ErrorDisplay";
 
 export default function WalletInputStep() {
   const [selectedAddress, setSelectedAddress] = useState<string>("");
-  // search by collection name
-  const [searhWord, setSearchword] = useState<string>("");
   const [error, setError] = useState<string>("");
 
   function selectAddress(address: string) {
@@ -50,7 +48,6 @@ export default function WalletInputStep() {
 
         {selectedAddress && (
           <NFTFeedProfile
-            searchWord={searhWord}
             addresses={[selectedAddress]}
             networkId={1}
             onClickCallback={(_: string, __: string, ___: string) => {

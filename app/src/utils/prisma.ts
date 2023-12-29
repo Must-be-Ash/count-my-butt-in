@@ -11,7 +11,6 @@ export const OrderCreateInput = z.object({
   collectionAddress: z.string().refine(ethers.isAddress),
   selectedTokenId: z.string(),
   personalNote: z.string().optional(),
-  description: z.string(),
   mintedTokenId: z.string().optional(),
   mintedNetworkId: z.nativeEnum(Network).optional(),
   autographData: z.string().optional(),

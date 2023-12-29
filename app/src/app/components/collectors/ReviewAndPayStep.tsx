@@ -3,13 +3,14 @@
 import { useEffect } from "react";
 import BinderButton from "@/app/components/BinderButton";
 import { useSteps } from "@/context/StepsContext";
-import { getOpenseaLink, shortenAddress } from "@/lib/utils";
+import { getOpenseaLink, networkToName, shortenAddress } from "@/lib/utils";
 import Image from "next/image";
 import { useInstance } from "@/context/InstanceContext";
 import ErrorDisplay from "@/app/components/ErrorDisplay";
 import { BINDER_DROP_ABI } from "@/abi";
-import { NETWORK_ID } from "@/utils/common";
+import { CAMPAIGN_ID, NETWORK_ID } from "@/utils/common";
 import { useWrite } from "@/hooks/web3";
+import APIHelpers from "@/lib/apiHelper";
 
 export default function ReviewAndPayStep({
   nft,
@@ -48,6 +49,22 @@ export default function ReviewAndPayStep({
 
   const gasFee = 0.1;
   const platformFee = 0.9;
+
+  async function mint() {
+    if (write) {
+      // create new order
+      const orders = await APIHelpers.post("/api/campaigns/1/orders", {
+        body: {
+          campaignId: CAMPAIGN_ID,
+          collectionNetwork: networkToName(nft.nftNetworkId).toUpperCase(),
+          collectionAddress: nft.contractAddress,
+          selectedTokenId: nft.tokenId,
+          personalNote: note,
+        },
+      });
+      await write();
+    }
+  }
 
   useEffect(() => {
     if (isSuccess) {
@@ -119,7 +136,7 @@ export default function ReviewAndPayStep({
       <BinderButton
         primary={false}
         title={wrongNetwork ? "Switch network" : "Mint"}
-        onClick={write ? () => write() : () => switchCorrectNetwork()}
+        onClick={write ? () => mint() : () => switchCorrectNetwork()}
         isLoading={isLoading}
         className="w-1/2 mx-auto mb-2"
       />

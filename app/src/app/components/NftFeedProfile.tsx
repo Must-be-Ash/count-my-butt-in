@@ -22,7 +22,7 @@ const NFTFeedProfile = ({
 }: {
   readOnly?: boolean;
   addresses: string[];
-  searchWord: string;
+  searchWord?: string;
   unclickable?: boolean;
   onClickCallback?: (
     networkId: string,

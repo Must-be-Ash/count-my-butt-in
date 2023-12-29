@@ -62,3 +62,5 @@ export const NETWORK_ID = 5;
 export function networkIdToString(networkId: number) {
   return `eip155:${networkId}`;
 }
+
+export const CAMPAIGN_ID = "1";
