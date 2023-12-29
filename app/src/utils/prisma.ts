@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient, Network } from "@prisma/client";
+import { Prisma, PrismaClient, Network, NetworkStatus } from "@prisma/client";
 import { z } from "zod";
 import { ethers } from "ethers";
 
@@ -36,10 +36,11 @@ const prisma = new PrismaClient().$extends({
   },
 });
 
-export function getOrders(campaignId: string) {
+export function getOrders(campaignId: string, status?: NetworkStatus) {
   return prisma.order.findMany({
     where: {
       campaignId,
+      status,
     },
   });
 }
