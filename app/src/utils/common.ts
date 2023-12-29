@@ -1,3 +1,5 @@
+import { JsonRpcProvider } from "ethers";
+
 export function getOpenseaLink(
   networkId: number,
   contractAddress: string,
@@ -64,3 +66,46 @@ export function networkIdToString(networkId: number) {
 }
 
 export const CAMPAIGN_ID = "1";
+
+export const BINDER_CONTRACT = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+
+export const SUPPORTED_NETWORKS = [5];
+
+export const goerliProvider = new JsonRpcProvider(
+  `https://eth-goerli.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_GOERLI}`
+);
+
+export const mainnetProvider = new JsonRpcProvider(
+  `https://eth-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_MAINNET}`
+);
+
+export const polygonProvider = new JsonRpcProvider(
+  `https://polygon-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_POLYGON}`
+);
+
+export const optimismProvider = new JsonRpcProvider(
+  `https://opt-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_OPTIMISM}`
+);
+
+export const baseProvider = new JsonRpcProvider(
+  `https://base-mainnet.blastapi.io/${process.env.NEXT_PUBLIC_ALCHEMY_BASE}`
+);
+
+export function getProvider(networkId: number) {
+  if (networkId === 1) {
+    return mainnetProvider;
+  }
+  if (networkId === 5) {
+    return goerliProvider;
+  }
+  if (networkId === 137) {
+    return polygonProvider;
+  }
+  if (networkId === 10) {
+    return optimismProvider;
+  }
+  if (networkId === 8453) {
+    return baseProvider;
+  }
+  return mainnetProvider;
+}
