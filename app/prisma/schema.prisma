@@ -48,3 +48,9 @@ model Order {
   autographDataURL String?
   metadataUrl String? // after uploading to a decentralised storage
 }
+
+model Campaign {
+  campaignId String @id @default(uuid())
+  manifestUrl String?
+  whitelistedCollectionAddresses String[]
+}

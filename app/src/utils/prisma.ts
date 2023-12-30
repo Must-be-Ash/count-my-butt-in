@@ -71,3 +71,27 @@ export function deleteOrder(orderId: string) {
     where: { orderId },
   });
 }
+
+export function createCampaign(data: Prisma.CampaignCreateInput) {
+  return prisma.campaign.create({
+    data,
+  });
+}
+
+export function getCampaign(campaignId: string) {
+  return prisma.campaign.findUnique({
+    where: {
+      campaignId,
+    },
+  });
+}
+
+export function updateCampaign(
+  campaignId: string,
+  data: Prisma.CampaignUpdateInput
+) {
+  return prisma.campaign.update({
+    where: { campaignId },
+    data,
+  });
+}
