@@ -16,6 +16,7 @@ contract BinderDropFactory {
   function createBinderDrop(address creator) external returns (address) {
     require(creator != address(0));
     address clone = Clones.clone(binderDrop);
+    BinderDrop(clone).initialize(creator);
     emit BinderDropCreated(clone, creator);
     return clone;
   }

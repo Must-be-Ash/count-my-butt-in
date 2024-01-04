@@ -2,6 +2,7 @@
 pragma solidity 0.8.20;
 
 import "openzeppelin-contracts/contracts/token/ERC721/ERC721.sol";
+import "openzeppelin-contracts/contracts/utils/cryptography/ECDSA.sol";
 import "./Admins.sol";
 
 error NonExistentToken();
@@ -10,6 +11,7 @@ error OnlyOneMintAllowed();
 error PublicMintsPaused();
 error PublicMintsActive();
 error MintPriceNotPaid();
+error HashVerificationFailed();
 
 contract BinderDrop is ERC721, Admins {
     bool public publicMintsPaused;
@@ -20,7 +22,8 @@ contract BinderDrop is ERC721, Admins {
 
     event AutographIncoming(address indexed minter, address indexed recipient, uint256 indexed tokenId, bytes32 hash);
 
-    constructor() ERC721("BinderDrop", "BinderDropV1") { }
+  constructor() ERC721("BinderDrop", "BinderDropV1") {
+   }
 
     function pausePublicMints() external onlyAdmin {
       if (publicMintsPaused) {
@@ -56,10 +59,9 @@ contract BinderDrop is ERC721, Admins {
      *
      * @param recipient which address the tokenId goes to
      * @param tokenId what token id is minted
-     * @param hash hash passed on from the server
      * @param signature string passed on from the server
      */
-    function mintTo(address recipient, uint256 tokenId, bytes memory signature) public {
+    function mintTo(address recipient, uint256 tokenId, bytes memory signature) public payable {
       // recipient-tokenid pair will always be unique
       // hash is the keccack256 over recipient,tokenId
       // tokenId is kept track of on the server
@@ -71,7 +73,7 @@ contract BinderDrop is ERC721, Admins {
       if (balanceOf(recipient) > 0) {
         revert OnlyOneMintAllowed();
       }
-      bytes32 hash = keccack256(string(abi.encodePacked(recipient, tokenId)));
+      bytes32 hash = keccak256(abi.encodePacked(recipient, tokenId));
       if (!_verifyHash(hash, signature)) {
         revert HashVerificationFailed();
       }
@@ -79,7 +81,7 @@ contract BinderDrop is ERC721, Admins {
         revert MintPriceNotPaid();
       }
       _safeMint(recipient, tokenId);
-      emit AutographIncoming(msg.sender, recipient, tokenId, hash)
+      emit AutographIncoming(msg.sender, recipient, tokenId, hash);
     }
 
     function revealBulk(uint256[] memory tokens, string memory _revealedURI) public onlyAdmin {
