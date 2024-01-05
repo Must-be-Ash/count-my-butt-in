@@ -60,8 +60,8 @@ const AutographModal = ({ closeModal }: { closeModal: () => void }) => {
         Submit
       </BinderButton>
     </div>
-  );
-};
+  )
+}
 
 const customStyles = {
   content: {
