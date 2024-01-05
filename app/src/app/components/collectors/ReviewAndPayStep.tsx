@@ -1,16 +1,13 @@
 "use client";
 
-import { useEffect } from "react";
-import BinderButton from "@/app/components/BinderButton";
-import { useSteps } from "@/context/StepsContext";
-import { getOpenseaLink, networkToName, shortenAddress } from "@/lib/utils";
+import { useEffect, useState } from "react";
+import { getOpenseaLink, shortenAddress } from "@/lib/utils";
 import Image from "next/image";
 import { useInstance } from "@/context/InstanceContext";
-import ErrorDisplay from "@/app/components/ErrorDisplay";
-import { BINDER_DROP_ABI } from "@/abi";
-import { CAMPAIGN_ID, NETWORK_ID } from "@/utils/common";
-import { useWrite } from "@/hooks/web3";
 import APIHelpers from "@/lib/apiHelper";
+import MintButton from "./MintButton";
+import Loader from "../Loader";
+import { TokenboundClient } from "@tokenbound/sdk";
 
 export default function ReviewAndPayStep({
   nft,
@@ -23,54 +20,44 @@ export default function ReviewAndPayStep({
     name: string;
   };
 }) {
-  const {
-    write,
-    error,
-    isLoading,
-    data,
-    switchCorrectNetwork,
-    wrongNetwork,
-    isSuccess,
-  } = useWrite({
-    networkId: NETWORK_ID,
-    contractAddress: "0xecb504d39723b0be0e3a9aa33d646642d1051ee1",
-    abi: BINDER_DROP_ABI,
-    functionName: "mintTo",
-    args: [
-      "0x128f606874e46e38192fF8D50331e967f99863c6",
-      "115792089237316195423570985008687907853269984665640564039457584007913129639935",
-      "ipfs://QmX48MqNwx1EBCVwqWByLWCpunF7fvQxLG5SjieQFnNuxk/0",
-      100,
-    ],
-  });
-
-  const { setCurrentStepIndex } = useSteps();
   const { note } = useInstance();
+  const [recipient, setRecipient] = useState<string>();
+  const [signature, setSignature] = useState<string>();
 
   const gasFee = 0.1;
   const platformFee = 0.9;
 
-  async function mint() {
-    if (write) {
-      // create new order
-      const orders = await APIHelpers.post("/api/campaigns/1/orders", {
-        body: {
-          campaignId: CAMPAIGN_ID,
-          collectionNetwork: networkToName(nft.nftNetworkId).toUpperCase(),
-          collectionAddress: nft.contractAddress,
-          selectedTokenId: nft.tokenId,
-          personalNote: note,
-        },
+  useEffect(() => {
+    const run = async () => {
+      const tokenboundClient = new TokenboundClient({
+        chainId: nft.nftNetworkId,
       });
-      await write();
-    }
-  }
+      setRecipient(
+        await tokenboundClient.getAccount({
+          tokenContract: nft.contractAddress as `0x${string}`,
+          tokenId: nft.tokenId,
+        })
+      );
+    };
+
+    run();
+  }, [nft]);
 
   useEffect(() => {
-    if (isSuccess) {
-      setCurrentStepIndex(3);
-    }
-  }, [isSuccess, setCurrentStepIndex]);
+    const run = async () => {
+      if (recipient) {
+        const signature = await APIHelpers.post("/api/sign", {
+          body: {
+            recipient,
+            tokenId: nft.tokenId,
+          },
+        });
+        setSignature(signature.signature);
+      }
+    };
+
+    run();
+  }, [recipient, nft]);
 
   return (
     <div className="flex flex-col justify-between h-full">
@@ -133,15 +120,11 @@ export default function ReviewAndPayStep({
         </div>
       </div>
 
-      <BinderButton
-        primary={false}
-        title={wrongNetwork ? "Switch network" : "Mint"}
-        onClick={write ? () => mint() : () => switchCorrectNetwork()}
-        isLoading={isLoading}
-        className="w-1/2 mx-auto mb-2"
-      />
-
-      <ErrorDisplay error={error} />
+      {!!recipient && !!signature ? (
+        <MintButton recipient={recipient} signature={signature} nft={nft} />
+      ) : (
+        <Loader />
+      )}
     </div>
   );
 }

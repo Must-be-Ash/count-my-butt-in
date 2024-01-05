@@ -109,3 +109,8 @@ export function getProvider(networkId: number) {
   }
   return mainnetProvider;
 }
+
+export const BINDER_CONTRACT_ADDRESS =
+  "0x0C4565553262a91C599C7Ee9FFD901EE91D16ba0";
+
+export const MINT_FEE = 0.01;
