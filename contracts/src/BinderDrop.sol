@@ -3,6 +3,7 @@ pragma solidity 0.8.20;
 
 import "openzeppelin-contracts/contracts/token/ERC721/ERC721.sol";
 import "openzeppelin-contracts/contracts/utils/cryptography/ECDSA.sol";
+import "openzeppelin-contracts/contracts/proxy/utils/Initializable.sol";
 import "./Admins.sol";
 
 error NonExistentToken();
@@ -13,17 +14,21 @@ error PublicMintsActive();
 error MintPriceNotPaid();
 error HashVerificationFailed();
 
-contract BinderDrop is ERC721, Admins {
+contract BinderDrop is ERC721, Admins, Initializable {
     bool public publicMintsPaused;
-    string public defaultURI = "https://SAMPLE-URI/";
+    string public defaultURI;
     string public revealedURI;
     mapping(uint256 => bool) revealedTokens;
-    uint256 public MINT_PRICE = 0.01 ether;
 
+    constructor() ERC721("BinderDrop", "BinderDropV1") {}
+
+    function initialize(address _creator) external initializer {
+      require(_creator != address(0));
+      creator = _creator;
+      defaultURI = "https://SAMPLE-URI/";
+    }
     event AutographIncoming(address indexed minter, address indexed recipient, uint256 indexed tokenId, bytes32 hash);
 
-  constructor() ERC721("BinderDrop", "BinderDropV1") {
-   }
 
     function pausePublicMints() external onlyAdmin {
       if (publicMintsPaused) {
@@ -54,6 +59,11 @@ contract BinderDrop is ERC721, Admins {
     function _verifyHash(bytes32 hash, bytes memory signature) internal view returns (bool) {
         return isAdmin(ECDSA.recover(hash, signature));
     }
+    function verifyMintCall(address recipient, uint256 tokenId, bytes memory signature) public view returns (bool) {
+        bytes32 payloadhash = keccak256(abi.encode(recipient, tokenId));
+        bytes32 hash = keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", payloadhash));
+        return _verifyHash(hash, signature);
+    }
     /**
      * @dev mintTo to create a new token defaults to pre-revealed art
      *
@@ -61,7 +71,7 @@ contract BinderDrop is ERC721, Admins {
      * @param tokenId what token id is minted
      * @param signature string passed on from the server
      */
-    function mintTo(address recipient, uint256 tokenId, bytes memory signature) public payable {
+    function mintTo(address recipient, uint256 tokenId, bytes memory signature) public {
       // recipient-tokenid pair will always be unique
       // hash is the keccack256 over recipient,tokenId
       // tokenId is kept track of on the server
@@ -73,13 +83,10 @@ contract BinderDrop is ERC721, Admins {
       if (balanceOf(recipient) > 0) {
         revert OnlyOneMintAllowed();
       }
-      bytes32 payloadhash = keccak256((abi.encode(recipient, tokenId)));
+      bytes32 payloadhash = keccak256(abi.encode(recipient, tokenId));
       bytes32 hash = keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", payloadhash));
       if (!_verifyHash(hash, signature)) {
         revert HashVerificationFailed();
-      }
-      if (msg.value != MINT_PRICE) {
-        revert MintPriceNotPaid();
       }
       _safeMint(recipient, tokenId);
       emit AutographIncoming(msg.sender, recipient, tokenId, hash);

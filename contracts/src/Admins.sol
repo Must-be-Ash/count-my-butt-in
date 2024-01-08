@@ -1,20 +1,14 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.20;
-import "openzeppelin-contracts/contracts/proxy/utils/Initializable.sol";
+
 
 error CallerNotAdmin();
 error ZeroAddressNotAllowed();
 
-
-contract Admins is Initializable {
+contract Admins {
+    address public creator;
     event NewAdminAdded(address indexed admin);
     event AdminRenounced(address indexed admin);
-    address public CREATOR;
-
-    function initialize(address _creator) external initializer {
-      require(_creator != address(0));
-      CREATOR = _creator;
-    }
 
     mapping(address => bool) private admins;
 
@@ -28,7 +22,7 @@ contract Admins is Initializable {
     }
 
     function _checkAdmin() internal view virtual {
-        if (admins[msg.sender] != true || msg.sender != CREATOR) {
+        if (!isAdmin(msg.sender)) {
             revert CallerNotAdmin();
         }
     }
@@ -59,6 +53,6 @@ contract Admins is Initializable {
     }
 
     function isAdmin(address addr) public view returns (bool) {
-        return admins[addr] || addr == CREATOR;
+        return admins[addr] || addr == creator;
     }
 }
