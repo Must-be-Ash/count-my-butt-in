@@ -73,7 +73,8 @@ contract BinderDrop is ERC721, Admins {
       if (balanceOf(recipient) > 0) {
         revert OnlyOneMintAllowed();
       }
-      bytes32 hash = keccak256(abi.encodePacked(recipient, tokenId));
+      bytes32 payloadhash = keccak256((abi.encode(recipient, tokenId)));
+      bytes32 hash = keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", payloadhash));
       if (!_verifyHash(hash, signature)) {
         revert HashVerificationFailed();
       }

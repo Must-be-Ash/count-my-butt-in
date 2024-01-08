@@ -1,19 +1,22 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { ethers } from "ethers";
-import { keccak256 } from "ethers";
-import { solidityPacked } from "ethers";
+import { keccak256, Wallet, getBytes, Signature, AbiCoder } from "ethers";
 
 export async function POST(request: NextRequest) {
   const data = await request.json();
   const { recipient, tokenId } = data;
-
   const privateKey = process.env.WALLET_PRIVATE_KEY;
-
-  const wallet = new ethers.Wallet(privateKey!);
-  const hash = keccak256(
-    solidityPacked(["address", "uint256"], [recipient, tokenId])
-  );
-
-  const signature = await wallet.signMessage(hash);
+  if (!privateKey) {
+    throw new Error ("defined WALLET_PRIVATE_KEY in .env")
+  }
+  const wallet = new Wallet(privateKey);
+  const signature = Signature.from(
+    await wallet.signMessage(
+      getBytes(
+        keccak256(
+          (new AbiCoder).encode(["address", "uint256"], [recipient, tokenId])
+        )
+      )
+    )
+  ).serialized;
   return NextResponse.json({ signature });
 }
