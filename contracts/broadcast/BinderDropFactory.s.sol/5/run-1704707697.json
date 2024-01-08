@@ -26,43 +26,13 @@
       "isFixedGasLimit": false
     }
   ],
-  "receipts": [
-    {
-      "transactionHash": "0xca4b682b2ea1927990e2b3c900a5610df15b6f1479b36b2757c9e978fe4c437d",
-      "transactionIndex": "0xc",
-      "blockHash": "0x35ef3216b960b043c759e34e2dfe14f3eb841628a6641eb954b94b375294733c",
-      "blockNumber": "0x9dcb34",
-      "from": "0xDd35Ac3f8986aE81d7F8B7c59565E73a3a525B4E",
-      "to": null,
-      "cumulativeGasUsed": "0x46a5ea",
-      "gasUsed": "0x1ce120",
-      "contractAddress": "0x69B77FE2d5C6d957b462c5762685A727Dfd70703",
-      "logs": [
-        {
-          "address": "0x0611AfB4711828F2683B8BE83a5e62aAFA74f352",
-          "topics": [
-            "0x2dbe9fb88463d989acccabbb6ee06901f83672eb78e04a11ff48dd8f69a27cda",
-            "0x00000000000000000000000069b77fe2d5c6d957b462c5762685a727dfd70703"
-          ],
-          "data": "0x",
-          "blockHash": "0x35ef3216b960b043c759e34e2dfe14f3eb841628a6641eb954b94b375294733c",
-          "blockNumber": "0x9dcb34",
-          "transactionHash": "0xca4b682b2ea1927990e2b3c900a5610df15b6f1479b36b2757c9e978fe4c437d",
-          "transactionIndex": "0xc",
-          "logIndex": "0x12",
-          "removed": false
-        }
-      ],
-      "status": "0x1",
-      "logsBloom": "0x00000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000008000000000000000000000020000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000010000000000000000000000000000000000000020000000000000800000000000000000000000000000000000000001400000000000",
-      "type": "0x2",
-      "effectiveGasPrice": "0xb2d05e11"
-    }
-  ],
+  "receipts": [],
   "libraries": [],
-  "pending": [],
+  "pending": [
+    "0xca4b682b2ea1927990e2b3c900a5610df15b6f1479b36b2757c9e978fe4c437d"
+  ],
   "returns": {},
-  "timestamp": 1704707741,
+  "timestamp": 1704707697,
   "chain": 5,
   "multi": false,
   "commit": "2e1c71f"

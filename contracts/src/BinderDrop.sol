@@ -18,7 +18,7 @@ contract BinderDrop is ERC721, Admins {
     string public defaultURI = "https://SAMPLE-URI/";
     string public revealedURI;
     mapping(uint256 => bool) revealedTokens;
-    uint256 public constant MINT_PRICE = 0.01 ether;
+    uint256 public MINT_PRICE = 0.01 ether;
 
     event AutographIncoming(address indexed minter, address indexed recipient, uint256 indexed tokenId, bytes32 hash);
 
@@ -90,6 +90,10 @@ contract BinderDrop is ERC721, Admins {
         revealedTokens[tokens[i]] = true;
       }
       revealedURI = _revealedURI;
+    }
+
+    function withdraw() external onlyAdmin {
+        payable(msg.sender).transfer(address(this).balance);
     }
 
     function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
