@@ -18,17 +18,21 @@ contract BinderDrop is ERC721, Admins, Initializable {
     using Strings for uint256;
     
     bool public publicMintsPaused;
+    uint256 internal _tokenCount = 0;
+    // the tokenId that is the boundary between revealed and pre-revealed tokens
+    uint256 internal _revealedTokenIdBoundary;
     string public defaultURI;
     string public revealedURI;
     mapping(uint256 => bool) revealedTokens;
 
     constructor() ERC721("BinderDrop", "BinderDropV1") {}
 
-    function initialize(address _creator) external initializer {
+    function initialize(address _creator, string memory defaultUri) external initializer {
       require(_creator != address(0));
       creator = _creator;
-      defaultURI = "https://arweave.net/w7Z7IWypheVcC1N5EtIxauotwCNNyocz57NA07kEbjM";
+      defaultURI = defaultUri;
     }
+
     event AutographIncoming(address indexed minter, string orderId, address indexed recipient, uint256 indexed tokenId, bytes32 hash);
 
 
@@ -70,7 +74,6 @@ contract BinderDrop is ERC721, Admins, Initializable {
      * @dev mintTo to create a new token defaults to pre-revealed art
      *
      * @param recipient which address the tokenId goes to
-     * @param tokenId what token id is minted
      * @param signature string passed on from the server
      */
     function mintTo(string memory orderId, address recipient, uint256 tokenId, bytes memory signature) public {
@@ -85,19 +88,23 @@ contract BinderDrop is ERC721, Admins, Initializable {
       if (balanceOf(recipient) > 0) {
         revert OnlyOneMintAllowed();
       }
-      bytes32 payloadhash = keccak256(abi.encode(recipient, tokenId));
+      bytes32 payloadhash = keccak256(abi.encode(recipient));
       bytes32 hash = keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", payloadhash));
       if (!_verifyHash(hash, signature)) {
         revert HashVerificationFailed();
       }
+      ++_tokenCount;
+      tokenId = _tokenCount;
       _safeMint(recipient, tokenId);
       emit AutographIncoming(msg.sender, orderId, recipient, tokenId, hash);
     }
 
-    function revealBulk(uint256[] memory tokens, string memory _revealedURI) public onlyAdmin {
-      for (uint i = 0; i < tokens.length; ++i) {
-        revealedTokens[tokens[i]] = true;
-      }
+    /**
+     *
+     * @param revealedTokenIdBoundary the tokenId that is the boundary between revealed and pre-revealed tokens. This determined which tokenUrl to return
+     */
+    function revealTokens(uint256 revealedTokenIdBoundary, string memory _revealedURI) public onlyAdmin {
+      _revealedTokenIdBoundary = revealedTokenIdBoundary;
       revealedURI = _revealedURI;
     }
 
@@ -109,7 +116,7 @@ contract BinderDrop is ERC721, Admins, Initializable {
       if (ownerOf(tokenId) == address(0)) {
         revert NonExistentToken();
       }
-      if (!revealedTokens[tokenId]) {
+      if (tokenId > _revealedTokenIdBoundary) {
         // default uri returned
         return bytes(defaultURI).length > 0 ? string(abi.encodePacked(defaultURI)) : "";
       }
