@@ -1,43 +1,60 @@
 import * as React from "react";
 import { createContext, useContext } from "react";
 
+export interface Instance {
+  orderId: string;
+  campaignId: string;
+  nftNetworkId: number;
+  contractAddress: string;
+  tokenId: string;
+  mintedTokenId: string;
+  nftUrl: string;
+  name: string;
+  note: string;
+}
+
 const instanceContext = createContext({
-  nft: {
+  instance: {
+    orderId: "",
+    campaignId: "",
     nftNetworkId: 0,
     contractAddress: "",
     tokenId: "",
+    mintedTokenId: "",
     nftUrl: "",
-    name: ""
+    name: "",
+    note: "",
   },
-  note: '',
-  setNote: (value: string) => {},
-  setNft: (value: {
-    nftNetworkId: number;
-    contractAddress: string;
-    tokenId: string;
-    nftUrl: string;
-    name: string;
-  }) => {},
+
+  setInstance: (_: Partial<Instance>) => {},
 });
 
-export function InstanceProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const [nft, setNft] = React.useState({
+export function InstanceProvider({ children }: { children: React.ReactNode }) {
+  const [instance, setInstance] = React.useState({
+    orderId: "",
+    campaignId: "",
     nftNetworkId: 0,
     contractAddress: "",
     tokenId: "",
+    mintedTokenId: "",
     nftUrl: "",
-    name: ""
+    name: "",
+    note: "",
   });
-  const [note, setNote] = React.useState('');
 
   return (
-    <instanceContext.Provider value={{ nft, note, setNote, setNft }}>
-    {children}
-  </instanceContext.Provider>
+    <instanceContext.Provider
+      value={{
+        instance,
+        setInstance: (value) =>
+          setInstance({
+            ...instance,
+            ...value,
+          }),
+      }}
+    >
+      {children}
+    </instanceContext.Provider>
   );
 }
 

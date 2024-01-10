@@ -12,7 +12,7 @@ export default function EnterWalletStep() {
   // search by collection name
   const [searhWord, setSearchword] = useState<string>("");
   const [error, setError] = useState<string>("");
-  const { setNft } = useInstance();
+  const { setInstance } = useInstance();
   const { setCurrentStepIndex } = useSteps();
 
   function selectAddress(address: string) {
@@ -65,7 +65,7 @@ export default function EnterWalletStep() {
               imageUrl: string,
               name: string
             ) => {
-              setNft({
+              setInstance({
                 nftNetworkId: parseInt(networkId),
                 contractAddress,
                 tokenId,

@@ -46,6 +46,9 @@ export function getOpenseaLink(
   contractAddress: string,
   tokenId: string
 ) {
+  console.log("networkId", networkId);
+  console.log("contractAddress", contractAddress);
+  console.log("tokenId", tokenId);
   if (networkId === 1) {
     return `https://opensea.io/assets/ethereum/${contractAddress}/${tokenId}`;
   }
@@ -129,16 +132,17 @@ export function networkToName(networkId: number) {
 }
 
 export function nameToNetwork(name: string): number {
-  if (name === "Ethereum") {
+  name = name.toLowerCase();
+  if (name === "ethereum") {
     return 1;
   }
-  if (name === "Polygon") {
+  if (name === "polygon") {
     return 137;
   }
-  if (name === "Base") {
+  if (name === "base") {
     return 8453;
   }
-  if (name === "Goerli") {
+  if (name === "goerli") {
     return 5;
   }
   return 1;

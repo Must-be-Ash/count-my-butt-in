@@ -41,7 +41,7 @@ export default function BinderButton({
           {isLoading ? (
             <Loader height={"5"} width="100" color="#fffff" />
           ) : (
-            title
+            title || "Button"
           )}
           {children}
         </div>

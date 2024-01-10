@@ -4,26 +4,26 @@ import { usePrivy } from "@privy-io/react-auth";
 import { useRouter } from "next/navigation";
 import Loader from "@/app/components/Loader";
 import { useEffect } from "react";
+import TopNav from "@/app/components/TopNav";
 
 export default function CollectorsLayout({
   children,
+  params,
 }: {
   children: React.ReactNode;
+  params: { campaignId: string };
 }) {
-  const { ready, authenticated, user } = usePrivy();
+  const { ready, authenticated } = usePrivy();
   const router = useRouter();
 
   useEffect(() => {
-    if (ready && authenticated) router.push("/collector/home");
+    if (ready && !authenticated)
+      router.push(`/collector/${params.campaignId}}`);
   }, [ready, authenticated, router]);
 
-  if (!ready) {
-    // Do nothing while the PrivyProvider initializes with updated user state
-    return <Loader />;
-  }
-
   return (
-    <main className="max-w-3xl flex flex-col items-center w-full mx-auto my-auto h-screen font-avenir">
+    <main>
+      <TopNav />
       {children}
     </main>
   );

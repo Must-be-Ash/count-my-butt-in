@@ -2,11 +2,7 @@ import { getOrder, updateOrder } from "@/utils/prisma";
 import { NextResponse, type NextRequest } from "next/server";
 import { ethers } from "ethers";
 import { BINDER_DROP_ABI } from "@/abi";
-import {
-  BINDER_CONTRACT,
-  SUPPORTED_NETWORKS,
-  getProvider,
-} from "@/utils/common";
+import { SUPPORTED_NETWORKS, getProvider } from "@/utils/common";
 import { EventLog } from "ethers";
 import { networkToName } from "@/lib/utils";
 import { Network } from "@prisma/client";
@@ -21,11 +17,11 @@ export async function POST(request: NextRequest) {
     const fromBlock = data.fromBlock || toBlock - 1000;
 
     const binderContract = new ethers.Contract(
-      BINDER_CONTRACT,
+      data.contract,
       BINDER_DROP_ABI,
       provider
     );
-    const binderMint = binderContract.filters.Mint();
+    const binderMint = binderContract.filters.AutographIncoming();
     const logsBinderMint = await binderContract.queryFilter(
       binderMint,
       fromBlock,

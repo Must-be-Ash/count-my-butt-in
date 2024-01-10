@@ -21,6 +21,8 @@ enum Network {
   POLYGON
   GNOSIS
   BASE
+  GOERLI
+  SEPOLIA
 }
 
 enum NetworkStatus {
@@ -51,6 +53,9 @@ model Order {
 
 model Campaign {
   campaignId String @id @default(uuid())
+  networkId Network @default(ETHEREUM)
+  defaultURI String?
+  binderContract String?
   manifestUrl String?
   whitelistedCollectionAddresses String[]
 }

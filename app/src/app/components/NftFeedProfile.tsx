@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import NFTDisplay from "@/app/components/NftDisplay";
 import Link from "next/link";
-import { ThreeDots } from "react-loader-spinner";
 import { OwnedNft, OwnedNftsResponse } from "alchemy-sdk";
 import ErrorDisplay from "@/app/components/ErrorDisplay";
 import { getNftsForOwner } from "@/lib/alchemy";
 import BinderButton from "@/app/components/BinderButton";
+import Loader from "./Loader";
 export interface PageToKeyMapping {
   [address: string]: {
     [page: number]: string | null;
@@ -321,14 +321,7 @@ const NFTFeedProfile = ({
       )}
       {loading && (
         <div className="flex flex-row justify-center items-center">
-          <ThreeDots
-            height="100"
-            width="50"
-            radius="9"
-            color="#fffff"
-            ariaLabel="three-dots-loading"
-            visible={true}
-          />
+          <Loader />
         </div>
       )}
       {error && <ErrorDisplay error={error} />}

@@ -3,35 +3,23 @@
 import { useEffect } from "react";
 import BinderButton from "@/app/components/BinderButton";
 import { useSteps } from "@/context/StepsContext";
-import { getOpenseaLink, networkToName, shortenAddress } from "@/lib/utils";
-import Image from "next/image";
+import { networkToName } from "@/lib/utils";
 import { useInstance } from "@/context/InstanceContext";
 import ErrorDisplay from "@/app/components/ErrorDisplay";
 import { BINDER_DROP_ABI } from "@/abi";
-import {
-  BINDER_CONTRACT_ADDRESS,
-  CAMPAIGN_ID,
-  NETWORK_ID,
-} from "@/utils/common";
+import { NETWORK_ID } from "@/utils/common";
 import { useWrite } from "@/hooks/web3";
 import APIHelpers from "@/lib/apiHelper";
-import { formatBytes32String } from "@ethersproject/strings";
 export default function MintButton({
   recipient,
   signature,
-  nft,
+  binderContract,
 }: {
   recipient: string;
   signature: string;
-  nft: {
-    nftNetworkId: number;
-    contractAddress: string;
-    tokenId: string;
-    nftUrl: string;
-    name: string;
-  };
+  binderContract: string;
 }) {
-  console.log(recipient, nft.tokenId, signature);
+  const { instance, setInstance } = useInstance();
   const {
     write,
     error,
@@ -42,28 +30,30 @@ export default function MintButton({
     isSuccess,
   } = useWrite({
     networkId: NETWORK_ID,
-    contractAddress: BINDER_CONTRACT_ADDRESS,
+    contractAddress: binderContract,
     abi: BINDER_DROP_ABI,
     functionName: "mintTo",
-    args: [recipient, Number(nft.tokenId), signature],
+    args: [instance.orderId, recipient, Number(instance.tokenId), signature],
   });
-  console.log("wwww", error);
   const { setCurrentStepIndex } = useSteps();
-  const { note } = useInstance();
 
   async function mint() {
     if (write) {
       // create new order
       await APIHelpers.post("/api/campaigns/1/orders", {
         body: {
-          campaignId: CAMPAIGN_ID,
-          collectionNetwork: networkToName(nft.nftNetworkId).toUpperCase(),
-          collectionAddress: nft.contractAddress,
-          selectedTokenId: nft.tokenId,
-          personalNote: note,
+          campaignId: instance.campaignId,
+          collectionNetwork: networkToName(instance.nftNetworkId).toUpperCase(),
+          collectionAddress: instance.contractAddress,
+          selectedTokenId: instance.tokenId,
+          personalNote: instance.note,
         },
       });
       await write();
+      // after succuessful mint, update instance with tokenId, we currently using the tokenId of the parent NFT for simplicity sake but need to change this later
+      setInstance({
+        mintedTokenId: instance.tokenId,
+      });
     }
   }
 
@@ -78,7 +68,7 @@ export default function MintButton({
       <BinderButton
         primary={false}
         title={wrongNetwork ? "Switch network" : "Mint"}
-        onClick={write ? () => mint() : () => switchCorrectNetwork()}
+        onClick={!wrongNetwork ? () => mint() : () => switchCorrectNetwork()}
         isLoading={isLoading}
         className="w-1/2 mx-auto mb-2"
       />

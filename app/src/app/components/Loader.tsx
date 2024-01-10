@@ -23,7 +23,7 @@ export default function Loader({
           height={height || 50}
           width={width || 50}
           radius={radius || "9"}
-          color={color || "#fffff"}
+          color={color || "#ffffff"}
           ariaLabel="three-dots-loading"
           visible={true}
         />

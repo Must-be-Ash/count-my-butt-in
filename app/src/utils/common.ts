@@ -65,10 +65,6 @@ export function networkIdToString(networkId: number) {
   return `eip155:${networkId}`;
 }
 
-export const CAMPAIGN_ID = "1";
-
-export const BINDER_CONTRACT = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
-
 export const SUPPORTED_NETWORKS = [5];
 
 export const goerliProvider = new JsonRpcProvider(
@@ -109,8 +105,5 @@ export function getProvider(networkId: number) {
   }
   return mainnetProvider;
 }
-
-export const BINDER_CONTRACT_ADDRESS =
-  "0x0C4565553262a91C599C7Ee9FFD901EE91D16ba0";
 
 export const MINT_FEE = 0.01;
