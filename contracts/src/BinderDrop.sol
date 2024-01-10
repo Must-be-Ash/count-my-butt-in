@@ -15,6 +15,8 @@ error MintPriceNotPaid();
 error HashVerificationFailed();
 
 contract BinderDrop is ERC721, Admins, Initializable {
+    using Strings for uint256;
+    
     bool public publicMintsPaused;
     string public defaultURI;
     string public revealedURI;
@@ -25,9 +27,9 @@ contract BinderDrop is ERC721, Admins, Initializable {
     function initialize(address _creator) external initializer {
       require(_creator != address(0));
       creator = _creator;
-      defaultURI = "https://SAMPLE-URI/";
+      defaultURI = "https://arweave.net/w7Z7IWypheVcC1N5EtIxauotwCNNyocz57NA07kEbjM";
     }
-    event AutographIncoming(address indexed minter, address indexed recipient, uint256 indexed tokenId, bytes32 hash);
+    event AutographIncoming(address indexed minter, string orderId, address indexed recipient, uint256 indexed tokenId, bytes32 hash);
 
 
     function pausePublicMints() external onlyAdmin {
@@ -71,7 +73,7 @@ contract BinderDrop is ERC721, Admins, Initializable {
      * @param tokenId what token id is minted
      * @param signature string passed on from the server
      */
-    function mintTo(address recipient, uint256 tokenId, bytes memory signature) public {
+    function mintTo(string memory orderId, address recipient, uint256 tokenId, bytes memory signature) public {
       // recipient-tokenid pair will always be unique
       // hash is the keccack256 over recipient,tokenId
       // tokenId is kept track of on the server
@@ -89,7 +91,7 @@ contract BinderDrop is ERC721, Admins, Initializable {
         revert HashVerificationFailed();
       }
       _safeMint(recipient, tokenId);
-      emit AutographIncoming(msg.sender, recipient, tokenId, hash);
+      emit AutographIncoming(msg.sender, orderId, recipient, tokenId, hash);
     }
 
     function revealBulk(uint256[] memory tokens, string memory _revealedURI) public onlyAdmin {
@@ -109,9 +111,9 @@ contract BinderDrop is ERC721, Admins, Initializable {
       }
       if (!revealedTokens[tokenId]) {
         // default uri returned
-        return bytes(defaultURI).length > 0 ? string(abi.encodePacked(defaultURI, tokenId)) : "";
+        return bytes(defaultURI).length > 0 ? string(abi.encodePacked(defaultURI)) : "";
       }
       // returned revealed uri
-      return string(abi.encodePacked(revealedURI, tokenId));
+      return string(abi.encodePacked(revealedURI, "/", uint256(tokenId).toString()));
     }
 }
