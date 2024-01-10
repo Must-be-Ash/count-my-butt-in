@@ -46,9 +46,6 @@ export function getOpenseaLink(
   contractAddress: string,
   tokenId: string
 ) {
-  console.log("networkId", networkId);
-  console.log("contractAddress", contractAddress);
-  console.log("tokenId", tokenId);
   if (networkId === 1) {
     return `https://opensea.io/assets/ethereum/${contractAddress}/${tokenId}`;
   }
@@ -60,6 +57,9 @@ export function getOpenseaLink(
   }
   if (networkId === 5) {
     return `https://testnets.opensea.io/assets/goerli/${contractAddress}/${tokenId}`;
+  }
+  if (networkId === 11155111) {
+    return `https://testnets.opensea.io/assets/sepolia/${contractAddress}/${tokenId}`;
   }
   return `https://opensea.io/assets/ethereum/${contractAddress}/${tokenId}`;
 }
@@ -80,6 +80,9 @@ export function getContractEtherscanLink(
   if (networkId === 5) {
     return `https://goerli.etherscan.io/address/${contractAddress}`;
   }
+  if (networkId === 11155111) {
+    return `https://sepolia.etherscan.io/address/${contractAddress}`;
+  }
   return `https://etherscan.io/address/${contractAddress}`;
 }
 
@@ -99,6 +102,9 @@ export function getTokenBoundLink(
   }
   if (networkId === 5) {
     return `https://tokenbound.org/assets/goerli/${contractAddress}/${tokenId}`;
+  }
+  if (networkId === 11155111) {
+    return `https://tokenbound.org/assets/sepolia/${contractAddress}/${tokenId}`;
   }
   return `https://tokenbound.org/assets/ethereum/${contractAddress}/${tokenId}`;
 }
@@ -128,6 +134,9 @@ export function networkToName(networkId: number) {
   if (networkId === 5) {
     return "Goerli";
   }
+  if (networkId === 11155111) {
+    return "Sepolia";
+  }
   return "Ethereum";
 }
 
@@ -145,6 +154,9 @@ export function nameToNetwork(name: string): number {
   if (name === "goerli") {
     return 5;
   }
+  if (name === "sepolia") {
+    return 11155111;
+  }
   return 1;
 }
 
@@ -160,6 +172,9 @@ export function networkToCurrency(networkId: number) {
   }
   if (networkId === 5) {
     return "GETH";
+  }
+  if (networkId === 11155111) {
+    return "SETH";
   }
   return "ETH";
 }

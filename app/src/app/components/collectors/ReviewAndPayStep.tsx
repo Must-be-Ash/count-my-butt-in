@@ -1,7 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getOpenseaLink, networkToName, shortenAddress } from "@/lib/utils";
+import {
+  getOpenseaLink,
+  nameToNetwork,
+  networkToName,
+  shortenAddress,
+} from "@/lib/utils";
 import Image from "next/image";
 import { useInstance } from "@/context/InstanceContext";
 import APIHelpers from "@/lib/apiHelper";
@@ -137,8 +142,10 @@ export default function ReviewAndPayStep() {
       {!!recipient &&
       !!signature &&
       !!campaign?.binderContract &&
+      !!campaign.networkId &&
       !!instance.orderId ? (
         <MintButton
+          campaignNetworkId={nameToNetwork(campaign.networkId)}
           recipient={recipient}
           signature={signature}
           binderContract={campaign.binderContract}

@@ -4,20 +4,25 @@ import LoginOrUserWidget from "@/app/components/LoginOrUserWidget";
 import { SignaturePadTest } from "@/app/components/SignaturePad/SignaturePad";
 import BinderButton from "@/app/components/BinderButton";
 import Main from "@/app/layouts/Main";
-import mockOrders from "@/utils/mocks/orders";
 import Image from "next/image";
 import { useState } from "react";
 import Modal from "react-modal";
+import { useOrders } from "@/hooks/useOrders";
+import NftDisplayFull from "@/app/components/NftDisplayFull";
+import NFTDisplayFull from "@/app/components/NftDisplayFull";
+import Loader from "@/app/components/Loader";
+import { nameToNetwork } from "@/lib/utils";
+import { NetworkStatus } from "@prisma/client";
 
 const StatusButton = ({
   orderStatus,
   triggerAutograph,
 }: {
-  orderStatus: Order["status"];
+  orderStatus: NetworkStatus;
   triggerAutograph: () => void;
 }) => {
   switch (orderStatus) {
-    case "AUTOGRAPHED": {
+    case "CONFIRMED": {
       return (
         <BinderButton className="w-full mt-2" disabled primary>
           Done
@@ -60,8 +65,8 @@ const AutographModal = ({ closeModal }: { closeModal: () => void }) => {
         Submit
       </BinderButton>
     </div>
-  )
-}
+  );
+};
 
 const customStyles = {
   content: {
@@ -74,7 +79,8 @@ const customStyles = {
   },
 };
 
-export default function Orders() {
+export default function Orders({ params }: { params: { campaignId: string } }) {
+  const { orders } = useOrders(params.campaignId);
   const triggerAutograph = async () => {
     openModal();
   };
@@ -96,34 +102,35 @@ export default function Orders() {
       </Modal>
       <LoginOrUserWidget />
       <div className="self-start">Order List</div>
-      <div className="flex flex-row gap-3 mt-8  flex-wrap">
-        {mockOrders.map((order, key) => {
-          return (
-            <div key={key} className="h-[265px] w-[173px] bg-black rounded-lg">
-              <div className="h-[173px] w-[173px] rounded-t-lg relative">
-                {/* image */}
-                <Image
-                  src={order.image}
-                  alt="nft image"
-                  fill
-                  className="rounded-t-lg"
-                />
-              </div>
-              {/* content */}
-              <div className="p-3">
-                <div className="text-white text-sm">
-                  {`${order.collectionTitle} #${order.tokenId}`}
-                </div>
-                <div>
-                  <StatusButton
-                    orderStatus={order.status}
-                    triggerAutograph={triggerAutograph}
+      <div className="flex flex-row gap-3 gap-y-14 mt-8 flex-wrap">
+        {!!orders &&
+          orders.length > 0 &&
+          orders.map((order, key) => {
+            return (
+              <div
+                key={key}
+                className="h-[265px] w-[173px] bg-black rounded-lg"
+              >
+                <div className="h-[180px] w-[173px] rounded-t-lg relative">
+                  {/* image */}
+                  <NFTDisplayFull
+                    networkId={nameToNetwork(order.collectionNetwork)}
+                    tokenId={order.selectedTokenId}
+                    contractAddress={order.collectionAddress}
                   />
                 </div>
+                {/* content */}
+                <div className="p-3">
+                  <div>
+                    <StatusButton
+                      orderStatus={order.status || "PENDING"}
+                      triggerAutograph={triggerAutograph}
+                    />
+                  </div>
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
       </div>
       <SubmitStickyButton />
     </Main>

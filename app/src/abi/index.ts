@@ -48,7 +48,10 @@ export const BINDER_DROP_ABI = [
   {
     type: "function",
     name: "initialize",
-    inputs: [{ name: "_creator", type: "address", internalType: "address" }],
+    inputs: [
+      { name: "_creator", type: "address", internalType: "address" },
+      { name: "defaultUri", type: "string", internalType: "string" },
+    ],
     outputs: [],
     stateMutability: "nonpayable",
   },
@@ -118,9 +121,13 @@ export const BINDER_DROP_ABI = [
   },
   {
     type: "function",
-    name: "revealBulk",
+    name: "revealTokens",
     inputs: [
-      { name: "tokens", type: "uint256[]", internalType: "uint256[]" },
+      {
+        name: "revealedTokenIdBoundary",
+        type: "uint256",
+        internalType: "uint256",
+      },
       { name: "_revealedURI", type: "string", internalType: "string" },
     ],
     outputs: [],

@@ -10,16 +10,20 @@ import { BINDER_DROP_ABI } from "@/abi";
 import { NETWORK_ID } from "@/utils/common";
 import { useWrite } from "@/hooks/web3";
 import APIHelpers from "@/lib/apiHelper";
+import { useCampaign } from "@/hooks/useCampaign";
 export default function MintButton({
+  campaignNetworkId,
   recipient,
   signature,
   binderContract,
 }: {
+  campaignNetworkId: number;
   recipient: string;
   signature: string;
   binderContract: string;
 }) {
   const { instance, setInstance } = useInstance();
+
   const {
     write,
     error,
@@ -29,11 +33,11 @@ export default function MintButton({
     wrongNetwork,
     isSuccess,
   } = useWrite({
-    networkId: NETWORK_ID,
+    networkId: campaignNetworkId,
     contractAddress: binderContract,
     abi: BINDER_DROP_ABI,
     functionName: "mintTo",
-    args: [instance.orderId, recipient, Number(instance.tokenId), signature],
+    args: [instance.orderId, recipient, signature],
   });
   const { setCurrentStepIndex } = useSteps();
 
