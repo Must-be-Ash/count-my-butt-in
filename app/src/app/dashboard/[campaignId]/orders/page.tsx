@@ -1,7 +1,7 @@
 "use client";
 
 import LoginOrUserWidget from "@/app/components/LoginOrUserWidget";
-import { SignaturePadTest } from "@/app/components/SignaturePad/SignaturePad";
+import SignaturePadTest from "@/app/components/SignaturePad/SignaturePad";
 import BinderButton from "@/app/components/BinderButton";
 import Main from "@/app/layouts/Main";
 import Image from "next/image";
@@ -13,6 +13,8 @@ import NFTDisplayFull from "@/app/components/NftDisplayFull";
 import Loader from "@/app/components/Loader";
 import { nameToNetwork } from "@/lib/utils";
 import { NetworkStatus } from "@prisma/client";
+import { getNftMetadata } from "@/lib/alchemy";
+import { set } from "zod";
 
 const StatusButton = ({
   orderStatus,
@@ -24,16 +26,16 @@ const StatusButton = ({
   switch (orderStatus) {
     case "CONFIRMED": {
       return (
-        <BinderButton className="w-full mt-2" disabled primary>
-          Done
-        </BinderButton>
+        <BinderButton className="w-full mt-2" disabled primary title="Done" />
       );
     }
     case "PENDING": {
       return (
-        <BinderButton className="w-full mt-2" onClick={triggerAutograph}>
-          Fill Order
-        </BinderButton>
+        <BinderButton
+          className="w-full mt-2"
+          onClick={triggerAutograph}
+          title="Fill Order"
+        />
       );
     }
   }
@@ -41,29 +43,39 @@ const StatusButton = ({
 
 const SubmitStickyButton = () => {
   return (
-    <div className="w-full sticky bottom-0 bg-slate-900 pt-8 pb-16">
+    <div className="w-full sticky bottom-0  pt-8 pb-8 mt-8">
       <div className="h-full w-full flex flex-col items-center">
-        <BinderButton className="w-3/4">Submit</BinderButton>
+        <BinderButton className="w-3/4" title="Submit" />
       </div>
     </div>
   );
 };
 
-const AutographModal = ({ closeModal }: { closeModal: () => void }) => {
+const AutographModal = ({
+  orderId,
+  closeModal,
+  backgroundImage,
+}: {
+  orderId: string;
+  closeModal: () => void;
+  backgroundImage: string;
+}) => {
   return (
     <div className="text-black flex flex-col gap-3 items-center">
       {/* top navigation */}
       <div className="flex flex-row justify-between w-full">
-        <h2>Hello</h2>
+        {/* <h2>Sign</h2> */}
         <button onClick={closeModal}>close</button>
       </div>
       {/* signature pad */}
       <div className="border border-black">
-        <SignaturePadTest />
+        <SignaturePadTest
+          orderId={orderId}
+          closeModal={closeModal}
+          backgroundImage={backgroundImage}
+        />
       </div>
-      <BinderButton className="w-3/4 bg-black" primary>
-        Submit
-      </BinderButton>
+      {/* <BinderButton className="w-3/4 bg-black" primary title="Submit" /> */}
     </div>
   );
 };
@@ -81,7 +93,10 @@ const customStyles = {
 
 export default function Orders({ params }: { params: { campaignId: string } }) {
   const { orders } = useOrders(params.campaignId);
-  const triggerAutograph = async () => {
+  const [selectedOrderId, setSelectedOrderId] = useState<string>("");
+  const [imageUrl, setImageUrl] = useState<string>("");
+  const triggerAutograph = async (orderId: string) => {
+    setSelectedOrderId(orderId);
     openModal();
   };
   const [modalIsOpen, setModalOpen] = useState<boolean>(false);
@@ -98,11 +113,15 @@ export default function Orders({ params }: { params: { campaignId: string } }) {
         onRequestClose={closeModal}
         style={customStyles}
       >
-        <AutographModal closeModal={closeModal} />
+        <AutographModal
+          orderId={selectedOrderId}
+          closeModal={closeModal}
+          backgroundImage={imageUrl}
+        />
       </Modal>
       <LoginOrUserWidget />
       <div className="self-start">Order List</div>
-      <div className="flex flex-row gap-3 gap-y-14 mt-8 flex-wrap">
+      <div className="flex flex-row gap-3 gap-y-14 mt-8 flex-wrap mb-8">
         {!!orders &&
           orders.length > 0 &&
           orders.map((order, key) => {
@@ -124,7 +143,21 @@ export default function Orders({ params }: { params: { campaignId: string } }) {
                   <div>
                     <StatusButton
                       orderStatus={order.status || "PENDING"}
-                      triggerAutograph={triggerAutograph}
+                      triggerAutograph={async () => {
+                        const nft = await getNftMetadata(
+                          nameToNetwork(order.collectionNetwork),
+                          order.collectionAddress,
+                          order.selectedTokenId
+                        );
+                        const media = nft?.media[0];
+                        if (media) {
+                          const imageUrl =
+                            media.thumbnail || media.gateway || media.raw;
+                          setImageUrl(imageUrl);
+                        }
+
+                        triggerAutograph(order.orderId);
+                      }}
                     />
                   </div>
                 </div>

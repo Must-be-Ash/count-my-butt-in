@@ -87,6 +87,10 @@ export const baseProvider = new JsonRpcProvider(
   `https://base-mainnet.blastapi.io/${process.env.NEXT_PUBLIC_ALCHEMY_BASE}`
 );
 
+export const sepoliaProvider = new JsonRpcProvider(
+  `https://eth-sepolia.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_SEPOLIA}`
+);
+
 export function getProvider(networkId: number) {
   if (networkId === 1) {
     return mainnetProvider;
@@ -102,6 +106,9 @@ export function getProvider(networkId: number) {
   }
   if (networkId === 8453) {
     return baseProvider;
+  }
+  if (networkId === 11155111) {
+    return sepoliaProvider;
   }
   return mainnetProvider;
 }

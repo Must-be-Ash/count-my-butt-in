@@ -29,6 +29,7 @@ const NFTDisplayFull = ({
       const media = nft?.media[0];
       if (media) {
         const imageUrl = media.thumbnail || media.gateway || media.raw;
+
         setNft({
           imageUrl,
           title: nft.title || nft.contract.name || "Unknown",

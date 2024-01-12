@@ -5,8 +5,9 @@ export async function GET(
   _: NextRequest,
   { params }: { params: { campaignId: string } }
 ) {
-  const orders = await getOrders(params.campaignId, "PENDING");
-  return NextResponse.json({ orders });
+  const pendingOrders = await getOrders(params.campaignId, "PENDING");
+  const confirmedOrders = await getOrders(params.campaignId, "CONFIRMED");
+  return NextResponse.json({ orders: [...pendingOrders, ...confirmedOrders] });
 }
 
 export async function POST(request: NextRequest) {

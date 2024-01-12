@@ -60,7 +60,7 @@ export function createOrder(data: Prisma.OrderCreateInput) {
 }
 
 export function updateOrder(orderId: string, data: Prisma.OrderUpdateInput) {
-  return prisma.order.update({
+  return prisma.order.updateMany({
     where: { orderId },
     data,
   });

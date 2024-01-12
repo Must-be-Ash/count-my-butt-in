@@ -5,12 +5,12 @@ import { BINDER_DROP_ABI } from "@/abi";
 import { SUPPORTED_NETWORKS, getProvider } from "@/utils/common";
 import { EventLog } from "ethers";
 import { networkToName } from "@/lib/utils";
-import { Network } from "@prisma/client";
+import { Network, NetworkStatus } from "@prisma/client";
 
 export async function POST(request: NextRequest) {
   const data = await request.json();
-  const { fromBlock, toBlock, contractAddress, network } = data;
-  const provider = getProvider(network);
+  const { fromBlock, toBlock, contractAddress, networkId } = data;
+  const provider = getProvider(networkId);
   // scan the latest 1000 blocks if fromblock and toblock is not specified
   const toBlockForFilter = toBlock || (await provider.getBlockNumber());
   const fromBlockForFilter = fromBlock || toBlock - 1000;
@@ -30,7 +30,6 @@ export async function POST(request: NextRequest) {
     .filter((log) => Boolean(log))
     .map((log) => {
       const theLog = log as EventLog;
-      console.log("the log", theLog);
       return {
         orderId: theLog.args![1].toLowerCase(),
         recipient: theLog.args![2].toString(),
@@ -48,13 +47,12 @@ export async function POST(request: NextRequest) {
     const order = await getOrder(orderId);
     if (!order?.transactionId) {
       await updateOrder(orderId, {
-        transactionId: tx,
+        transactionId: `${tx}`,
         mintedTokenId: tokenId,
-        mintedNetworkId: networkToName(network).toUpperCase() as Network,
-        status: "PENDING",
+        mintedNetworkId: networkToName(networkId).toUpperCase() as Network,
+        status: NetworkStatus.PENDING,
       });
     }
   }
-
   return NextResponse.json({ success: true });
 }

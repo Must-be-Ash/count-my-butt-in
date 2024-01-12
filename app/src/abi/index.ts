@@ -78,7 +78,6 @@ export const BINDER_DROP_ABI = [
     inputs: [
       { name: "orderId", type: "string", internalType: "string" },
       { name: "recipient", type: "address", internalType: "address" },
-      { name: "tokenId", type: "uint256", internalType: "uint256" },
       { name: "signature", type: "bytes", internalType: "bytes" },
     ],
     outputs: [],

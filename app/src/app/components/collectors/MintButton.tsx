@@ -11,6 +11,7 @@ import { NETWORK_ID } from "@/utils/common";
 import { useWrite } from "@/hooks/web3";
 import APIHelpers from "@/lib/apiHelper";
 import { useCampaign } from "@/hooks/useCampaign";
+import { BigNumber } from "alchemy-sdk";
 export default function MintButton({
   campaignNetworkId,
   recipient,
@@ -32,6 +33,7 @@ export default function MintButton({
     switchCorrectNetwork,
     wrongNetwork,
     isSuccess,
+    parsed,
   } = useWrite({
     networkId: campaignNetworkId,
     contractAddress: binderContract,
@@ -40,7 +42,6 @@ export default function MintButton({
     args: [instance.orderId, recipient, signature],
   });
   const { setCurrentStepIndex } = useSteps();
-
   async function mint() {
     if (write) {
       // create new order
@@ -54,18 +55,31 @@ export default function MintButton({
         },
       });
       await write();
-      // after succuessful mint, update instance with tokenId, we currently using the tokenId of the parent NFT for simplicity sake but need to change this later
-      setInstance({
-        mintedTokenId: instance.tokenId,
-      });
     }
   }
 
   useEffect(() => {
     if (isSuccess) {
+      // after succuessful mint, update instance with tokenId
+      if (parsed?.args?.tokenId) {
+        const tokenId = parsed?.args?.tokenId;
+        setInstance({
+          mintedTokenId: (tokenId as BigNumber).toString(), // tokenId will be a BigNumber
+        });
+      }
+      // trigger scanner
+      APIHelpers.post("/api/scan", {
+        body: {
+          contractAddress: binderContract,
+          networkId: campaignNetworkId,
+        } as any,
+      }).catch((e) => {
+        console.log(`Error scanning:`);
+        console.log(e);
+      });
       setCurrentStepIndex(3);
     }
-  }, [isSuccess, setCurrentStepIndex]);
+  }, [isSuccess, parsed, setCurrentStepIndex, setInstance]);
 
   return (
     <>

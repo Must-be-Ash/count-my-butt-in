@@ -3,6 +3,7 @@ import { useWallets } from "@privy-io/react-auth";
 import { networkIdToString } from "@/utils/common";
 import { useEffect } from "react";
 import { useWaitForTransaction } from "wagmi";
+import { Interface } from "@ethersproject/abi";
 
 export function useWrite(data: {
   networkId: number;
@@ -47,7 +48,11 @@ export function useWrite(data: {
     data: writeData,
   } = useContractWrite(config);
 
-  const { isLoading: isMintLoading, isSuccess } = useWaitForTransaction({
+  const {
+    isLoading: isMintLoading,
+    isSuccess,
+    data: receipt,
+  } = useWaitForTransaction({
     hash: writeData?.hash,
   });
 
@@ -60,6 +65,18 @@ export function useWrite(data: {
     }
   }, [networkId, wallet, wrongNetwork]);
 
+  let parsed;
+  if (receipt) {
+    const iface = new Interface(abi);
+    for (const log of receipt.logs) {
+      try {
+        parsed = iface.parseLog(log);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
+
   return {
     write,
     error: error && formatError(error),
@@ -69,6 +86,7 @@ export function useWrite(data: {
     wrongNetwork,
     switchCorrectNetwork: () => wallet.switchChain(networkId),
     isSuccess,
+    parsed,
   };
 }
 
