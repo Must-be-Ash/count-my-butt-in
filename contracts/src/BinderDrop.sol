@@ -33,8 +33,7 @@ contract BinderDrop is ERC721, Admins, Initializable {
       defaultURI = defaultUri;
     }
 
-    event AutographIncoming(address indexed minter, string orderId, address indexed recipient, uint256 indexed tokenId, bytes32 hash);
-
+    event AutographIncoming(address minter, string orderId, address recipient, uint256 tokenId, bytes32 hash);
 
     function pausePublicMints() external onlyAdmin {
       if (publicMintsPaused) {
@@ -76,7 +75,7 @@ contract BinderDrop is ERC721, Admins, Initializable {
      * @param recipient which address the tokenId goes to
      * @param signature string passed on from the server
      */
-    function mintTo(string memory orderId, address recipient, uint256 tokenId, bytes memory signature) public {
+    function mintTo(string memory orderId, address recipient, bytes memory signature) public {
       // recipient-tokenid pair will always be unique
       // hash is the keccack256 over recipient,tokenId
       // tokenId is kept track of on the server
@@ -94,9 +93,8 @@ contract BinderDrop is ERC721, Admins, Initializable {
         revert HashVerificationFailed();
       }
       ++_tokenCount;
-      tokenId = _tokenCount;
-      _safeMint(recipient, tokenId);
-      emit AutographIncoming(msg.sender, orderId, recipient, tokenId, hash);
+      _safeMint(recipient, _tokenCount);
+      emit AutographIncoming(msg.sender, orderId, recipient, _tokenCount, hash);
     }
 
     /**
