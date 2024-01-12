@@ -25,6 +25,11 @@ export const optimismAlchemy = new Alchemy({
   network: Network.OPT_MAINNET, // Replace with your network.
 });
 
+export const sepoliaAlchemy = new Alchemy({
+  apiKey: process.env.NEXT_PUBLIC_ALCHEMY_KEY!, // Replace with your Alchemy API Key.
+  network: Network.ETH_SEPOLIA, // Replace with your network.
+});
+
 const nftsPerPage = 40;
 
 export function getAlchemy(networkId: number) {
@@ -42,6 +47,9 @@ export function getAlchemy(networkId: number) {
   }
   if (networkId === 8453) {
     return baseAlchemy;
+  }
+  if (networkId === 11155111) {
+    return sepoliaAlchemy;
   }
   return mainnetAlchemy;
 }

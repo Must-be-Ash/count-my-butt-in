@@ -13,13 +13,14 @@ export async function POST(request: NextRequest) {
   const provider = getProvider(networkId);
   // scan the latest 1000 blocks if fromblock and toblock is not specified
   const toBlockForFilter = toBlock || (await provider.getBlockNumber());
-  const fromBlockForFilter = fromBlock || toBlock - 1000;
+  const fromBlockForFilter = fromBlock ?? toBlockForFilter - 1000;
 
   const binderContract = new ethers.Contract(
     contractAddress,
     BINDER_DROP_ABI,
     provider
   );
+
   const binderMint = binderContract.filters.AutographIncoming();
   const logsBinderMint = await binderContract.queryFilter(
     binderMint,

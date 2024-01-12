@@ -60,7 +60,7 @@ export function useWrite(data: {
 
   // prompt for network switch if user is on wrong network
   useEffect(() => {
-    if (wrongNetwork) {
+    if (wrongNetwork && wallet) {
       wallet.switchChain(networkId);
     }
   }, [networkId, wallet, wrongNetwork]);

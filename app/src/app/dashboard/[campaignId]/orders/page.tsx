@@ -15,6 +15,8 @@ import { nameToNetwork } from "@/lib/utils";
 import { NetworkStatus } from "@prisma/client";
 import { getNftMetadata } from "@/lib/alchemy";
 import { set } from "zod";
+import TokenUriUpdateButton from "@/app/components/dashboard/orders/TokenUriUpdateButton";
+import { useCampaign } from "@/hooks/useCampaign";
 
 const StatusButton = ({
   orderStatus,
@@ -39,16 +41,6 @@ const StatusButton = ({
       );
     }
   }
-};
-
-const SubmitStickyButton = () => {
-  return (
-    <div className="w-full sticky bottom-0  pt-8 pb-8 mt-8">
-      <div className="h-full w-full flex flex-col items-center">
-        <BinderButton className="w-3/4" title="Submit" />
-      </div>
-    </div>
-  );
 };
 
 const AutographModal = ({
@@ -93,6 +85,7 @@ const customStyles = {
 
 export default function Orders({ params }: { params: { campaignId: string } }) {
   const { orders } = useOrders(params.campaignId);
+  const { campaign } = useCampaign(params.campaignId);
   const [selectedOrderId, setSelectedOrderId] = useState<string>("");
   const [imageUrl, setImageUrl] = useState<string>("");
   const triggerAutograph = async (orderId: string) => {
@@ -165,7 +158,18 @@ export default function Orders({ params }: { params: { campaignId: string } }) {
             );
           })}
       </div>
-      <SubmitStickyButton />
+      <div className="w-full sticky bottom-0  pt-8 pb-8 mt-8">
+        {campaign && campaign.binderContract && (
+          <div className="h-full w-full flex flex-col items-center">
+            <TokenUriUpdateButton
+              revealedTokenIdBoundary={10}
+              revealedURI="https://arweave.net/w7Z7IWypheVcC1N5EtIxauotwCNNyocz57NA07kEbjM"
+              campaignNetworkId={nameToNetwork(campaign.networkId)}
+              binderContract={campaign.binderContract}
+            />
+          </div>
+        )}
+      </div>
     </Main>
   );
 }
