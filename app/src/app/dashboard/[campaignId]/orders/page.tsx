@@ -75,7 +75,7 @@ const customStyles = {
 };
 
 export default function Orders({ params }: { params: { campaignId: string } }) {
-  const { orders } = useOrders(params.campaignId);
+  const { orders, refetchOrders } = useOrders(params.campaignId);
   const { campaign } = useCampaign(params.campaignId);
   const [selectedOrderId, setSelectedOrderId] = useState<string>("");
   const [imageUrl, setImageUrl] = useState<string>("");
@@ -89,6 +89,7 @@ export default function Orders({ params }: { params: { campaignId: string } }) {
   }
   function closeModal() {
     setModalOpen(false);
+    refetchOrders();
   }
   return (
     <AuthenticatedPage homeRoute={`/dashboard/${params.campaignId}`}>

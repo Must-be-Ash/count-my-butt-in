@@ -8,7 +8,7 @@ export const fetchSWR = async (url: string) => {
 };
 
 export function useOrders(campaignId: string) {
-  const { data, error, isLoading } = useSWR<Order[]>(
+  const { data, error, isLoading, mutate } = useSWR<Order[]>(
     `/api/campaigns/${campaignId}/orders`,
     fetchSWR
   );
@@ -18,5 +18,6 @@ export function useOrders(campaignId: string) {
     isLoading,
     isError: error,
     error: error,
+    refetchOrders: mutate
   };
 }
