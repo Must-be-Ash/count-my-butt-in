@@ -123,4 +123,4 @@ export const MINT_FEE = 0.01;
 
 export const binderNetworkId = 11155111;
 export const binderFactoryContract =
-  "0x92b1Bc9dD6ccF1F1473fCE71C6545e63773C3bE5";
+  "0x4507664aa24c653f1C428B3e53ddb8A6D8c9C93B";

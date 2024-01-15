@@ -34,8 +34,8 @@ export default function SignaturePadTest({
     color: "white",
     width: 320,
     height: 320,
-    brushRadius: 10,
-    lazyRadius: 12,
+    brushRadius: 6,
+    lazyRadius: 10,
     savedCanvasData: ``,
   });
   const [drawingOn, setDrawingOn] =
