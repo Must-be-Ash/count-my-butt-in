@@ -21,10 +21,13 @@ export function Providers({ children }: { children: React.ReactNode }) {
         console.log(args);
       }}
       config={{
-        loginMethods: ["email", "wallet"],
+        loginMethods: ["twitter", "wallet", "email"],
         appearance: {
           theme: "light",
           accentColor: "#676FFF",
+        },
+        embeddedWallets: {
+          createOnLogin: "users-without-wallets",
         },
       }}
     >

@@ -16,7 +16,7 @@ export function useWrite(data: {
 
   const { wallets } = useWallets();
   const wallet = wallets[0];
-
+  console.log("the wallet", wallet);
   let error = null;
 
   // check if the user is connected to the correct network

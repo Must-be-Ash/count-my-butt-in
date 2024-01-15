@@ -25,7 +25,6 @@ const NFTDisplayFull = ({
 
   useEffect(() => {
     async function getNft() {
-      console.log("qwdqwd", networkId);
       const nft = await getNftMetadata(networkId, contractAddress, tokenId);
       const media = nft?.media[0];
       if (media) {
