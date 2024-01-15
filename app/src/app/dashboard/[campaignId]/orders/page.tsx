@@ -17,6 +17,7 @@ import { getNftMetadata } from "@/lib/alchemy";
 import { set } from "zod";
 import TokenUriUpdateButton from "@/app/components/dashboard/orders/TokenUriUpdateButton";
 import { useCampaign } from "@/hooks/useCampaign";
+import { AuthenticatedPage } from "@/app/components/page/AuthenticatedPage";
 
 const StatusButton = ({
   orderStatus,
@@ -100,76 +101,78 @@ export default function Orders({ params }: { params: { campaignId: string } }) {
     setModalOpen(false);
   }
   return (
-    <Main>
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
-        style={customStyles}
-      >
-        <AutographModal
-          orderId={selectedOrderId}
-          closeModal={closeModal}
-          backgroundImage={imageUrl}
-        />
-      </Modal>
-      <LoginOrUserWidget />
-      <div className="self-start">Order List</div>
-      <div className="flex flex-row gap-3 gap-y-14 mt-8 flex-wrap mb-8">
-        {!!orders &&
-          orders.length > 0 &&
-          orders.map((order, key) => {
-            return (
-              <div
-                key={key}
-                className="h-[265px] w-[173px] bg-black rounded-lg"
-              >
-                <div className="h-[180px] w-[173px] rounded-t-lg relative">
-                  {/* image */}
-                  <NFTDisplayFull
-                    networkId={nameToNetwork(order.collectionNetwork)}
-                    tokenId={order.selectedTokenId}
-                    contractAddress={order.collectionAddress}
-                  />
-                </div>
-                {/* content */}
-                <div className="p-3">
-                  <div>
-                    <StatusButton
-                      orderStatus={order.status || "PENDING"}
-                      triggerAutograph={async () => {
-                        const nft = await getNftMetadata(
-                          nameToNetwork(order.collectionNetwork),
-                          order.collectionAddress,
-                          order.selectedTokenId
-                        );
-                        const media = nft?.media[0];
-                        if (media) {
-                          const imageUrl =
-                            media.thumbnail || media.gateway || media.raw;
-                          setImageUrl(imageUrl);
-                        }
-
-                        triggerAutograph(order.orderId);
-                      }}
+    <AuthenticatedPage homeRoute={`/dashboard/${params.campaignId}`}>
+      <Main>
+        <Modal
+          isOpen={modalIsOpen}
+          onRequestClose={closeModal}
+          style={customStyles}
+        >
+          <AutographModal
+            orderId={selectedOrderId}
+            closeModal={closeModal}
+            backgroundImage={imageUrl}
+          />
+        </Modal>
+        <LoginOrUserWidget />
+        <div className="self-start">Order List</div>
+        <div className="flex flex-row gap-3 gap-y-14 mt-8 flex-wrap mb-8">
+          {!!orders &&
+            orders.length > 0 &&
+            orders.map((order, key) => {
+              return (
+                <div
+                  key={key}
+                  className="h-[265px] w-[173px] bg-black rounded-lg"
+                >
+                  <div className="h-[180px] w-[173px] rounded-t-lg relative">
+                    {/* image */}
+                    <NFTDisplayFull
+                      networkId={nameToNetwork(order.collectionNetwork)}
+                      tokenId={order.selectedTokenId}
+                      contractAddress={order.collectionAddress}
                     />
                   </div>
+                  {/* content */}
+                  <div className="p-3">
+                    <div>
+                      <StatusButton
+                        orderStatus={order.status || "PENDING"}
+                        triggerAutograph={async () => {
+                          const nft = await getNftMetadata(
+                            nameToNetwork(order.collectionNetwork),
+                            order.collectionAddress,
+                            order.selectedTokenId
+                          );
+                          const media = nft?.media[0];
+                          if (media) {
+                            const imageUrl =
+                              media.thumbnail || media.gateway || media.raw;
+                            setImageUrl(imageUrl);
+                          }
+
+                          triggerAutograph(order.orderId);
+                        }}
+                      />
+                    </div>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
-      </div>
-      <div className="w-full sticky bottom-0  pt-8 pb-8 mt-8">
-        {campaign && campaign.binderContract && (
-          <div className="h-full w-full flex flex-col items-center">
-            <TokenUriUpdateButton
-              revealedTokenIdBoundary={10}
-              revealedURI="https://arweave.net/w7Z7IWypheVcC1N5EtIxauotwCNNyocz57NA07kEbjM"
-              campaignNetworkId={nameToNetwork(campaign.networkId)}
-              binderContract={campaign.binderContract}
-            />
-          </div>
-        )}
-      </div>
-    </Main>
+              );
+            })}
+        </div>
+        <div className="w-full sticky bottom-0  pt-8 pb-8 mt-8">
+          {campaign && campaign.binderContract && (
+            <div className="h-full w-full flex flex-col items-center">
+              <TokenUriUpdateButton
+                revealedTokenIdBoundary={10}
+                revealedURI="https://arweave.net/w7Z7IWypheVcC1N5EtIxauotwCNNyocz57NA07kEbjM"
+                campaignNetworkId={nameToNetwork(campaign.networkId)}
+                binderContract={campaign.binderContract}
+              />
+            </div>
+          )}
+        </div>
+      </Main>
+    </AuthenticatedPage>
   );
 }
