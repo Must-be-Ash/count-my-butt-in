@@ -25,24 +25,14 @@ const StatusButton = ({
 }: {
   orderStatus: NetworkStatus;
   triggerAutograph: () => void;
-}) => {
-  switch (orderStatus) {
-    case "CONFIRMED": {
-      return (
-        <BinderButton className="w-full mt-2" disabled primary title="Done" />
-      );
-    }
-    case "PENDING": {
-      return (
-        <BinderButton
-          className="w-full mt-2"
-          onClick={triggerAutograph}
-          title="Fill Order"
-        />
-      );
-    }
-  }
-};
+}) => (
+  <BinderButton
+    className="w-full mt-2"
+    onClick={triggerAutograph}
+    title={orderStatus === "PENDING" ? "FILL ORDER" : "DONE"}
+  />
+)
+
 
 const AutographModal = ({
   orderId,
@@ -159,6 +149,13 @@ export default function Orders({ params }: { params: { campaignId: string } }) {
                 </div>
               );
             })}
+            {
+              orders?.length === 0 && (
+                <div>
+                  No orders found for the campaign
+                </div>
+              )
+            }
         </div>
         <div className="w-full sticky bottom-0  pt-8 pb-8 mt-8">
           {campaign && campaign.binderContract && (
