@@ -31,7 +31,7 @@ export default function SignaturePadTest({
 }) {
   const { refetchCampaign } = useCampaign(campaignId);
   const [state, setState] = useState<CanvasState>({
-    color: "#ffc600",
+    color: "white",
     width: 320,
     height: 320,
     brushRadius: 10,
@@ -100,20 +100,18 @@ export default function SignaturePadTest({
   return (
     <div className="w-96 h-96 m-auto">
       {!state.savedCanvasData && (
-        <button onClick={async () => saveCanvas()} className="mr-3">
-          Save
-        </button>
+        <BinderButton onClick={async () => saveCanvas()} title="Save" primary />
       )}
       {state.savedCanvasData && (
-        <button onClick={async () => resetCanvas()} className="mr-3">
-          Reset
-        </button>
+        <BinderButton onClick={async () => resetCanvas()} primary title="Reset" />
       )}
+      <div className="pt-3">
       <CanvasToDrawOn
         state={state}
         setDrawingOn={setDrawingOn}
         backgroundImage={backgroundImage}
       />
+      </div>
     </div>
   );
 }
@@ -129,7 +127,6 @@ const CanvasToDrawOn = ({
 }) => {
   if (state.savedCanvasData) {
     return (
-      <>
         <CanvasDraw
           ref={(canvasDraw) => {
             if (canvasDraw && state.savedCanvasData) {
@@ -141,8 +138,9 @@ const CanvasToDrawOn = ({
           brushRadius={state.brushRadius}
           lazyRadius={state.lazyRadius}
           disabled
+          backgroundColor="black"
+          hideGrid
         />
-      </>
     );
   }
   return (
