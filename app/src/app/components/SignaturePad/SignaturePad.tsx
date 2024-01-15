@@ -42,8 +42,6 @@ export default function SignaturePadTest({
       setLoading(true);
       const orderDetails = await APIHelpers.get(`/api/campaigns/1/orders/${orderId}`);
       const savedCanvasData = `${orderDetails.order.autographData.toString()}`;
-      console.log("setting state");
-      console.log(savedCanvasData);
       setState({
         ...state,
         savedCanvasData,
