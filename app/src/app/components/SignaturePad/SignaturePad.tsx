@@ -3,6 +3,7 @@ import CanvasDraw, { CanvasDrawProps } from "react-canvas-draw";
 import BinderButton from "../BinderButton";
 import APIHelpers from "@/lib/apiHelper";
 import { NetworkStatus } from "@prisma/client";
+import { useCampaign } from "@/hooks/useCampaign";
 
 export interface SignaturePadProps {
   closeModal: () => void;
@@ -10,22 +11,25 @@ export interface SignaturePadProps {
 }
 
 type CanvasState = {
-  color: string,
-  width: number,
-  height: number,
-  brushRadius: number,
-  lazyRadius: number,
-  savedCanvasData: any,
-}
+  color: string;
+  width: number;
+  height: number;
+  brushRadius: number;
+  lazyRadius: number;
+  savedCanvasData: any;
+};
 export default function SignaturePadTest({
+  campaignId,
   orderId,
   closeModal,
   backgroundImage,
 }: {
+  campaignId: string;
   orderId: string;
   closeModal: () => void;
   backgroundImage: string;
 }) {
+  const { refetchCampaign } = useCampaign(campaignId);
   const [state, setState] = useState<CanvasState>({
     color: "#ffc600",
     width: 320,
@@ -34,66 +38,77 @@ export default function SignaturePadTest({
     lazyRadius: 12,
     savedCanvasData: ``,
   });
-  const [drawingOn, setDrawingOn] = useState<CanvasState["savedCanvasData"]>(``);
+  const [drawingOn, setDrawingOn] =
+    useState<CanvasState["savedCanvasData"]>(``);
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const fetch = async () => {
       setLoading(true);
-      const orderDetails = await APIHelpers.get(`/api/campaigns/1/orders/${orderId}`);
+      const orderDetails = await APIHelpers.get(
+        `/api/campaigns/${campaignId}/orders/${orderId}`
+      );
       const savedCanvasData = `${orderDetails.order.autographData.toString()}`;
       setState({
         ...state,
         savedCanvasData,
-      })
+      });
       setLoading(false);
-    }
+    };
     fetch();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orderId]);
 
   const saveCanvas = async () => {
-    await APIHelpers.patch(`/api/campaigns/1/orders/${orderId}`, {
+    await APIHelpers.patch(`/api/campaigns/${campaignId}/orders/${orderId}`, {
       body: {
         autographData: drawingOn.getSaveData(),
         autographDataURL: drawingOn.getDataURL(),
         status: NetworkStatus.CONFIRMED,
-      }
-    })
+      },
+    });
+    // additionally upload data to ipfs, do this async to give better UX experience
+    APIHelpers.post(`/api/campaigns/${campaignId}/metadata`).then(() =>
+      refetchCampaign()
+    );
     closeModal();
-  }
+  };
   const resetCanvas = async () => {
     setState((currstate) => {
       return {
         ...currstate,
-        savedCanvasData: ``
-      }
-    })
-    setDrawingOn(undefined)
-    await APIHelpers.patch(`/api/campaigns/1/orders/${orderId}`, {
+        savedCanvasData: ``,
+      };
+    });
+    setDrawingOn(undefined);
+    await APIHelpers.patch(`/api/campaigns/${campaignId}/orders/${orderId}`, {
       body: {
         autographData: "",
         autographDataURL: "",
+        metadataUrl: "",
         status: NetworkStatus.PENDING,
-      }
-    })
+      },
+    });
+    await APIHelpers.patch(`/api/campaigns/${campaignId}/`, {
+      body: {
+        manifestUrl: "",
+      },
+    });
+    refetchCampaign();
     closeModal();
-  }
+  };
   return (
     <div className="w-96 h-96 m-auto">
-      {
-        !state.savedCanvasData && (
-          <button onClick={async () => saveCanvas()} className="mr-3" >
-            Save
-          </button>
-        )
-      }
-      {
-        state.savedCanvasData &&
-        <button onClick={async () => resetCanvas()} className="mr-3" >
+      {!state.savedCanvasData && (
+        <button onClick={async () => saveCanvas()} className="mr-3">
+          Save
+        </button>
+      )}
+      {state.savedCanvasData && (
+        <button onClick={async () => resetCanvas()} className="mr-3">
           Reset
         </button>
-      }
+      )}
       <CanvasToDrawOn
         state={state}
         setDrawingOn={setDrawingOn}
@@ -103,14 +118,22 @@ export default function SignaturePadTest({
   );
 }
 
-const CanvasToDrawOn = ({state, setDrawingOn, backgroundImage}: {state: CanvasState, setDrawingOn: (arg: CanvasDraw) => void, backgroundImage: string}) => {
+const CanvasToDrawOn = ({
+  state,
+  setDrawingOn,
+  backgroundImage,
+}: {
+  state: CanvasState;
+  setDrawingOn: (arg: CanvasDraw) => void;
+  backgroundImage: string;
+}) => {
   if (state.savedCanvasData) {
     return (
       <>
         <CanvasDraw
           ref={(canvasDraw) => {
             if (canvasDraw && state.savedCanvasData) {
-              return canvasDraw.loadSaveData(state.savedCanvasData)
+              return canvasDraw.loadSaveData(state.savedCanvasData);
             }
           }}
           imgSrc={backgroundImage}
@@ -120,16 +143,16 @@ const CanvasToDrawOn = ({state, setDrawingOn, backgroundImage}: {state: CanvasSt
           disabled
         />
       </>
-    )
+    );
   }
   return (
     <CanvasDraw
-      onChange={(cd) =>  setDrawingOn(cd)}
+      onChange={(cd) => setDrawingOn(cd)}
       imgSrc={backgroundImage}
       brushColor={state.color}
       brushRadius={state.brushRadius}
       lazyRadius={state.lazyRadius}
       backgroundColor="black"
     />
-  )
-}
+  );
+};

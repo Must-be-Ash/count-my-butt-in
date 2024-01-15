@@ -31,14 +31,15 @@ const StatusButton = ({
     onClick={triggerAutograph}
     title={orderStatus === "PENDING" ? "FILL ORDER" : "DONE"}
   />
-)
-
+);
 
 const AutographModal = ({
+  campaignId,
   orderId,
   closeModal,
   backgroundImage,
 }: {
+  campaignId: string;
   orderId: string;
   closeModal: () => void;
   backgroundImage: string;
@@ -53,6 +54,7 @@ const AutographModal = ({
       {/* signature pad */}
       <div className="border border-black">
         <SignaturePadTest
+          campaignId={campaignId}
           orderId={orderId}
           closeModal={closeModal}
           backgroundImage={backgroundImage}
@@ -100,6 +102,7 @@ export default function Orders({ params }: { params: { campaignId: string } }) {
           style={customStyles}
         >
           <AutographModal
+            campaignId={params.campaignId}
             orderId={selectedOrderId}
             closeModal={closeModal}
             backgroundImage={imageUrl}
@@ -150,25 +153,27 @@ export default function Orders({ params }: { params: { campaignId: string } }) {
                 </div>
               );
             })}
-            {
-              orders?.length === 0 && (
-                <div>
-                  No orders found for the campaign
-                </div>
-              )
-            }
+          {orders?.length === 0 && <div>No orders found for the campaign</div>}
         </div>
         <div className="w-full sticky bottom-0  pt-8 pb-8 mt-8">
-          {campaign && campaign.binderContract && (
-            <div className="h-full w-full flex flex-col items-center">
-              <TokenUriUpdateButton
-                revealedTokenIdBoundary={10}
-                revealedURI="https://arweave.net/w7Z7IWypheVcC1N5EtIxauotwCNNyocz57NA07kEbjM"
-                campaignNetworkId={nameToNetwork(campaign.networkId)}
-                binderContract={campaign.binderContract}
-              />
-            </div>
-          )}
+          {campaign &&
+            campaign.binderContract &&
+            !!orders &&
+            campaign.manifestUrl && (
+              <div className="h-full w-full flex flex-col items-center">
+                <TokenUriUpdateButton
+                  revealedTokenIdBoundary={
+                    orders
+                      .filter((order) => order.mintedTokenId)
+                      .map((order) => Number(order.mintedTokenId))
+                      .sort((a, b) => b - a)[0] || 0 // get the largest tokenId
+                  }
+                  revealedURI={campaign.manifestUrl}
+                  campaignNetworkId={nameToNetwork(campaign.networkId)}
+                  binderContract={campaign.binderContract}
+                />
+              </div>
+            )}
         </div>
       </Main>
     </AuthenticatedPage>
