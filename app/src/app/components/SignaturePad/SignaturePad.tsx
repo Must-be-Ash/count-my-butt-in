@@ -151,6 +151,9 @@ const CanvasToDrawOn = ({
       brushRadius={state.brushRadius}
       lazyRadius={state.lazyRadius}
       backgroundColor="black"
+      style={{
+        opacity: "60%"
+      }}
     />
   );
 };
