@@ -86,6 +86,7 @@ export function useWrite(data: {
     wrongNetwork,
     switchCorrectNetwork: () => wallet.switchChain(networkId),
     isSuccess,
+    wallet,
     parsed,
   };
 }

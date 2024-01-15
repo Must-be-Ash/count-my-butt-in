@@ -19,10 +19,10 @@ export default function CollectorsLayout({
   useEffect(() => {
     if (ready && !authenticated)
       router.push(`/collector/${params.campaignId}}`);
-  }, [ready, authenticated, router]);
+  }, [ready, authenticated, router, params.campaignId]);
 
   return (
-    <main>
+    <main className="p-4">
       <TopNav />
       {children}
     </main>

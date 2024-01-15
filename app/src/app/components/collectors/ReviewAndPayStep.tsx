@@ -14,6 +14,7 @@ import MintButton from "./MintButton";
 import Loader from "../Loader";
 import { TokenboundClient } from "@tokenbound/sdk";
 import { useCampaign } from "@/hooks/useCampaign";
+import { getContractEtherscanLink } from "@/utils/common";
 
 export default function ReviewAndPayStep() {
   const { instance, setInstance } = useInstance();
@@ -76,10 +77,10 @@ export default function ReviewAndPayStep() {
 
   return (
     <div className="flex flex-col justify-between h-full">
-      <div className="flex flex-col gap-4 grow">
+      <div className="flex flex-col gap-4 grow p-2">
         <h1>Review and Pay</h1>
         <div className="inline-flex bg-black p-4 rounded-md flex-col items-start gap-[8px] relative flex-[0_0_auto]">
-          <div className="relative w-fit mt-[-1.00px] [font-family:'Inter-SemiBold',Helvetica] font-semibold text-white text-[14px] tracking-[0] leading-[20px] whitespace-nowrap">
+          <div className="relative w-fit mt-[-1.00px] [font-family:'Inter-SemiBold',Helvetica] font-semibold text-white text-[14px] tracking-[0] leading-[20px]">
             NFT
           </div>
           <a
@@ -102,17 +103,22 @@ export default function ReviewAndPayStep() {
               }
             />
             <div className="inline-flex flex-col items-start gap-[4px] relative flex-[0_0_auto]">
-              <div className="relative w-fit mt-[-1.00px] [font-family:'Inter-SemiBold',Helvetica] font-semibold text-white text-[16px] tracking-[0] leading-[24px] whitespace-nowrap">
+              <div className="relative w-fit mt-[-1.00px] [font-family:'Inter-SemiBold',Helvetica] font-semibold text-white text-[16px] tracking-[0] leading-[24px]">
                 {`${instance.name}`}
               </div>
-              <div className="relative w-fit [font-family:'Inter-Regular',Helvetica] font-normal text-grey-200 text-[14px] tracking-[0] leading-[20px] whitespace-nowrap">
+              <div className="relative w-fit [font-family:'Inter-Regular',Helvetica] font-normal text-grey-200 text-[14px] tracking-[0] leading-[20px]">
                 Token ID: {instance.tokenId}
               </div>
-              <div className="relative w-fit [font-family:'Inter-Regular',Helvetica] font-normal text-grey-200 text-[14px] tracking-[0] leading-[20px] whitespace-nowrap">
-                Contract:{" "}
-                {instance.contractAddress ||
-                  shortenAddress(instance.contractAddress)}
-              </div>
+              <a
+                href={getContractEtherscanLink(
+                  instance.nftNetworkId,
+                  instance.contractAddress
+                )}
+                target="_blank"
+                className="relative w-fit [font-family:'Inter-Regular',Helvetica] font-normal text-grey-200 text-[14px] tracking-[0] leading-[20px]"
+              >
+                Contract: {shortenAddress(instance.contractAddress)}
+              </a>
             </div>
           </a>
           <div className="text-neutral-400 text-sm">Note for the artist</div>

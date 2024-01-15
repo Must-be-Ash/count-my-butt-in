@@ -17,6 +17,9 @@ export function getOpenseaLink(
   if (networkId === 5) {
     return `https://testnets.opensea.io/assets/goerli/${contractAddress}/${tokenId}`;
   }
+  if (networkId === 11155111) {
+    return `https://testnets.opensea.io/assets/sepolia/${contractAddress}/${tokenId}`;
+  }
   return `https://opensea.io/assets/ethereum/${contractAddress}/${tokenId}`;
 }
 
@@ -35,6 +38,9 @@ export function getContractEtherscanLink(
   }
   if (networkId === 5) {
     return `https://goerli.etherscan.io/address/${contractAddress}`;
+  }
+  if (networkId === 11155111) {
+    return `https://sepolia.etherscan.io/address/${contractAddress}`;
   }
   return `https://etherscan.io/address/${contractAddress}`;
 }

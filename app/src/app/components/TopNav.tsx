@@ -35,23 +35,23 @@ export default function CollectorTopNav() {
         )}
         <LogoutButton size="lg" />
       </div>
-      <ol role="list" className=" md:flex md:space-x-2 grow pt-2">
+      <ol role="list" className="flex space-x-2 grow pt-2">
         {allSteps.map((step) => (
-          <li key={step.id} className="md:flex-1">
+          <li key={step.id} className="flex-1">
             {step.status === "complete" ? (
-              <div className="group flex flex-col border-l-4 border-green-400 py-2 pl-4 hover:border-indigo-800 md:border-l-0 md:border-t-4 md:pb-0 md:pl-0 md:pt-4">
+              <div className="group flex flex-col border-green-400 py-2 hover:border-indigo-800 border-l-0 border-t-4 pb-0 pl-0 pt-4">
                 {" "}
                 <span className="w-14" />
               </div>
             ) : step.status === "current" ? (
               <div
-                className="flex flex-col border-l-4 border-green-400 py-2 pl-4 md:border-l-0 md:border-t-4 md:pb-0 md:pl-0 md:pt-4"
+                className="flex flex-col border-green-400 py-2 border-l-0 border-t-4 pb-0 pl-0 pt-4"
                 aria-current="step"
               >
                 <span className="w-14" />
               </div>
             ) : (
-              <div className="group flex flex-col border-l-4 border-gray-400 py-2 pl-4 hover:border-gray-300 md:border-l-0 md:border-t-4 md:pb-0 md:pl-0 md:pt-4">
+              <div className="group flex flex-col border-gray-400 py-2 hover:border-gray-300 border-l-0 border-t-4 pb-0 pl-0 pt-4">
                 <span className="w-14" />
               </div>
             )}

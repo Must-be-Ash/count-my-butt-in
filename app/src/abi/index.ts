@@ -449,3 +449,44 @@ export const BINDER_DROP_ABI = [
   { type: "error", name: "PublicMintsPaused", inputs: [] },
   { type: "error", name: "ZeroAddressNotAllowed", inputs: [] },
 ];
+
+export const BINDER_FACTORY_ABI = [
+  { inputs: [], stateMutability: "nonpayable", type: "constructor" },
+  { inputs: [], name: "ERC1167FailedCreateClone", type: "error" },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "clone",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "creator",
+        type: "address",
+      },
+    ],
+    name: "BinderDropCreated",
+    type: "event",
+  },
+  {
+    inputs: [],
+    name: "binderDrop",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "creator", type: "address" },
+      { internalType: "string", name: "defaultUri", type: "string" },
+    ],
+    name: "createBinderDrop",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+];
