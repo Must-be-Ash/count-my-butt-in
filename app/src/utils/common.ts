@@ -120,3 +120,7 @@ export function getProvider(networkId: number) {
 }
 
 export const MINT_FEE = 0.01;
+
+export const binderNetworkId = 11155111;
+export const binderFactoryContract =
+  "0x92b1Bc9dD6ccF1F1473fCE71C6545e63773C3bE5";

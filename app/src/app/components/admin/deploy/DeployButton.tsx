@@ -8,8 +8,7 @@ import { useWrite } from "@/hooks/web3";
 import { BINDER_DROP_ABI, BINDER_FACTORY_ABI } from "@/abi";
 import { usePrivy } from "@privy-io/react-auth";
 import LogoutButton from "@/app/components/LogoutButton";
-import { getContractEtherscanLink } from "@/utils/common";
-import { binderNetworkId } from "@/app/admin/deploy/page";
+import { binderNetworkId, getContractEtherscanLink } from "@/utils/common";
 import SetAdminButton from "./SetAdminButton";
 
 export default function DeployButton({

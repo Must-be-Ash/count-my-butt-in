@@ -1,19 +1,13 @@
 "use client";
-import { useEffect, useState } from "react";
-import { Campaign, Network } from "@prisma/client";
-import BinderButton from "@/app/components/BinderButton";
-import APIHelpers from "@/lib/apiHelper";
+import { useState } from "react";
+import { Campaign } from "@prisma/client";
 import LoginButton from "@/app/components/LoginButton";
-import { useWrite } from "@/hooks/web3";
-import { BINDER_FACTORY_ABI } from "@/abi";
 import { usePrivy } from "@privy-io/react-auth";
 import LogoutButton from "@/app/components/LogoutButton";
 import DeployButton from "@/app/components/admin/deploy/DeployButton";
 
 import { useWallets } from "@privy-io/react-auth";
-
-export const binderNetworkId = 11155111;
-const binderFactoryContract = "0x92b1Bc9dD6ccF1F1473fCE71C6545e63773C3bE5";
+import { binderFactoryContract, binderNetworkId } from "@/utils/common";
 
 export default function CreateCampaign() {
   const [config, setConfig] = useState<Partial<Campaign> | undefined>();
