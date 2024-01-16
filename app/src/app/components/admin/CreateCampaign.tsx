@@ -88,6 +88,16 @@ export default function CreateCampaign() {
         }}
       />
       {camapginId && <div>{`Created Campaign Id: ${camapginId}`}</div>}
+      {camapginId && (
+        <a href={`https://app.signed.gg/collector/${camapginId}`}>
+          Go to Collector Page
+        </a>
+      )}
+      {camapginId && (
+        <a href={`https://app.signed.gg/dashboard/${camapginId}/orders`}>
+          Go to Artist Page
+        </a>
+      )}
     </div>
   );
 }
