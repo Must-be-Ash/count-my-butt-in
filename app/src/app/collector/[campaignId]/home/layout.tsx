@@ -17,8 +17,7 @@ export default function CollectorsLayout({
   const router = useRouter();
 
   useEffect(() => {
-    if (ready && !authenticated)
-      router.push(`/collector/${params.campaignId}}`);
+    if (ready && !authenticated) router.push(`/collector/${params.campaignId}`);
   }, [ready, authenticated, router, params.campaignId]);
 
   return (
