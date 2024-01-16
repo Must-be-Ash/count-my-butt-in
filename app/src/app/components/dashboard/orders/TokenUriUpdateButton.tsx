@@ -19,7 +19,7 @@ export default function TokenUriUpdateButton({
   binderContract: string;
 }) {
   const { instance, setInstance } = useInstance();
-
+  console.log("qwdqwd", revealedTokenIdBoundary);
   const {
     write,
     error,
