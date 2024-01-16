@@ -41,7 +41,7 @@ export async function POST(
     image_url:
       "https://arweave.net/qWfD01lnf6A9dWcNSxZ6ZCWSZ7CgVz5iq99j7QhHW6c",
   };
-
+  const currentDate = new Date();
   const manifestUrl = await uploadMetadata(
     defaultMetadata,
     ordersToUpload.map((order) => ({
@@ -51,6 +51,12 @@ export async function POST(
         : "Signed Autograph",
       attributes: twitterUsername
         ? [
+            {
+              trait_type: "Date",
+              value: `${
+                currentDate.getMonth() + 1
+              }/${currentDate.getDate()}/${currentDate.getFullYear()}`,
+            },
             {
               trait_type: "Social",
               value: "Twitter",
