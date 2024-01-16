@@ -99,6 +99,13 @@ export default function SignaturePadTest({
   };
   return (
     <div className="w-96 h-96 m-auto">
+      <div className="pb-3">
+        <CanvasToDrawOn
+          state={state}
+          setDrawingOn={setDrawingOn}
+          backgroundImage={backgroundImage}
+        />
+      </div>
       {!state.savedCanvasData && (
         <BinderButton onClick={async () => saveCanvas()} title="Save" primary />
       )}
