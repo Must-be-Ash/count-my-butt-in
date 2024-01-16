@@ -8,7 +8,7 @@ import { usePrivy } from "@privy-io/react-auth";
 import LoginButton from "./LoginButton";
 import formatWalletAddress from "@/utils/formatWalletAddress";
 import LogoutButton from "./LogoutButton";
-import DefaultPfp from "public/assets/defaults/pfp.png";
+import DefaultPfp from "public/assets/defaults/pfp.jpg";
 import Image from "next/image";
 
 const LoginOrUserWidget = () => {
