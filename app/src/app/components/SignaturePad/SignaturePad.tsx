@@ -145,7 +145,6 @@ const CanvasToDrawOn = ({
         disabled
         hideGrid
         style={{
-          opacity: "60%",
           backgroundImage: `-webkit-linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.8)), url(${backgroundImage})`,
         }}
       />
@@ -158,8 +157,7 @@ const CanvasToDrawOn = ({
       brushRadius={state.brushRadius}
       lazyRadius={state.lazyRadius}
       style={{
-        opacity: "60%",
-        backgroundImage: `-webkit-linear-gradient(rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.8)), url(${backgroundImage})`,
+        backgroundImage: `-webkit-linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.6)), url(${backgroundImage})`,
       }}
       hideGrid
     />
