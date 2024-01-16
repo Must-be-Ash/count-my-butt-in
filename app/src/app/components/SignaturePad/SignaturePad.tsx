@@ -34,8 +34,8 @@ export default function SignaturePadTest({
     color: "white",
     width: 320,
     height: 320,
-    brushRadius: 6,
-    lazyRadius: 10,
+    brushRadius: 5,
+    lazyRadius: 5,
     savedCanvasData: ``,
   });
   const [drawingOn, setDrawingOn] =
@@ -116,13 +116,6 @@ export default function SignaturePadTest({
           title="Reset"
         />
       )}
-      <div className="pt-3">
-        <CanvasToDrawOn
-          state={state}
-          setDrawingOn={setDrawingOn}
-          backgroundImage={backgroundImage}
-        />
-      </div>
     </div>
   );
 }
@@ -151,6 +144,10 @@ const CanvasToDrawOn = ({
         disabled
         backgroundColor="black"
         hideGrid
+        style={{
+          opacity: "60%",
+          backgroundColor: "black"
+        }}
       />
     );
   }
@@ -164,6 +161,7 @@ const CanvasToDrawOn = ({
       backgroundColor="black"
       style={{
         opacity: "60%",
+        backgroundColor: "black"
       }}
     />
   );
