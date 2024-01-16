@@ -49,7 +49,7 @@ export default function SignaturePadTest({
       const orderDetails = await APIHelpers.get(
         `/api/campaigns/${campaignId}/orders/${orderId}`
       );
-      const savedCanvasData = `${orderDetails.order.autographData.toString()}`;
+      const savedCanvasData = orderDetails.order.autographData ? `${orderDetails.order.autographData.toString()}` : null;
       setState({
         ...state,
         savedCanvasData,
@@ -153,6 +153,7 @@ const CanvasToDrawOn = ({
         hideGrid
         style={{
           backgroundImage: `-webkit-linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.6)), url(${backgroundImage})`,
+          backgroundSize: `cover`
         }}
       />
     );
@@ -165,6 +166,7 @@ const CanvasToDrawOn = ({
       lazyRadius={state.lazyRadius}
       style={{
         backgroundImage: `-webkit-linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.6)), url(${backgroundImage})`,
+        backgroundSize: `cover`
       }}
       hideGrid
     />
