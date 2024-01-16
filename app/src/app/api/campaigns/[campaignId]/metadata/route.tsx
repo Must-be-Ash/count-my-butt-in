@@ -9,6 +9,12 @@ export async function POST(
   _: NextRequest,
   { params }: { params: { campaignId: string } }
 ) {
+  // get all pending orders
+  const pendingOrders = await getOrders(params.campaignId, "PENDING");
+  // do not trigger upload until all orders are confirmed
+  if (pendingOrders.length) {
+    return NextResponse.json({ manifestUrl: "" });
+  }
   // get all confirmed orders
   const ordersToUpload = await getOrders(params.campaignId, "CONFIRMED");
 
@@ -34,7 +40,7 @@ export async function POST(
     image_url:
       "https://arweave.net/qWfD01lnf6A9dWcNSxZ6ZCWSZ7CgVz5iq99j7QhHW6c",
   };
-  console.log("the order to upload", ordersToUpload);
+
   const manifestUrl = await uploadMetadata(
     defaultMetadata,
     ordersToUpload.map((order) => ({
