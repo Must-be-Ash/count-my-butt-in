@@ -31,11 +31,6 @@ export default function CreateCampaign() {
               ? config.binderContract
               : "Enter the artist Binder Contract"
           }
-          value={
-            config?.binderContract
-              ? config.binderContract
-              : "Enter the artist Binder Contract"
-          }
           onBlur={(e) =>
             setConfig({
               ...config,
@@ -58,11 +53,6 @@ export default function CreateCampaign() {
               ? config.whitelistedCollectionAddresses[0]
               : "Enter the artist whitelisted collection address"
           }
-          value={
-            config?.whitelistedCollectionAddresses?.length
-              ? config.whitelistedCollectionAddresses[0]
-              : "Enter the artist whitelisted collection address"
-          }
           onBlur={(e) =>
             setConfig({
               ...config,
@@ -81,11 +71,6 @@ export default function CreateCampaign() {
           id="address"
           className="block w-full pl-4 py-1 rounded-md border-0 text-ellipsis text-white shadow-sm bg-black ring-1 ring-inset ring-neutral-400 placeholder:text-white placeholder:opacity-40 focus:ring-2 focus:ring-inset focus:ring-neutral-700 sm:text-sm sm:leading-6"
           placeholder={
-            config?.networkId
-              ? config.networkId
-              : "Enter the network the campaign is on"
-          }
-          value={
             config?.networkId
               ? config.networkId
               : "Enter the network the campaign is on"
