@@ -11,6 +11,7 @@ import LogoutButton from "@/app/components/LogoutButton";
 import { binderNetworkId, getContractEtherscanLink } from "@/utils/common";
 import SetAdminButton from "./SetAdminButton";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function DeployButton({
   networkId,
@@ -22,6 +23,7 @@ export default function DeployButton({
   creatorAddress: string;
 }) {
   const [deployedContract, setDeployedContract] = useState();
+  const router = useRouter();
 
   const {
     write,
@@ -42,17 +44,17 @@ export default function DeployButton({
       "https://arweave.net/w7Z7IWypheVcC1N5EtIxauotwCNNyocz57NA07kEbjM",
     ],
   });
-
   useEffect(() => {
     const run = async () => {
       if (parsed) {
         const contractAddress = parsed.args.clone;
         setDeployedContract(contractAddress);
+        router.push(`/admin?contractAddress=${deployedContract}`);
       }
     };
 
     run();
-  }, [parsed, isSuccess]);
+  }, [parsed, isSuccess, deployedContract, router]);
 
   return (
     <>
@@ -66,12 +68,6 @@ export default function DeployButton({
               ? () => write()
               : () => switchCorrectNetwork()
           }
-        />
-      )}
-      {deployedContract && (
-        <SetAdminButton
-          networkId={binderNetworkId}
-          contractAddress={deployedContract}
         />
       )}
       {deployedContract && (
