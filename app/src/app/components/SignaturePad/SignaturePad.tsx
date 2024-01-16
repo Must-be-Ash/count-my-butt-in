@@ -148,8 +148,6 @@ const CanvasToDrawOn = ({
           opacity: "60%",
           backgroundImage: `rgba(0, 0, 0), url(${backgroundImage})`,
           objectFit: "contain",
-          width: "100%",
-          height: "100%"
         }}
       />
     );
