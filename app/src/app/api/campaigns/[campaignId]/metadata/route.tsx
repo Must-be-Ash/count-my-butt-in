@@ -46,7 +46,21 @@ export async function POST(
     defaultMetadata,
     ordersToUpload.map((order) => ({
       name: "Signed Autograph",
-      description: `Signed by @${twitterUsername}`,
+      description: twitterUsername
+        ? `Signed by [@${twitterUsername}](https://twitter.com/${twitterUsername})`
+        : "Signed Autograph",
+      attributes: twitterUsername
+        ? [
+            {
+              trait_type: "Social",
+              value: "Twitter",
+            },
+            {
+              trait_type: "Username",
+              value: twitterUsername,
+            },
+          ]
+        : undefined,
       image: order.autographDataURL,
       image_url: order.autographDataURL,
     }))

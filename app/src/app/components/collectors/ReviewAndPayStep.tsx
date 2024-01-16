@@ -162,7 +162,9 @@ export default function ReviewAndPayStep() {
           binderContract={campaign.binderContract}
         />
       ) : (
-        <Loader />
+        <div className="flex flex-row justify-center">
+          <Loader />
+        </div>
       )}
     </div>
   );
