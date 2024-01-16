@@ -26,14 +26,14 @@ export default function BinderButton({
       <button
         {...props}
         className={classNames(
+          props.className,
           primary
             ? `${
                 textColor || "text-white"
-              } bg-grey-900 border border-solid border-black`
+              } bg-[#232323] border`
             : `bg-white ${textColor || "text-black"} `,
-          "inline-flex items-center text-[16px] justify-center gap-[8px] px-[12px] py-[8px] relative  rounded-[8px]  enabled:cursor-pointer enabled:hover:opacity-70",
-          disabled ? "bg-[#404040] text-white" : "",
-          props.className
+          "inline-flex items-center text-[16px] justify-center gap-[8px] px-[12px] py-[8px] relative  rounded-[8px]  enabled:cursor-pointer enabled:hover:opacity-80",
+          disabled ? "bg-[#404040] text-white" : ""
         )}
         disabled={disabled}
       >

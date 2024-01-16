@@ -46,21 +46,17 @@ const AutographModal = ({
 }) => {
   return (
     <div className="text-black flex flex-col gap-3 items-center">
-      {/* top navigation */}
       <div className="flex flex-row justify-between w-full">
-        {/* <h2>Sign</h2> */}
-        <button onClick={closeModal}>close</button>
+        <div>Make your mark</div>
+        <button onClick={closeModal}>X</button>
       </div>
       {/* signature pad */}
-      <div className="border border-black">
-        <SignaturePadTest
-          campaignId={campaignId}
-          orderId={orderId}
-          closeModal={closeModal}
-          backgroundImage={backgroundImage}
-        />
-      </div>
-      {/* <BinderButton className="w-3/4 bg-black" primary title="Submit" /> */}
+      <SignaturePadTest
+        campaignId={campaignId}
+        orderId={orderId}
+        closeModal={closeModal}
+        backgroundImage={backgroundImage}
+      />
     </div>
   );
 };
@@ -73,6 +69,8 @@ const customStyles = {
     bottom: "auto",
     marginRight: "-50%",
     transform: "translate(-50%, -50%)",
+    height: "550px",
+    width: "550px"
   },
 };
 
