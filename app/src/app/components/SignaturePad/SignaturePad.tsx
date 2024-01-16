@@ -146,7 +146,10 @@ const CanvasToDrawOn = ({
         hideGrid
         style={{
           opacity: "60%",
-          backgroundImage: `-webkit-linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.8)), url(${backgroundImage})`,
+          backgroundImage: `rgba(0, 0, 0), url(${backgroundImage})`,
+          objectFit: "contain",
+          width: "100%",
+          height: "100%"
         }}
       />
     );
