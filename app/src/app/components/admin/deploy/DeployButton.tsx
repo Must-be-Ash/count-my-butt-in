@@ -10,6 +10,7 @@ import { usePrivy } from "@privy-io/react-auth";
 import LogoutButton from "@/app/components/LogoutButton";
 import { binderNetworkId, getContractEtherscanLink } from "@/utils/common";
 import SetAdminButton from "./SetAdminButton";
+import Link from "next/link";
 
 export default function DeployButton({
   networkId,
@@ -78,6 +79,14 @@ export default function DeployButton({
           href={getContractEtherscanLink(binderNetworkId, deployedContract)}
           target="_blank"
         >{`Deployed Contract Address: ${deployedContract}`}</a>
+      )}
+      {deployedContract && (
+        <Link
+          className="mt-4"
+          href={`/admin?contractAddress=${deployedContract}`}
+        >
+          <BinderButton title={"Create Campaign"} />
+        </Link>
       )}
     </>
   );

@@ -3,8 +3,16 @@ import { useState } from "react";
 import { Campaign, Network } from "@prisma/client";
 import BinderButton from "@/app/components/BinderButton";
 import APIHelpers from "@/lib/apiHelper";
+import { useSearchParams } from "next/navigation";
+
 export default function CreateCampaign() {
-  const [config, setConfig] = useState<Partial<Campaign> | undefined>();
+  const searchParams = useSearchParams();
+  const contractAddress = searchParams.get("contractAddress");
+
+  const [config, setConfig] = useState<Partial<Campaign>>({
+    binderContract: contractAddress,
+    networkId: "SEPOLIA",
+  });
   const [camapginId, setCampaignId] = useState();
 
   return (

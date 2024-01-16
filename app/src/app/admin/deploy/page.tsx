@@ -28,9 +28,6 @@ export default function CreateCampaign() {
         />
       )}
       {!authenticated && <LoginButton />}
-      <Link className="mt-4" href="/admin">
-        <BinderButton title={"Create Campaign"} />
-      </Link>
     </div>
   );
 }
