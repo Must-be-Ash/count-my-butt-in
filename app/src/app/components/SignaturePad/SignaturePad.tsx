@@ -137,16 +137,14 @@ const CanvasToDrawOn = ({
             return canvasDraw.loadSaveData(state.savedCanvasData);
           }
         }}
-        imgSrc={backgroundImage}
         brushColor={state.color}
         brushRadius={state.brushRadius}
         lazyRadius={state.lazyRadius}
         disabled
-        backgroundColor="black"
         hideGrid
         style={{
           opacity: "60%",
-          backgroundColor: "black"
+          backgroundImage: `-webkit-linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.8)), url(${backgroundImage})`,
         }}
       />
     );
@@ -154,14 +152,12 @@ const CanvasToDrawOn = ({
   return (
     <CanvasDraw
       onChange={(cd) => setDrawingOn(cd)}
-      imgSrc={backgroundImage}
       brushColor={state.color}
       brushRadius={state.brushRadius}
       lazyRadius={state.lazyRadius}
-      backgroundColor="black"
       style={{
         opacity: "60%",
-        backgroundColor: "black"
+        backgroundImage: `-webkit-linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.8)), url(${backgroundImage})`,
       }}
     />
   );
