@@ -47,7 +47,7 @@ export default function EnterWalletStep() {
                   ? selectedAddress
                   : "Enter a wallet address or ENS name"
               }
-              onBlur={(e) => selectAddress(e.target.value)}
+              onChange={(e) => selectAddress(e.target.value)}
             />
           </div>
         </div>

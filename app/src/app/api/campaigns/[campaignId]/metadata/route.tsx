@@ -6,9 +6,10 @@ import { NextResponse, type NextRequest } from "next/server";
  * Grab all confirmed orders, generate ipfs link for autograph and metadata then append to Order model the metadata url
  */
 export async function POST(
-  _: NextRequest,
+  request: NextRequest,
   { params }: { params: { campaignId: string } }
 ) {
+  const { twitterUsername } = await request.json();
   // get all pending orders
   const pendingOrders = await getOrders(params.campaignId, "PENDING");
   // do not trigger upload until all orders are confirmed
@@ -44,8 +45,8 @@ export async function POST(
   const manifestUrl = await uploadMetadata(
     defaultMetadata,
     ordersToUpload.map((order) => ({
-      name: "My Signature",
-      description: "My Signature",
+      name: "Signed Autograph",
+      description: `Signed by @${twitterUsername}`,
       image: order.autographDataURL,
       image_url: order.autographDataURL,
     }))

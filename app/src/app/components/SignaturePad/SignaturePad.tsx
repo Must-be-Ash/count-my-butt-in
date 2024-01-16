@@ -4,6 +4,7 @@ import BinderButton from "../BinderButton";
 import APIHelpers from "@/lib/apiHelper";
 import { NetworkStatus } from "@prisma/client";
 import { useCampaign } from "@/hooks/useCampaign";
+import { usePrivy } from "@privy-io/react-auth";
 
 export interface SignaturePadProps {
   closeModal: () => void;
@@ -41,7 +42,7 @@ export default function SignaturePadTest({
   const [drawingOn, setDrawingOn] =
     useState<CanvasState["savedCanvasData"]>(``);
   const [loading, setLoading] = useState<boolean>(false);
-
+  const { user } = usePrivy();
   useEffect(() => {
     const fetch = async () => {
       setLoading(true);
@@ -68,9 +69,11 @@ export default function SignaturePadTest({
       },
     });
     // additionally upload data to ipfs, do this async to give better UX experience
-    APIHelpers.post(`/api/campaigns/${campaignId}/metadata`).then(() =>
-      refetchCampaign()
-    );
+    APIHelpers.post(`/api/campaigns/${campaignId}/metadata`, {
+      body: {
+        twitterUsername: user?.twitter?.username,
+      },
+    }).then(() => refetchCampaign());
     closeModal();
   };
   const resetCanvas = async () => {
@@ -108,7 +111,11 @@ export default function SignaturePadTest({
       </div>
       <div className="w-full flex flex-col items-center">
         {!state.savedCanvasData && (
-          <BinderButton onClick={async () => saveCanvas()} title="Save" primary />
+          <BinderButton
+            onClick={async () => saveCanvas()}
+            title="Save"
+            primary
+          />
         )}
         {state.savedCanvasData && (
           <BinderButton
