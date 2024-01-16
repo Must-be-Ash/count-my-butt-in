@@ -106,16 +106,18 @@ export default function SignaturePadTest({
           backgroundImage={backgroundImage}
         />
       </div>
-      {!state.savedCanvasData && (
-        <BinderButton onClick={async () => saveCanvas()} title="Save" primary />
-      )}
-      {state.savedCanvasData && (
-        <BinderButton
-          onClick={async () => resetCanvas()}
-          primary
-          title="Reset"
-        />
-      )}
+      <div className="w-full flex flex-col items-center">
+        {!state.savedCanvasData && (
+          <BinderButton onClick={async () => saveCanvas()} title="Save" primary />
+        )}
+        {state.savedCanvasData && (
+          <BinderButton
+            onClick={async () => resetCanvas()}
+            primary
+            title="Reset"
+          />
+        )}
+      </div>
     </div>
   );
 }
