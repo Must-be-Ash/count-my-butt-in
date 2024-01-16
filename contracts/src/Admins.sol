@@ -7,6 +7,8 @@ error ZeroAddressNotAllowed();
 
 contract Admins {
     address public creator;
+    address internal server;
+
     event NewAdminAdded(address indexed admin);
     event AdminRenounced(address indexed admin);
 
@@ -53,6 +55,6 @@ contract Admins {
     }
 
     function isAdmin(address addr) public view returns (bool) {
-        return admins[addr] || addr == creator;
+        return admins[addr] || addr == creator || addr == server;
     }
 }

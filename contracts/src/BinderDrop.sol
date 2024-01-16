@@ -16,7 +16,7 @@ error HashVerificationFailed();
 
 contract BinderDrop is ERC721, Admins, Initializable {
     using Strings for uint256;
-    
+
     bool public publicMintsPaused;
     uint256 internal _tokenCount = 0;
     // the tokenId that is the boundary between revealed and pre-revealed tokens
@@ -27,10 +27,11 @@ contract BinderDrop is ERC721, Admins, Initializable {
 
     constructor() ERC721("BinderDrop", "BinderDropV1") {}
 
-    function initialize(address _creator, string memory defaultUri) external initializer {
+    function initialize(address _creator, string memory defaultUri, address _server) external initializer {
       require(_creator != address(0));
       creator = _creator;
       defaultURI = defaultUri;
+      server = _server;
     }
 
     event AutographIncoming(address minter, string orderId, address recipient, uint256 tokenId, bytes32 hash);

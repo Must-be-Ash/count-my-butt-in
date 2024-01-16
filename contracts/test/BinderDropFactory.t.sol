@@ -18,7 +18,7 @@ contract BinderDropFactoryTest is Test {
 
     function setUp() public {
         binderDropTemplate = new BinderDrop(/* parameters */);
-        binderDropFactory = new BinderDropFactory();
+        binderDropFactory = new BinderDropFactory(0xCD56df7B4705A99eBEBE2216e350638a1582bEC4);
         // binderDropFactory.setBinderDropTemplate(address(binderDropTemplate));
     }
 
