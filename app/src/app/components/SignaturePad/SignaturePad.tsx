@@ -106,16 +106,18 @@ export default function SignaturePadTest({
           backgroundImage={backgroundImage}
         />
       </div>
-      {!state.savedCanvasData && (
-        <BinderButton onClick={async () => saveCanvas()} title="Save" primary />
-      )}
-      {state.savedCanvasData && (
-        <BinderButton
-          onClick={async () => resetCanvas()}
-          primary
-          title="Reset"
-        />
-      )}
+      <div className="w-full flex flex-col items-center">
+        {!state.savedCanvasData && (
+          <BinderButton onClick={async () => saveCanvas()} title="Save" primary />
+        )}
+        {state.savedCanvasData && (
+          <BinderButton
+            onClick={async () => resetCanvas()}
+            primary
+            title="Reset"
+          />
+        )}
+      </div>
     </div>
   );
 }
@@ -137,16 +139,17 @@ const CanvasToDrawOn = ({
             return canvasDraw.loadSaveData(state.savedCanvasData);
           }
         }}
-        imgSrc={backgroundImage}
         brushColor={state.color}
         brushRadius={state.brushRadius}
         lazyRadius={state.lazyRadius}
         disabled
-        backgroundColor="black"
         hideGrid
         style={{
           opacity: "60%",
-          backgroundColor: "black"
+          backgroundImage: `rgba(0, 0, 0), url(${backgroundImage})`,
+          objectFit: "contain",
+          width: "100%",
+          height: "100%"
         }}
       />
     );
@@ -154,14 +157,12 @@ const CanvasToDrawOn = ({
   return (
     <CanvasDraw
       onChange={(cd) => setDrawingOn(cd)}
-      imgSrc={backgroundImage}
       brushColor={state.color}
       brushRadius={state.brushRadius}
       lazyRadius={state.lazyRadius}
-      backgroundColor="black"
       style={{
         opacity: "60%",
-        backgroundColor: "black"
+        backgroundImage: `-webkit-linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.8)), url(${backgroundImage})`,
       }}
     />
   );
