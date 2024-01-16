@@ -103,14 +103,18 @@ export default function SignaturePadTest({
         <BinderButton onClick={async () => saveCanvas()} title="Save" primary />
       )}
       {state.savedCanvasData && (
-        <BinderButton onClick={async () => resetCanvas()} primary title="Reset" />
+        <BinderButton
+          onClick={async () => resetCanvas()}
+          primary
+          title="Reset"
+        />
       )}
       <div className="pt-3">
-      <CanvasToDrawOn
-        state={state}
-        setDrawingOn={setDrawingOn}
-        backgroundImage={backgroundImage}
-      />
+        <CanvasToDrawOn
+          state={state}
+          setDrawingOn={setDrawingOn}
+          backgroundImage={backgroundImage}
+        />
       </div>
     </div>
   );
@@ -127,20 +131,20 @@ const CanvasToDrawOn = ({
 }) => {
   if (state.savedCanvasData) {
     return (
-        <CanvasDraw
-          ref={(canvasDraw) => {
-            if (canvasDraw && state.savedCanvasData) {
-              return canvasDraw.loadSaveData(state.savedCanvasData);
-            }
-          }}
-          imgSrc={backgroundImage}
-          brushColor={state.color}
-          brushRadius={state.brushRadius}
-          lazyRadius={state.lazyRadius}
-          disabled
-          backgroundColor="black"
-          hideGrid
-        />
+      <CanvasDraw
+        ref={(canvasDraw) => {
+          if (canvasDraw && state.savedCanvasData) {
+            return canvasDraw.loadSaveData(state.savedCanvasData);
+          }
+        }}
+        imgSrc={backgroundImage}
+        brushColor={state.color}
+        brushRadius={state.brushRadius}
+        lazyRadius={state.lazyRadius}
+        disabled
+        backgroundColor="black"
+        hideGrid
+      />
     );
   }
   return (
@@ -152,7 +156,7 @@ const CanvasToDrawOn = ({
       lazyRadius={state.lazyRadius}
       backgroundColor="black"
       style={{
-        opacity: "60%"
+        opacity: "60%",
       }}
     />
   );

@@ -10,13 +10,10 @@ export async function POST(
   { params }: { params: { campaignId: string } }
 ) {
   // get all confirmed orders
-  const orders = await getOrders(params.campaignId, "CONFIRMED");
-  const ordersToUpload = orders.filter(
-    (order) => !order.metadataUrl && order.autographDataURL
-  );
+  const ordersToUpload = await getOrders(params.campaignId, "CONFIRMED");
 
   if (!ordersToUpload.length) {
-    return NextResponse.json({ orders: [] });
+    return NextResponse.json({ manifestUrl: "" });
   }
 
   // hardcoded for now
@@ -37,7 +34,7 @@ export async function POST(
     image_url:
       "https://arweave.net/qWfD01lnf6A9dWcNSxZ6ZCWSZ7CgVz5iq99j7QhHW6c",
   };
-
+  console.log("the order to upload", ordersToUpload);
   const manifestUrl = await uploadMetadata(
     defaultMetadata,
     ordersToUpload.map((order) => ({
@@ -56,5 +53,5 @@ export async function POST(
   // update manifest url of campaign
   await updateCampaign(params.campaignId, { manifestUrl });
 
-  return NextResponse.json({ orders: ordersToUpload });
+  return NextResponse.json({ manifestUrl });
 }

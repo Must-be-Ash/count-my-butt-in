@@ -36,28 +36,33 @@ export default function ReviewAndPayStep() {
           tokenId: instance.tokenId,
         })
       );
-      // create new order and save to BE if not yet created
-      if (!instance.orderId) {
-        const result = await APIHelpers.post("/api/campaigns/1/orders", {
-          body: {
-            campaignId: instance.campaignId,
-            collectionNetwork: networkToName(
-              instance.nftNetworkId
-            ).toUpperCase(),
-            collectionAddress: instance.contractAddress,
-            selectedTokenId: instance.tokenId,
-            personalNote: instance.note,
-          },
-        });
-        setInstance({
-          ...instance,
-          orderId: result.order.orderId,
-        });
-      }
     };
 
     run();
   }, [instance, setInstance]);
+
+  useEffect(() => {
+    const run = async () => {
+      // create new order and save to BE
+
+      const result = await APIHelpers.post("/api/campaigns/1/orders", {
+        body: {
+          campaignId: instance.campaignId,
+          collectionNetwork: networkToName(instance.nftNetworkId).toUpperCase(),
+          collectionAddress: instance.contractAddress,
+          selectedTokenId: instance.tokenId,
+          personalNote: instance.note,
+        },
+      });
+      console.log("created new order", result.order.orderId);
+      setInstance({
+        ...instance,
+        orderId: result.order.orderId,
+      });
+    };
+
+    run();
+  }, []);
 
   useEffect(() => {
     const run = async () => {

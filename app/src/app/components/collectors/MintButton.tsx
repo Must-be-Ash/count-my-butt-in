@@ -54,6 +54,7 @@ export default function MintButton({
           personalNote: instance.note,
         },
       });
+
       await write();
     }
   }
