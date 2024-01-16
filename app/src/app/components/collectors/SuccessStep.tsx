@@ -50,7 +50,7 @@ export function SuccessStep() {
               );
             }}
             title="See NFT"
-            textColor="text-black"
+            textColor="text-white"
             className="mx-auto text-center w-full"
           />
         </div>
