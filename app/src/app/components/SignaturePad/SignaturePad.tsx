@@ -49,7 +49,9 @@ export default function SignaturePadTest({
       const orderDetails = await APIHelpers.get(
         `/api/campaigns/${campaignId}/orders/${orderId}`
       );
-      const savedCanvasData = orderDetails.order.autographData ? `${orderDetails.order.autographData.toString()}` : null;
+      const savedCanvasData = orderDetails.order.autographData
+        ? `${orderDetails.order.autographData.toString()}`
+        : null;
       setState({
         ...state,
         savedCanvasData,
@@ -69,7 +71,7 @@ export default function SignaturePadTest({
       },
     });
     // additionally upload data to ipfs, do this async to give better UX experience
-    APIHelpers.post(`/api/campaigns/${campaignId}/metadata`, {
+    await APIHelpers.post(`/api/campaigns/${campaignId}/metadata`, {
       body: {
         twitterUsername: user?.twitter?.username,
       },
@@ -153,7 +155,7 @@ const CanvasToDrawOn = ({
         hideGrid
         style={{
           backgroundImage: `-webkit-linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.6)), url(${backgroundImage})`,
-          backgroundSize: `cover`
+          backgroundSize: `cover`,
         }}
       />
     );
@@ -166,7 +168,7 @@ const CanvasToDrawOn = ({
       lazyRadius={state.lazyRadius}
       style={{
         backgroundImage: `-webkit-linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.6)), url(${backgroundImage})`,
-        backgroundSize: `cover`
+        backgroundSize: `cover`,
       }}
       hideGrid
     />

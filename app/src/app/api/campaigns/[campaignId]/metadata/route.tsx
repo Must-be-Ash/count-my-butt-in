@@ -44,32 +44,34 @@ export async function POST(
   const currentDate = new Date();
   const manifestUrl = await uploadMetadata(
     defaultMetadata,
-    ordersToUpload.map((order) => ({
-      name: "Signed Autograph",
-      description: twitterUsername
-        ? `Signed by [@${twitterUsername}](https://twitter.com/${twitterUsername})`
-        : "Signed Autograph",
-      attributes: twitterUsername
-        ? [
-            {
-              trait_type: "Date",
-              value: `${
-                currentDate.getMonth() + 1
-              }/${currentDate.getDate()}/${currentDate.getFullYear()}`,
-            },
-            {
-              trait_type: "Social",
-              value: "Twitter",
-            },
-            {
-              trait_type: "Username",
-              value: twitterUsername,
-            },
-          ]
-        : undefined,
-      image: order.autographDataURL,
-      image_url: order.autographDataURL,
-    }))
+    ordersToUpload
+      .sort((a, b) => Number(a.mintedTokenId) - Number(b.mintedTokenId))
+      .map((order) => ({
+        name: "Signed Autograph",
+        description: twitterUsername
+          ? `Signed by [@${twitterUsername}](https://twitter.com/${twitterUsername})`
+          : "Signed Autograph",
+        attributes: twitterUsername
+          ? [
+              {
+                trait_type: "Date",
+                value: `${
+                  currentDate.getMonth() + 1
+                }/${currentDate.getDate()}/${currentDate.getFullYear()}`,
+              },
+              {
+                trait_type: "Social",
+                value: "Twitter",
+              },
+              {
+                trait_type: "Username",
+                value: twitterUsername,
+              },
+            ]
+          : undefined,
+        image: order.autographDataURL,
+        image_url: order.autographDataURL,
+      }))
   );
   // update metadata url of each order
   for (const order of ordersToUpload) {
