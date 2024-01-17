@@ -120,7 +120,7 @@ export default function Orders({ params }: { params: { campaignId: string } }) {
         <LoginOrUserWidget />
 
         <div className="flex flex-row bg-gray-700 rounded-full text-base gap-2 px-4 my-2 items-center cursor-pointer" onClick={() => copyText(COLLECTOR_LINK)}>
-          <div className="py-2 font-mono flex-1 text-xs">
+          <div className="py-2 flex-1 text-xs">
             {COLLECTOR_LINK}
           </div>
           <div className={`rounded-full p-1 ${isCopied ? "border-2 border-green-400 text-green-400" :"border-2 border-white text-white"}`}>
