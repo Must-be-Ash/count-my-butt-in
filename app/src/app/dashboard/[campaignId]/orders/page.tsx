@@ -127,6 +127,9 @@ export default function Orders({ params }: { params: { campaignId: string } }) {
            {isCopied ? <IoCheckmark /> : <FaRegCopy  />}
           </div>
         </div>
+        <div className="text-xs">
+          Copy the link above and share with your collectors
+        </div>
 
         <div className="capitalize font-semibold pt-6">Order List</div>
         <div className="flex flex-row gap-3 gap-y-14 mt-8 flex-wrap mb-8">
