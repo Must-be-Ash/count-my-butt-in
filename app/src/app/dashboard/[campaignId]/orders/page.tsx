@@ -80,7 +80,7 @@ const customStyles = {
 };
 
 export default function Orders({ params }: { params: { campaignId: string } }) {
-  const COLLECTOR_LINK=`https://app.signed.gg/dashboard/${params.campaignId}/orders`
+  const COLLECTOR_LINK=`https://app.signed.gg/collector/${params.campaignId}/home`
   const [isCopied, setIsCopied] = useState<boolean>(false);
 
   const copyText = (text: string) => {
