@@ -20,6 +20,8 @@ import { useCampaign } from "@/hooks/useCampaign";
 import { AuthenticatedPage } from "@/app/components/page/AuthenticatedPage";
 import { FaRegCopy } from "react-icons/fa";
 import { IoCheckmark } from "react-icons/io5";
+import formatLongURL from "@/utils/formatLongURL";
+import { BiCopy } from "react-icons/bi";
 
 
 const StatusButton = ({
@@ -119,12 +121,12 @@ export default function Orders({ params }: { params: { campaignId: string } }) {
         </Modal>
         <LoginOrUserWidget />
 
-        <div className="flex flex-row bg-gray-700 rounded-full text-base gap-2 px-4 my-2 items-center cursor-pointer" onClick={() => copyText(COLLECTOR_LINK)}>
-          <div className="py-2 flex-1 text-xs">
-            {COLLECTOR_LINK}
+        <div className="flex flex-row bg-gray-700 rounded-full text-base gap-2 my-2 items-center cursor-pointer w-full pr-[2px]" onClick={() => copyText(COLLECTOR_LINK)}>
+          <div className="py-2 flex-1 text-xs pl-4">
+            {formatLongURL(COLLECTOR_LINK, 22, 15)}
           </div>
-          <div className={`rounded-full p-1 ${isCopied ? "border-2 border-green-400 text-green-400" :"border-2 border-white text-white"}`}>
-           {isCopied ? <IoCheckmark /> : <FaRegCopy  />}
+          <div className={`rounded-full p-[6px] text-lg text-gray-600 ${isCopied ? "bg-green-300" : "bg-gray-300"}`}>
+           {isCopied ? <IoCheckmark /> : <BiCopy  />}
           </div>
         </div>
         <div className="text-xs">

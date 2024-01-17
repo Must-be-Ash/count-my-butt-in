@@ -1,0 +1,12 @@
+export default function formatLongURL(
+  url?: string | null,
+  endPrefix?: number,
+  endSuffix?: number
+): string {
+  if (!url) return "";
+  if (url.length <= 12) return url;
+  const prefix = url.substring(0, endPrefix || 8);
+  const suffix =
+    endSuffix === 0 ? "" : url.substring(url.length - (endSuffix || 4));
+  return `${prefix}...${suffix}`;
+}
