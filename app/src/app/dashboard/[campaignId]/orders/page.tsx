@@ -18,6 +18,10 @@ import { set } from "zod";
 import TokenUriUpdateButton from "@/app/components/dashboard/orders/TokenUriUpdateButton";
 import { useCampaign } from "@/hooks/useCampaign";
 import { AuthenticatedPage } from "@/app/components/page/AuthenticatedPage";
+import { FaRegCopy } from "react-icons/fa";
+import { FaPeopleGroup } from "react-icons/fa6";
+import { IoMdCheckmarkCircleOutline } from "react-icons/io";
+
 
 const StatusButton = ({
   orderStatus,
@@ -75,6 +79,15 @@ const customStyles = {
 };
 
 export default function Orders({ params }: { params: { campaignId: string } }) {
+  const COLLECTOR_LINK=`https://app.signed.gg/dashboard/${params.campaignId}/orders`
+  const [isCopied, setIsCopied] = useState<boolean>(false);
+
+  const copyText = (text: string) => {
+    setIsCopied(false);
+    navigator.clipboard.writeText(text)
+    setIsCopied(true);
+  }
+
   const { orders, refetchOrders } = useOrders(params.campaignId);
   const { campaign } = useCampaign(params.campaignId);
   const [selectedOrderId, setSelectedOrderId] = useState<string>("");
@@ -107,7 +120,19 @@ export default function Orders({ params }: { params: { campaignId: string } }) {
           />
         </Modal>
         <LoginOrUserWidget />
-        <div className="self-start">Order List</div>
+        <div className="flex flex-row border-2 border-white rounded-md text-base gap-3 p-1 items-center cursor-pointer" onClick={() => copyText(COLLECTOR_LINK)}>
+          <div className="w-1/4">
+            <FaPeopleGroup />
+          </div>
+          <div className="py-2 font-mono flex-1 text-xs">
+            {COLLECTOR_LINK}
+          </div>
+          <div className="text-xl">
+           {isCopied ? <IoMdCheckmarkCircleOutline /> : <FaRegCopy />}
+          </div>
+        </div>
+
+        <div className="capitalize font-semibold pt-6">Order List</div>
         <div className="flex flex-row gap-3 gap-y-14 mt-8 flex-wrap mb-8">
           {!!orders &&
             orders.length > 0 &&

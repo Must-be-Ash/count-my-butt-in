@@ -42,7 +42,7 @@ export function useWrite(data: {
   });
 
   const {
-    write,
+    writeAsync: write,
     error: mintError,
     isLoading: isWriteLoading,
     data: writeData,
