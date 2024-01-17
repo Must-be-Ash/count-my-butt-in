@@ -19,8 +19,7 @@ import TokenUriUpdateButton from "@/app/components/dashboard/orders/TokenUriUpda
 import { useCampaign } from "@/hooks/useCampaign";
 import { AuthenticatedPage } from "@/app/components/page/AuthenticatedPage";
 import { FaRegCopy } from "react-icons/fa";
-import { FaPeopleGroup } from "react-icons/fa6";
-import { IoMdCheckmarkCircleOutline } from "react-icons/io";
+import { IoCheckmark } from "react-icons/io5";
 
 
 const StatusButton = ({
@@ -83,9 +82,8 @@ export default function Orders({ params }: { params: { campaignId: string } }) {
   const [isCopied, setIsCopied] = useState<boolean>(false);
 
   const copyText = (text: string) => {
-    setIsCopied(false);
+    setIsCopied((c) => !c);
     navigator.clipboard.writeText(text)
-    setIsCopied(true);
   }
 
   const { orders, refetchOrders } = useOrders(params.campaignId);
@@ -120,15 +118,13 @@ export default function Orders({ params }: { params: { campaignId: string } }) {
           />
         </Modal>
         <LoginOrUserWidget />
-        <div className="flex flex-row border-2 border-white rounded-md text-base gap-3 p-1 items-center cursor-pointer" onClick={() => copyText(COLLECTOR_LINK)}>
-          <div className="w-1/4">
-            <FaPeopleGroup />
-          </div>
+
+        <div className="flex flex-row bg-gray-700 rounded-full text-base gap-2 px-4 my-2 items-center cursor-pointer" onClick={() => copyText(COLLECTOR_LINK)}>
           <div className="py-2 font-mono flex-1 text-xs">
             {COLLECTOR_LINK}
           </div>
-          <div className="text-xl">
-           {isCopied ? <IoMdCheckmarkCircleOutline /> : <FaRegCopy />}
+          <div className={`rounded-full p-1 ${isCopied ? "border-2 border-green-400 text-green-400" :"border-2 border-white text-white"}`}>
+           {isCopied ? <IoCheckmark /> : <FaRegCopy  />}
           </div>
         </div>
 
