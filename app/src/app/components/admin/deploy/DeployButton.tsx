@@ -49,26 +49,18 @@ export default function DeployButton({
       if (parsed) {
         const contractAddress = parsed.args.clone;
         setDeployedContract(contractAddress);
+        const result = await APIHelpers.post("/api/campaigns", {
+          body: {
+            binderContract: parsed?.args.clone,
+            networkId: "SEPOLIA",
+          },
+        });
+        const campaign = result.campaign;
+        router.push(`/dashboard/${campaign.campaignId}/orders`);
       }
     };
     run();
   }, [parsed, isSuccess, deployedContract, router]);
-  const config = {
-    binderContract: contractAddress,
-    networkId: "SEPOLIA",
-  };
-  const deployContractAndDoOtherStuff = async() => {
-    if (!write) {
-      console.log("write object is undefined");
-      return;
-    }
-    await write();
-    const result = await APIHelpers.post("/api/campaigns", {
-      body: config,
-    });
-    const campaign = result.campaign;
-    router.push(`/dashboard/${campaign.campaignId}/orders`);
-  }
 
   return (
     <>
@@ -79,7 +71,7 @@ export default function DeployButton({
           title="Deploy Campaign Contract"
           onClick={
             !wrongNetwork && write
-              ? () => deployContractAndDoOtherStuff()
+              ? () => write()
               : () => switchCorrectNetwork()
           }
         />
