@@ -41,7 +41,7 @@ export default function DeployButton({
     functionName: "createBinderDrop",
     args: [
       creatorAddress,
-      "https://arweave.net/w7Z7IWypheVcC1N5EtIxauotwCNNyocz57NA07kEbjM",
+      "https://arweave.net/ckSld6yHJxWxis45HhUxOcaP23Ksym1rv1rcDrz8Z-E",
     ],
   });
   useEffect(() => {

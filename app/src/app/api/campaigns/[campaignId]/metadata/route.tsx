@@ -26,8 +26,8 @@ export async function POST(
   // hardcoded for now
   const defaultMetadata = {
     created_by: "Binder Studio",
-    description: "Binder Signature Drop",
-    external_url: "https://binder.studio/",
+    description: "Binder Signature Drop, Power by [Binder](https://signed.gg/)",
+    external_url: "https://signed.gg",
     name: "Binder Drop",
     image_details: {
       bytes: 314183,
@@ -40,6 +40,20 @@ export async function POST(
     image: "https://arweave.net/qWfD01lnf6A9dWcNSxZ6ZCWSZ7CgVz5iq99j7QhHW6c",
     image_url:
       "https://arweave.net/qWfD01lnf6A9dWcNSxZ6ZCWSZ7CgVz5iq99j7QhHW6c",
+    animation_details: {
+      bytes: 1636135,
+      format: "MP4",
+      duration: 11,
+      sha256:
+        "2f10aab908e915631664eb0a7d5ae04afe85f31fb97bd59b09d676e75753bde0",
+      width: 1080,
+      height: 1080,
+      codecs: ["H.264", "AAC"],
+    },
+    animation:
+      "https://arweave.net/aZBb0n-kqSh7eyNcxw4KhAyCBCcQyGO1GnWbV2e0Hcw",
+    animation_url:
+      "https://arweave.net/aZBb0n-kqSh7eyNcxw4KhAyCBCcQyGO1GnWbV2e0Hcw",
   };
   const currentDate = new Date();
   const manifestUrl = await uploadMetadata(
