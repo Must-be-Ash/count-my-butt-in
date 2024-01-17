@@ -5,6 +5,7 @@ import LoginButton from "@/app/components/LoginButton";
 import APIHelpers from "@/lib/apiHelper";
 import { usePrivy, useWallets } from "@privy-io/react-auth";
 import { useState } from "react";
+import LogoutButton from "@/app/components/LogoutButton";
 
 export default function HeyYo() {
   const { authenticated, user } = usePrivy();
@@ -17,7 +18,6 @@ export default function HeyYo() {
         <BinderButton
           onClick={async () => {
             if (wallets.length) {
-              console.log(`funding ${wallets[0].address}`);
               setLoading(true);
               await APIHelpers.post("/api/fund", {
                 body: {
@@ -34,6 +34,7 @@ export default function HeyYo() {
         />
       )}
       {!authenticated && <LoginButton />}
+      {authenticated && <LogoutButton size="lg" withText />}
       {success && <div className="text-white text-xl">ETH SENT! 🎉</div>}
     </main>
   );
