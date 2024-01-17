@@ -16,7 +16,7 @@ export function useWrite(data: {
 
   const { wallets } = useWallets();
   const wallet = wallets[0];
-  console.log("the wallet", wallet);
+
   let error = null;
 
   // check if the user is connected to the correct network
@@ -52,6 +52,7 @@ export function useWrite(data: {
     isLoading: isMintLoading,
     isSuccess,
     data: receipt,
+    error: transactionError,
   } = useWaitForTransaction({
     hash: writeData?.hash,
   });
@@ -80,6 +81,7 @@ export function useWrite(data: {
   return {
     write,
     error: error && formatError(error),
+    transactionError,
     isLoading: isLoading || isWriteLoading || isMintLoading,
     data: writeData,
     currentNetwork: wallet?.chainId,

@@ -29,7 +29,7 @@ export default function MintButton({
     write,
     error,
     isLoading,
-    data,
+    transactionError,
     switchCorrectNetwork,
     wrongNetwork,
     isSuccess,
@@ -60,7 +60,7 @@ export default function MintButton({
   }
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess || parsed) {
       // after succuessful mint, update instance with tokenId
       if (parsed?.args?.tokenId) {
         const tokenId = parsed?.args?.tokenId;
@@ -79,8 +79,29 @@ export default function MintButton({
         console.log(e);
       });
       setCurrentStepIndex(3);
+      // Sometime Sepolia can throw unexplained error, trigger our scanner anyway in this case
+    } else if (transactionError) {
+      setTimeout(() => {
+        APIHelpers.post("/api/scan", {
+          body: {
+            contractAddress: binderContract,
+            networkId: campaignNetworkId,
+          } as any,
+        }).catch((e) => {
+          console.log(`Error scanning:`);
+          console.log(e);
+        });
+      }, 2000);
     }
-  }, [isSuccess, parsed, setCurrentStepIndex, setInstance]);
+  }, [
+    binderContract,
+    campaignNetworkId,
+    isSuccess,
+    parsed,
+    setCurrentStepIndex,
+    setInstance,
+    transactionError,
+  ]);
 
   return (
     <>

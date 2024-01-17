@@ -3,6 +3,7 @@ import { PrivyWagmiConnector } from "@privy-io/wagmi-connector";
 // https://wagmi.sh/react/chains
 import { mainnet, goerli, optimism, base } from "@wagmi/chains";
 import { configureChains, sepolia } from "wagmi";
+import { alchemyProvider } from "wagmi/providers/alchemy";
 // You may replace this with your preferred providers
 // https://wagmi.sh/react/providers/configuring-chains#multiple-providers
 import { publicProvider } from "wagmi/providers/public";
@@ -11,5 +12,8 @@ import { publicProvider } from "wagmi/providers/public";
 // https://wagmi.sh/react/providers/configuring-chains
 export const configureChainsConfig = configureChains(
   [mainnet, goerli, optimism, base, sepolia],
-  [publicProvider()]
+  [
+    publicProvider(),
+    alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_SEPOLIA! }),
+  ]
 );
