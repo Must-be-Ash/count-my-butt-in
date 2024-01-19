@@ -81,7 +81,7 @@ contract BinderDrop is ERC721, Admins, Initializable {
      * @param recipient which address the tokenId goes to
      * @param signature string passed on from the server
      */
-    function mintTo(string memory orderId, address recipient, bytes memory signature) public {
+    function mintTo(string memory orderId, address recipient, bytes memory signature) public payable {
       // recipient-tokenid pair will always be unique
       // hash is the keccack256 over recipient,tokenId
       // tokenId is kept track of on the server
