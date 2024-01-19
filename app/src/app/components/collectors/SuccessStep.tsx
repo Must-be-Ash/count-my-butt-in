@@ -4,6 +4,7 @@ import { getOpenseaLink, nameToNetwork } from "@/lib/utils";
 import { useInstance } from "@/context/InstanceContext";
 import NFTDisplay from "../NftDisplay";
 import { useCampaign } from "@/hooks/useCampaign";
+import Link from "next/link";
 
 export function SuccessStep() {
   const { instance } = useInstance();
@@ -30,29 +31,17 @@ export function SuccessStep() {
       </div>
       <div className="mt-6 space-y-4 w-full">
         <div className="w-full mx-auto">
-          <BinderButton
-            primary={true}
-            onClick={() => {
-              if (!campaign?.networkId) {
-                console.log("No network Id set for campaign");
-                return;
-              }
-              if (!campaign?.binderContract) {
-                console.log("No binder contract set for campaign");
-                return;
-              }
-              window.open(
-                getOpenseaLink(
-                  nameToNetwork(campaign.networkId),
-                  campaign.binderContract,
-                  instance.mintedTokenId
-                )
-              );
-            }}
-            title="See NFT"
-            textColor="text-white"
-            className="mx-auto text-center w-full"
-          />
+          <Link
+            href={`/asset/sepolia/${instance.contractAddress}/${instance.tokenId}`}
+          >
+            <BinderButton
+              primary={true}
+              onClick={() => {}}
+              title="See NFT"
+              textColor="text-white"
+              className="mx-auto text-center w-full"
+            />
+          </Link>
         </div>
       </div>
     </div>
