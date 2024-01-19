@@ -32,7 +32,7 @@ export function SuccessStep() {
       <div className="mt-6 space-y-4 w-full">
         <div className="w-full mx-auto">
           <Link
-            href={`/asset/sepolia/${instance.contractAddress}/${instance.tokenId}`}
+            href={`/asset/sepolia/${campaign?.binderContract}/${instance.tokenId}`}
           >
             <BinderButton
               primary={true}
