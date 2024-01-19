@@ -51,10 +51,6 @@ $ anvil
 $ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
 ```
 
-```shell
-forge script script/BinderDropFactory.s.sol:BinderDropFactoryDeployScript --rpc-url https://eth-sepolia.g.alchemy.com/v2/<ALCHEMY_KEY> --broadcast --verify -vvvv
-```
-
 ### Cast
 
 ```shell
