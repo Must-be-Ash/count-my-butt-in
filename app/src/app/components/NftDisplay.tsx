@@ -6,14 +6,18 @@ const NFTDisplay = ({
   title,
   tokenId,
   networkId,
+  ...props
 }: {
   imageUrl: string;
   title: string;
   tokenId?: string;
   networkId: number;
-}) => {
+} & any) => {
   return (
-    <div className="flex flex-col rounded-2xl bg-black max-w-[100px] sm:max-w-[252px] hover:opacity-80">
+    <div
+      {...props}
+      className="flex flex-col rounded-2xl bg-black max-w-[100px] sm:max-w-[252px] hover:opacity-80"
+    >
       <img
         src={imageUrl}
         alt={`Unable to load asset`}
