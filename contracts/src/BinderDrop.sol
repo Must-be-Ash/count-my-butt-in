@@ -13,30 +13,25 @@ error PublicMintsPaused();
 error PublicMintsActive();
 error MintPriceNotPaid();
 error HashVerificationFailed();
-error MaxTokenCountReached();
 
 contract BinderDrop is ERC721, Admins, Initializable {
     using Strings for uint256;
-    uint256 public BATCH_SIZE;
 
     bool public publicMintsPaused;
     uint256 internal _tokenCount = 0;
-    uint256 internal _maxTokenCount = BATCH_SIZE;
-
     // the tokenId that is the boundary between revealed and pre-revealed tokens
     uint256 internal _revealedTokenIdBoundary;
-
     string public defaultURI;
     string public revealedURI;
+    mapping(uint256 => bool) revealedTokens;
 
     constructor() ERC721("BinderDrop", "BinderDropV1") {}
 
-    function initialize(address _creator, string memory _defaultURI, address _server, uint256 _batchSize) external initializer {
+    function initialize(address _creator, string memory defaultUri, address _server) external initializer {
       require(_creator != address(0));
       creator = _creator;
-      defaultURI = _defaultURI;
+      defaultURI = defaultUri;
       server = _server;
-      BATCH_SIZE = _batchSize;
     }
 
     event AutographIncoming(address minter, string orderId, address recipient, uint256 tokenId, bytes32 hash);
@@ -93,12 +88,6 @@ contract BinderDrop is ERC721, Admins, Initializable {
       if (balanceOf(recipient) > 0) {
         revert OnlyOneMintAllowed();
       }
-      if (_tokenCount == _maxTokenCount - 1) {
-        // the last token mint was _maxTokenCount
-        // should revert here
-        // unless maxTokenCount is increased
-        revert MaxTokenCountReached();
-      }
       bytes32 payloadhash = keccak256(abi.encode(recipient));
       bytes32 hash = keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", payloadhash));
       if (!_verifyHash(hash, signature)) {
@@ -107,16 +96,6 @@ contract BinderDrop is ERC721, Admins, Initializable {
       ++_tokenCount;
       _safeMint(recipient, _tokenCount);
       emit AutographIncoming(msg.sender, orderId, recipient, _tokenCount, hash);
-    }
-
-    function bumpTokenCount() public onlyAdmin returns (uint256) {
-      _maxTokenCount += BATCH_SIZE;
-      return _maxTokenCount;
-    }
-
-    function updateBatchSize(uint256 batchSize) public onlyAdmin returns (uint256) {
-      BATCH_SIZE += batchSize;
-      return BATCH_SIZE;
     }
 
     /**

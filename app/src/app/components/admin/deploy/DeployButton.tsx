@@ -8,7 +8,7 @@ import { useWrite } from "@/hooks/web3";
 import { BINDER_DROP_ABI, BINDER_FACTORY_ABI } from "@/abi";
 import { usePrivy } from "@privy-io/react-auth";
 import LogoutButton from "@/app/components/LogoutButton";
-import { BATCH_SIZE, binderNetworkId, getContractEtherscanLink } from "@/utils/common";
+import { binderNetworkId, getContractEtherscanLink } from "@/utils/common";
 import SetAdminButton from "./SetAdminButton";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -41,8 +41,7 @@ export default function DeployButton({
     functionName: "createBinderDrop",
     args: [
       creatorAddress,
-      "https://arweave.net/w7Z7IWypheVcC1N5EtIxauotwCNNyocz57NA07kEbjM",
-      BATCH_SIZE
+      "https://arweave.net/ckSld6yHJxWxis45HhUxOcaP23Ksym1rv1rcDrz8Z-E",
     ],
   });
   useEffect(() => {
