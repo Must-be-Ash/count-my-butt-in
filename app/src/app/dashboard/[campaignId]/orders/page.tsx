@@ -23,7 +23,6 @@ import { IoCheckmark } from "react-icons/io5";
 import formatLongURL from "@/utils/formatLongURL";
 import { BiCopy } from "react-icons/bi";
 
-
 const StatusButton = ({
   orderStatus,
   triggerAutograph,
@@ -51,10 +50,6 @@ const AutographModal = ({
 }) => {
   return (
     <div className="text-black flex flex-col gap-3 items-center">
-      <div className="flex flex-row justify-between w-full">
-        <div>Make your mark</div>
-        <button onClick={closeModal}>X</button>
-      </div>
       {/* signature pad */}
       <SignaturePadTest
         campaignId={campaignId}
@@ -74,19 +69,17 @@ const customStyles = {
     bottom: "auto",
     marginRight: "-50%",
     transform: "translate(-50%, -50%)",
-    height: "550px",
-    width: "550px"
   },
 };
 
 export default function Orders({ params }: { params: { campaignId: string } }) {
-  const COLLECTOR_LINK=`https://app.signed.gg/collector/${params.campaignId}/home`
+  const COLLECTOR_LINK = `https://app.signed.gg/collector/${params.campaignId}/home`;
   const [isCopied, setIsCopied] = useState<boolean>(false);
 
   const copyText = (text: string) => {
     setIsCopied((c) => !c);
-    navigator.clipboard.writeText(text)
-  }
+    navigator.clipboard.writeText(text);
+  };
 
   const { orders, refetchOrders } = useOrders(params.campaignId);
   const { campaign } = useCampaign(params.campaignId);
@@ -111,6 +104,7 @@ export default function Orders({ params }: { params: { campaignId: string } }) {
           isOpen={modalIsOpen}
           onRequestClose={closeModal}
           style={customStyles}
+          className="bg-transparent rounded-md absolute top-0 left-0 bottom-0 right-0 p-2"
         >
           <AutographModal
             campaignId={params.campaignId}
@@ -121,12 +115,19 @@ export default function Orders({ params }: { params: { campaignId: string } }) {
         </Modal>
         <LoginOrUserWidget />
 
-        <div className="flex flex-row bg-gray-700 rounded-full text-base gap-2 my-2 items-center cursor-pointer w-full pr-[2px]" onClick={() => copyText(COLLECTOR_LINK)}>
+        <div
+          className="flex flex-row bg-gray-700 rounded-full text-base gap-2 my-2 items-center cursor-pointer w-full pr-[2px]"
+          onClick={() => copyText(COLLECTOR_LINK)}
+        >
           <div className="py-2 flex-1 text-xs pl-4">
             {formatLongURL(COLLECTOR_LINK, 22, 15)}
           </div>
-          <div className={`rounded-full p-[6px] text-lg text-gray-600 ${isCopied ? "bg-green-300" : "bg-gray-300"}`}>
-           {isCopied ? <IoCheckmark /> : <BiCopy  />}
+          <div
+            className={`rounded-full p-[6px] text-lg text-gray-600 ${
+              isCopied ? "bg-green-300" : "bg-gray-300"
+            }`}
+          >
+            {isCopied ? <IoCheckmark /> : <BiCopy />}
           </div>
         </div>
         <div className="text-xs">
@@ -134,16 +135,13 @@ export default function Orders({ params }: { params: { campaignId: string } }) {
         </div>
 
         <div className="capitalize font-semibold pt-6">Order List</div>
-        <div className="flex flex-row gap-3 gap-y-14 mt-8 flex-wrap mb-8">
+        <div className="grid grid-cols-2 gap-3 gap-y-14 mt-8 mb-8">
           {!!orders &&
             orders.length > 0 &&
             orders.map((order, key) => {
               return (
-                <div
-                  key={key}
-                  className="h-[265px] w-[173px] bg-black rounded-lg"
-                >
-                  <div className="h-[180px] w-[173px] rounded-t-lg relative">
+                <div key={key} className="bg-black rounded-t-2xl">
+                  <div className="rounded-t-lg relative">
                     {/* image */}
                     <NFTDisplayFull
                       networkId={nameToNetwork(order.collectionNetwork)}

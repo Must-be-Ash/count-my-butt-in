@@ -44,15 +44,15 @@ const NFTDisplayFull = ({
   return (
     <>
       {nft && (
-        <div className="flex flex-col items-center justify-center rounded-2xl bg-black max-w-[100px] sm:max-w-[252px] cursor-pointer">
+        <div className="flex flex-col items-center justify-center rounded-2xl bg-black cursor-pointer">
           <img
             src={nft.imageUrl}
             alt={`Unable to load asset`}
-            className="rounded-t-2xl h-[100px] sm:h-[252px] object-cover"
+            className="rounded-t-2xl w-full h-[252px] object-cover"
           />
 
           {!imageOnly && (
-            <div className="flex flex-col items-start p-2 sm:p-3 truncate text-ellipsis">
+            <div className="flex flex-col items-start p-4 sm:p-3 truncate text-ellipsis w-full">
               <div className="text-xs sm:text-md truncate text-ellipsis w-full">
                 {nft.title} {tokenId ? `#${tokenId}` : ""}
               </div>

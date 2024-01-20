@@ -103,7 +103,7 @@ export default function SignaturePadTest({
     closeModal();
   };
   return (
-    <div className="w-96 h-96 m-auto">
+    <div className="m-auto">
       <div className="pb-3">
         <CanvasToDrawOn
           state={state}
@@ -111,7 +111,7 @@ export default function SignaturePadTest({
           backgroundImage={backgroundImage}
         />
       </div>
-      <div className="w-full flex flex-col items-center">
+      <div className="flex flex-col items-center">
         {!state.savedCanvasData && (
           <BinderButton
             onClick={async () => saveCanvas()}
@@ -157,6 +157,7 @@ const CanvasToDrawOn = ({
           backgroundImage: `-webkit-linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.6)), url(${backgroundImage})`,
           backgroundSize: `cover`,
         }}
+        canvasWidth={state.width}
       />
     );
   }
@@ -170,6 +171,7 @@ const CanvasToDrawOn = ({
         backgroundImage: `-webkit-linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.6)), url(${backgroundImage})`,
         backgroundSize: `cover`,
       }}
+      canvasWidth={state.width}
       hideGrid
     />
   );
