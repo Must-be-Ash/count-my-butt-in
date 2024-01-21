@@ -27,7 +27,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
         loginMethods: ["twitter", "wallet", "email"],
         appearance: {
           theme: "light",
-          accentColor: "#82bd9e",
+          accentColor: "#458f68",
         },
         embeddedWallets: {
           createOnLogin: "users-without-wallets",
