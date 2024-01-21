@@ -40,6 +40,7 @@ const config = {
       },
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],
+        title: ["var(--font-baskerville)", ...fontFamily.serif]
       },
     },
   },
