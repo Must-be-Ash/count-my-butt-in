@@ -22,12 +22,12 @@ export async function uploadMetadata(
   return manifestUri.slice(0, manifestUri.length - 1); // remove the last "/" from the uri
 }
 
-export async function uploadFile(dataBlob: Blob) {
-  const file = new File([dataBlob], "signature.png", { type: "image/png" });
-  const data = await file.arrayBuffer();
-  // Here we get the IPFS URI of where our metadata has been uploaded, this will return an array of URIs
-  const uri = await storage.upload(Buffer.from(data));
-  // grab the first uri
-  const url = await storage.resolveScheme(uri);
-  return url;
-}
+// export async function uploadFile(dataBlob: Blob) {
+//   const file = new File([dataBlob], "signature.png", { type: "image/png" });
+//   const data = await file.arrayBuffer();
+//   // Here we get the IPFS URI of where our metadata has been uploaded, this will return an array of URIs
+//   const uri = await storage.upload(Buffer.from(data));
+//   // grab the first uri
+//   const url = await storage.resolveScheme(uri);
+//   return url;
+// }

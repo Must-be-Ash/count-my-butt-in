@@ -1,4 +1,4 @@
-import { uploadFile, uploadMetadata } from "@/lib/ipfs";
+import { uploadMetadata } from "@/lib/ipfs";
 import { getOrders, updateCampaign, updateOrder } from "@/utils/prisma";
 import { NextResponse, type NextRequest } from "next/server";
 
