@@ -79,8 +79,6 @@ const NFTFeed = ({
             }))
           );
         }
-        for (const nft of nfts) {
-        }
 
         for (const nft of nfts) {
           if (nft.pageKey) {
@@ -165,25 +163,6 @@ const NFTFeed = ({
                 networkId: networkId.toString(),
               }))
             );
-            for (const ownedNft of theNFT.ownedNfts) {
-              if (ownedNft.title === "Binder Drop") {
-                // binder drop, check if metadata is updated
-                const { order } = await APIHelpers.get(
-                  `/api/nft?tokenId=${ownedNft.tokenId}&contractAddress=${ownedNft.contract.address}`
-                );
-
-                if (order && order.metadataUrl) {
-                  const response = await fetch(order.metadataUrl);
-                  const metadata = await response.json();
-                  ownedNft.title = metadata.name;
-                  const imageUrl = metadata.image.replaceAll(
-                    "ipfs://",
-                    "https://ipfs.io/ipfs/"
-                  );
-                  ownedNft.media[0].gateway = imageUrl;
-                }
-              }
-            }
           }
 
           for (const nft of nfts) {

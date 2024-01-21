@@ -61,3 +61,11 @@ model Campaign {
   manifestUrl String?
   whitelistedCollectionAddresses String[]
 }
+
+model Nft {
+  networkId Network @default(ETHEREUM)
+  contractAddress String
+  tokenId String
+  tokenUri String?
+  @@unique([networkId, contractAddress, tokenId])
+}

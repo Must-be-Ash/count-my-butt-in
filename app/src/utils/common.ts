@@ -124,3 +124,5 @@ export const MINT_FEE = 0.01;
 export const binderNetworkId = 11155111;
 export const binderFactoryContract =
   "0x24E709007e017Bb54082d20d27f46DEbe2ad8D08";
+
+export const childrenNetworkIds = [1, 137, 8453, 11155111];

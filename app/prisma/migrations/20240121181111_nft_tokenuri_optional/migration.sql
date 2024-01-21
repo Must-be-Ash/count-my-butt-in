@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Nft" ALTER COLUMN "tokenUri" DROP NOT NULL;

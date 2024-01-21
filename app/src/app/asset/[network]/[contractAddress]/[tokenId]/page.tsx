@@ -5,11 +5,14 @@ import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { Nft } from "alchemy-sdk";
 import { TokenboundClient } from "@tokenbound/sdk";
-import { getNftMetadata } from "@/lib/alchemy";
+import { getNftMetadata, getNftsForOwner } from "@/lib/alchemy";
 import Loader from "@/app/components/Loader";
 import NFTFeed from "@/app/components/asset/NftFeed";
 import { nameToNetwork } from "@/lib/utils";
 import { getOpenseaLink } from "@/lib/utils";
+import { IoMdRefresh } from "react-icons/io";
+import APIHelpers from "@/lib/apiHelper";
+import { childrenNetworkIds } from "@/utils/common";
 
 export default function NFTProfile({
   params,
@@ -26,6 +29,7 @@ export default function NFTProfile({
   const tokenId = params.tokenId;
   const networkId = nameToNetwork(params.network);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [refreshLoading, setRefreshLoading] = useState<boolean>(false);
 
   if (!networkId) {
     throw new Error("networkId is required");
@@ -108,6 +112,38 @@ export default function NFTProfile({
                       <div>{nft.contract.name}</div>
                     </div>
                   </div>
+                  {!refreshLoading && (
+                    <IoMdRefresh
+                      className="text-2xl cursor-pointer"
+                      onClick={async () => {
+                        console.log("qwdqwd", tokenContracts);
+                        setRefreshLoading(true);
+                        try {
+                          for (const networkId of childrenNetworkIds) {
+                            const theNFT = await getNftsForOwner(
+                              networkId,
+                              tokenContracts[0]
+                            );
+                            for (const ownedNft of theNFT.ownedNfts) {
+                              await APIHelpers.post("/api/nft/refresh", {
+                                body: {
+                                  contractAddress:
+                                    ownedNft.contract.address.toLowerCase(),
+                                  tokenId: ownedNft.tokenId,
+                                  networkId: networkId,
+                                },
+                              });
+                            }
+                          }
+                        } catch (e) {
+                          console.error(e);
+                        } finally {
+                          setRefreshLoading(false);
+                        }
+                      }}
+                    />
+                  )}
+                  {refreshLoading && <Loader />}
                 </div>
                 <div className="flex flex-col mt-10">
                   <div className="relative mb-12">
@@ -123,7 +159,7 @@ export default function NFTProfile({
                     <NFTFeed
                       addresses={tokenContracts}
                       searchWord=""
-                      networkIds={[1, 137, 11155111, 8453]}
+                      networkIds={childrenNetworkIds}
                       unclickable={true}
                       fullRes={true}
                     />

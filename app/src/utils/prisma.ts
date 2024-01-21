@@ -1,4 +1,10 @@
-import { Prisma, PrismaClient, Network, NetworkStatus } from "@prisma/client";
+import {
+  Prisma,
+  PrismaClient,
+  Network,
+  NetworkStatus,
+  Nft,
+} from "@prisma/client";
 import { z } from "zod";
 import { ethers } from "ethers";
 
@@ -103,5 +109,35 @@ export function updateCampaign(
   return prisma.campaign.update({
     where: { campaignId },
     data,
+  });
+}
+
+export function getNft(
+  network: Network,
+  contractAddress: string,
+  tokenId: string
+): Promise<Nft | null> {
+  return prisma.nft.findFirst({
+    where: {
+      networkId: network,
+      contractAddress: contractAddress.toLowerCase(),
+      tokenId,
+    },
+  });
+}
+
+export function createNft(data: Prisma.NftCreateInput) {
+  return prisma.nft.upsert({
+    where: {
+      networkId_contractAddress_tokenId: {
+        networkId: data.networkId!,
+        contractAddress: data.contractAddress.toLowerCase(),
+        tokenId: data.tokenId,
+      },
+    },
+    update: {
+      tokenUri: data.tokenUri,
+    },
+    create: data,
   });
 }
