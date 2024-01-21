@@ -12,6 +12,7 @@ import { binderNetworkId, getContractEtherscanLink } from "@/utils/common";
 import SetAdminButton from "./SetAdminButton";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Loader from "../../Loader";
 
 export default function DeployButton({
   networkId,
@@ -25,6 +26,7 @@ export default function DeployButton({
   const [deployedContract, setDeployedContract] = useState();
   const [campaignId, setCampaignId] = useState<string>();
   const router = useRouter();
+  const [loading, setIsLoading] = useState<boolean>(false);
 
   const {
     write,
@@ -52,6 +54,7 @@ export default function DeployButton({
   }, [campaignId, router, deployedContract, parsed])
   useEffect(() => {
     const run = async () => {
+      setIsLoading(true);
       if (parsed && (!campaignId || !contractAddress)) {
         const contractAddress = parsed.args.clone;
         const result = await APIHelpers.post("/api/campaigns", {
@@ -64,9 +67,16 @@ export default function DeployButton({
         setDeployedContract(contractAddress);
         setCampaignId(campaign.campaignId);
       }
+      setIsLoading(false);
     };
     run();
   }, [parsed, isSuccess, deployedContract, campaignId, contractAddress]);
+
+  if (isLoading || loading) {
+    return (
+      <Loader />
+    )
+  }
 
   return (
     <>
