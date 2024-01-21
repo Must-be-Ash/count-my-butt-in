@@ -19,15 +19,16 @@ export async function uploadMetadata(
   const manifestUri = await storage.resolveScheme(
     uris[0].slice(0, uris[0].lastIndexOf("/"))
   );
-  console.log("qwdqwd", manifestUri.slice(0, manifestUri.length - 1));
+
   // Here we get a URL with a gateway that we can look at in the browser
   return manifestUri.slice(0, manifestUri.length - 1); // remove the last "/" from the uri
 }
 
-export async function uploadFile(dataBlob: any) {
+export async function uploadFile(dataBlob: Blob) {
+  const file = new File([dataBlob], "signature.png", { type: "image/png" });
+  const data = await file.arrayBuffer();
   // Here we get the IPFS URI of where our metadata has been uploaded, this will return an array of URIs
-  const uri = await storage.upload(dataBlob);
-  console.info(uri);
+  const uri = await storage.upload(Buffer.from(data));
   // grab the first uri
   const url = await storage.resolveScheme(uri);
   return url;

@@ -45,6 +45,16 @@ export function getOrders(campaignId: string, status?: NetworkStatus) {
   });
 }
 
+export function getOrderByToken(tokenId: string, contractAddress: string) {
+  return prisma.order.findMany({
+    where: {
+      mintedTokenId: tokenId,
+      mintedContractAddress: contractAddress.toLowerCase(),
+      status: NetworkStatus.CONFIRMED,
+    },
+  });
+}
+
 export function getOrder(orderId: string) {
   return prisma.order.findUnique({
     where: {

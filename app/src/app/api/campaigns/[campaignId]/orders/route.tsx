@@ -1,4 +1,4 @@
-import { createOrder, getOrders, updateOrder } from "@/utils/prisma";
+import { createOrder, getOrders } from "@/utils/prisma";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function GET(

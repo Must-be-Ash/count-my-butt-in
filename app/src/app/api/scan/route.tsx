@@ -50,6 +50,7 @@ export async function POST(request: NextRequest) {
       await updateOrder(orderId, {
         transactionId: `${tx}`,
         mintedTokenId: tokenId,
+        mintedContractAddress: contractAddress.toLowerCase(),
         mintedNetworkId: networkToName(networkId).toUpperCase() as Network,
         status: NetworkStatus.PENDING,
       });

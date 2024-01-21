@@ -1,3 +1,4 @@
+import { uploadFile } from "@/lib/ipfs";
 import { deleteOrder, getOrder, updateOrder } from "@/utils/prisma";
 import { NextResponse, type NextRequest } from "next/server";
 
@@ -14,6 +15,21 @@ export async function PATCH(
   { params }: { params: { orderId: string } }
 ) {
   const data = await request.json();
+  // if autographDataURL is not ipfs link, upload to ipfs
+  if (data.autographDataURL && !data.autographDataURL.includes("ipfs")) {
+    const byteCharacters = atob(data.autographDataURL.split(",")[1]);
+
+    // Creating a Uint8Array for the binary data
+    const byteNumbers = new Array(byteCharacters.length);
+    for (var i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: "image/png" });
+    const url = await uploadFile(blob);
+    data.autographDataURL = url;
+  }
   const order = await updateOrder(params.orderId, data);
   return NextResponse.json({ order });
 }

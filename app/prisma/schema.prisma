@@ -39,8 +39,10 @@ model Order {
   selectedTokenId String
   personalNote String?
   transactionId String?
+  mintedContractAddress String?
   mintedTokenId String?
   mintedNetworkId Network?
+  @@index([mintedTokenId, mintedContractAddress, status])
 
   // cron job updates the following, based on the txId
   status NetworkStatus?

@@ -7,6 +7,9 @@ import { getNftsForOwner } from "@/lib/alchemy";
 import { getOpenseaLink } from "@/lib/utils";
 import NFTDisplay from "../NftDisplay";
 import BinderButton from "../BinderButton";
+import APIHelpers from "@/lib/apiHelper";
+import { Order } from "@prisma/client";
+import { useCampaign } from "@/hooks/useCampaign";
 
 export interface PageToKeyMapping {
   [address: string]: {
@@ -163,20 +166,23 @@ const NFTFeed = ({
               }))
             );
             for (const ownedNft of theNFT.ownedNfts) {
-              if (networkId === 11155111)
-                fetch(
-                  "https://eth-sepolia.g.alchemy.com/nft/v3/zwqlDQyCjglSkrnU_L92Yx3t5ujTuwXY/refreshNftMetadata",
-                  {
-                    method: "POST",
-                    headers: {
-                      "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                      contractAddress: ownedNft.contract.address,
-                      tokenId: ownedNft.tokenId,
-                    }),
-                  }
+              if (ownedNft.title === "Binder Drop") {
+                // binder drop, check if metadata is updated
+                const { order } = await APIHelpers.get(
+                  `/api/nft?tokenId=${ownedNft.tokenId}&contractAddress=${ownedNft.contract.address}`
                 );
+
+                if (order && order.metadataUrl) {
+                  const response = await fetch(order.metadataUrl);
+                  const metadata = await response.json();
+                  ownedNft.title = metadata.name;
+                  const imageUrl = metadata.image.replaceAll(
+                    "ipfs://",
+                    "https://ipfs.io/ipfs/"
+                  );
+                  ownedNft.media[0].gateway = imageUrl;
+                }
+              }
             }
           }
 

@@ -90,7 +90,7 @@ export async function POST(
   // update metadata url of each order
   for (const order of ordersToUpload) {
     await updateOrder(order.orderId, {
-      metadataUrl: `${manifestUrl}${order.mintedTokenId}`,
+      metadataUrl: `${manifestUrl}/${order.mintedTokenId}`,
     });
   }
   // update manifest url of campaign
