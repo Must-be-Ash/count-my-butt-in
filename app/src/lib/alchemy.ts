@@ -31,7 +31,7 @@ export const sepoliaAlchemy = new Alchemy({
   network: Network.ETH_SEPOLIA, // Replace with your network.
 });
 
-const nftsPerPage = 40;
+export const nftsPerPage = 40;
 
 export function getAlchemy(networkId: number) {
   if (networkId === 1) {
@@ -86,14 +86,19 @@ export async function getNftsForOwner(
     );
 
     if (!!nft) {
-      const response = await fetch(nft.tokenUri);
-      const metadata = await response.json();
-      ownedNft.title = metadata.name;
-      const imageUrl = metadata.image.replaceAll(
-        "ipfs://",
-        "https://ipfs.io/ipfs/"
-      );
-      ownedNft.media[0].gateway = imageUrl;
+      try {
+        const response = await fetch(nft.tokenUri);
+        const metadata = await response.json();
+        ownedNft.title = metadata.name;
+        const imageUrl = metadata.image.replaceAll(
+          "ipfs://",
+          "https://ipfs.io/ipfs/"
+        );
+        ownedNft.media[0].gateway = imageUrl;
+      } catch (e) {
+        // non-blocking
+        console.error(e);
+      }
     }
 
     ownedNfts.ownedNfts[i] = ownedNft;

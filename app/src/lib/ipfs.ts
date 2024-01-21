@@ -16,9 +16,7 @@ export async function uploadMetadata(
   // This will log a URL like ipfs://QmWgbcjKWCXhaLzMz4gNBxQpAHktQK6MkLvBkKXbsoWEEy/0
 
   if (!uris.length) return "";
-  const manifestUri = await storage.resolveScheme(
-    uris[0].slice(0, uris[0].lastIndexOf("/"))
-  );
+  const manifestUri = uris[0].replaceAll("ipfs://", "https://ipfs.io/ipfs/");
 
   // Here we get a URL with a gateway that we can look at in the browser
   return manifestUri.slice(0, manifestUri.length - 1); // remove the last "/" from the uri

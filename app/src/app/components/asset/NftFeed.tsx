@@ -3,13 +3,10 @@ import Link from "next/link";
 import { ThreeDots } from "react-loader-spinner";
 import { OwnedNft, OwnedNftsResponse } from "alchemy-sdk";
 import ErrorDisplay from "@/app/components/ErrorDisplay";
-import { getNftsForOwner } from "@/lib/alchemy";
+import { getNftsForOwner, nftsPerPage } from "@/lib/alchemy";
 import { getOpenseaLink } from "@/lib/utils";
 import NFTDisplay from "../NftDisplay";
 import BinderButton from "../BinderButton";
-import APIHelpers from "@/lib/apiHelper";
-import { Order } from "@prisma/client";
-import { useCampaign } from "@/hooks/useCampaign";
 
 export interface PageToKeyMapping {
   [address: string]: {
@@ -17,6 +14,7 @@ export interface PageToKeyMapping {
   };
 }
 
+// support paging for multiple TBA addresses
 const NFTFeed = ({
   addresses,
   searchWord,
@@ -147,6 +145,7 @@ const NFTFeed = ({
   }
 
   useEffect(() => {
+    // pagination
     async function getNfts() {
       setLoading(true);
       try {
@@ -185,16 +184,14 @@ const NFTFeed = ({
   }, [addresses, networkIds]);
 
   useEffect(() => {
+    // filter nft by searchWord
     if (ownedNfts.length && searchWord) {
       const filteredNfts = ownedNfts.filter((nft: OwnedNft) => {
-        return (
-          nft?.title?.toLowerCase().includes(searchWord.toLowerCase()) ||
-          nft?.rawMetadata?.name
-            ?.toString()
-            ?.toLowerCase()
-            .includes(searchWord.toLowerCase()) ||
-          nft?.contract.name?.toLowerCase().includes(searchWord.toLowerCase())
-        );
+        const nftName =
+          nft?.title ||
+          nft?.rawMetadata?.name?.toString() ||
+          nft?.contract.name;
+        return nftName?.toLowerCase().includes(searchWord.toLowerCase());
       });
 
       setFilteredData(filteredNfts);
@@ -282,7 +279,9 @@ const NFTFeed = ({
               />
             )}
             {!Object.keys(pageToKeysMapping).every(
-              (address) => pageToKeysMapping[address][currentPage] === null
+              (address) =>
+                pageToKeysMapping[address][currentPage] === null ||
+                filteredData.length < nftsPerPage
             ) && (
               <BinderButton
                 className="bg-neural-800 text-neutral-300 px-4 py-2 rounded hover:cursor-pointer hover:text-neutral-100"
