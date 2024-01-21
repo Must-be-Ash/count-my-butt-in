@@ -1,15 +1,14 @@
 import Footer from "@/app/components/Footer";
+import Nav from "@/components/Nav";
 import { ReactNode } from "react";
 
-const Main = ({children}: {children: ReactNode}) => {
+const Main = ({children, hideNav = false}: {children: ReactNode; hideNav?: boolean}) => {
   return (
-    <main>
-      <div className="flex flex-col items-center h-screen w-[393px] mx-auto">
-        <div className="flex-1 flex flex-col items-center p-3">
+    <main className="flex flex-col sm:max-w-[1024px] sm:mx-auto w-full h-screen p-3">
+        {!hideNav && <Nav />}
+        <div className="flex-1 flex flex-col items-center w-full">
           {children}
         </div>
-        <Footer />
-      </div>
     </main>
   )
 }

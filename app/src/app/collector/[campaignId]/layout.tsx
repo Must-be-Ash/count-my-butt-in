@@ -4,6 +4,7 @@ import { usePrivy } from "@privy-io/react-auth";
 import { useRouter } from "next/navigation";
 import Loader from "@/app/components/Loader";
 import { useEffect } from "react";
+import Main from "@/app/layouts/Main";
 
 export default function CollectorsLayout({
   children,
@@ -28,8 +29,8 @@ export default function CollectorsLayout({
   }
 
   return (
-    <main className="max-w-3xl flex flex-col items-center w-full mx-auto my-auto h-screen font-avenir">
+    <Main hideNav>
       {children}
-    </main>
+    </Main>
   );
 }

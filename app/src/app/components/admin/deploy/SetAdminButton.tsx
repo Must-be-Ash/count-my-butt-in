@@ -20,15 +20,11 @@ export default function SetAdminButton({
   });
 
   return (
-    <>
       <BinderButton
-        primary={false}
-        textColor="text-black"
         title="Set Admin"
         onClick={
           !wrongNetwork && write ? () => write() : () => switchCorrectNetwork()
         }
-      />
-    </>
+      >Set Admin</BinderButton>
   );
 }

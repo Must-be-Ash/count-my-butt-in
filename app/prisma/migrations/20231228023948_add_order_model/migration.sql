@@ -12,13 +12,15 @@ CREATE TABLE "Order" (
     "collectionAddress" TEXT NOT NULL,
     "selectedTokenId" TEXT NOT NULL,
     "personalNote" TEXT,
-    "transactionId" TEXT NOT NULL,
-    "mintedTokenId" TEXT NOT NULL,
-    "mintedNetworkId" "Network" NOT NULL,
+    "transactionId" TEXT,
+    "mintedTokenId" TEXT,
+    "mintedNetworkId" "Network",
     "status" "NetworkStatus",
     "autographData" TEXT,
     "autographDataURL" TEXT,
     "metadataUrl" TEXT,
+    "toUpload" TEXT,
+    "nftImageURL" TEXT,
 
     CONSTRAINT "Order_pkey" PRIMARY KEY ("orderId")
 );

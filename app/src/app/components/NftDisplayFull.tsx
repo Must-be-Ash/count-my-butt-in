@@ -22,9 +22,10 @@ const NFTDisplayFull = ({
   imageOnly?: boolean;
 }) => {
   const [nft, setNft] = useState<BinderNFT | null>(null);
-
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   useEffect(() => {
     async function getNft() {
+      setIsLoading(true);
       const nft = await getNftMetadata(networkId, contractAddress, tokenId);
       const media = nft?.media[0];
       if (media) {
@@ -37,13 +38,14 @@ const NFTDisplayFull = ({
           networkId,
         });
       }
+      setIsLoading(false);
     }
     getNft();
   }, [contractAddress, tokenId, networkId]);
 
   return (
     <>
-      {nft && (
+      {nft && !isLoading && (
         <div className="flex flex-col items-center justify-center rounded-2xl bg-black cursor-pointer">
           <img
             src={nft.imageUrl}
@@ -63,9 +65,9 @@ const NFTDisplayFull = ({
           )}
         </div>
       )}
-      {!nft && (
-        <div className="flex flex-row items-center justify-center w-full mx-auto">
-          <Loader />
+      {isLoading && (
+        <div className="flex flex-row items-center justify-center w-full mx-auto h-[252px]">
+          <Loader color="black" />
         </div>
       )}
     </>

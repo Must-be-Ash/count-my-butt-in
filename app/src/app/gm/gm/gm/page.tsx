@@ -29,9 +29,7 @@ export default function HeyYo() {
             setLoading(false);
           }}
           isLoading={loading}
-          title="Fund Me"
-          className="mb-10"
-        />
+        >Fund me</BinderButton>
       )}
       {!authenticated && <LoginButton />}
       {authenticated && <LogoutButton size="lg" withText />}

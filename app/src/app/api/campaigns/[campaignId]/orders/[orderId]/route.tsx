@@ -1,5 +1,7 @@
 import { uploadFile } from "@/lib/ipfs";
 import { deleteOrder, getOrder, updateOrder } from "@/utils/prisma";
+import { overlayImages } from "@/utils/processImage";
+import { Order } from "@prisma/client";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function GET(
@@ -14,7 +16,17 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: { orderId: string } }
 ) {
-  const data = await request.json();
+
+  const data = await request.json() as Order;
+  let toUpload = '';
+  if (data.nftImageURL && data.autographDataURL) {
+    toUpload = await overlayImages({
+      url: data.nftImageURL,
+      overlaySignature: data.autographDataURL
+    })
+  }
+  
+
   // if autographDataURL is not ipfs link, upload to ipfs
   if (data.autographDataURL && !data.autographDataURL.includes("ipfs")) {
     const byteCharacters = atob(data.autographDataURL.split(",")[1]);
@@ -30,7 +42,8 @@ export async function PATCH(
     const url = await uploadFile(blob);
     data.autographDataURL = url;
   }
-  const order = await updateOrder(params.orderId, data);
+  const order = await updateOrder(params.orderId, {...data, toUpload});
+
   return NextResponse.json({ order });
 }
 

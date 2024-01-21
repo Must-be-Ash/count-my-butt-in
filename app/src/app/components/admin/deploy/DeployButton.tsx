@@ -23,6 +23,7 @@ export default function DeployButton({
   creatorAddress: string;
 }) {
   const [deployedContract, setDeployedContract] = useState();
+  const [campaignId, setCampaignId] = useState<string>();
   const router = useRouter();
 
   const {
@@ -45,10 +46,14 @@ export default function DeployButton({
     ],
   });
   useEffect(() => {
+    if (campaignId) {
+      router.push(`/dashboard/${campaignId}/orders`);
+    }
+  }, [campaignId, router, deployedContract, parsed])
+  useEffect(() => {
     const run = async () => {
-      if (parsed) {
+      if (parsed && (!campaignId || !contractAddress)) {
         const contractAddress = parsed.args.clone;
-        setDeployedContract(contractAddress);
         const result = await APIHelpers.post("/api/campaigns", {
           body: {
             binderContract: parsed?.args.clone,
@@ -56,39 +61,34 @@ export default function DeployButton({
           },
         });
         const campaign = result.campaign;
-        router.push(`/dashboard/${campaign.campaignId}/orders`);
+        setDeployedContract(contractAddress);
+        setCampaignId(campaign.campaignId);
       }
     };
     run();
-  }, [parsed, isSuccess, deployedContract, router]);
+  }, [parsed, isSuccess, deployedContract, campaignId, contractAddress]);
 
   return (
     <>
       {!deployedContract && (
         <BinderButton
-          primary={false}
-          textColor="text-black"
-          title="Deploy Campaign Contract"
           onClick={
             !wrongNetwork && write
               ? () => write()
               : () => switchCorrectNetwork()
           }
-        />
+        >Start a Campaign</BinderButton>
       )}
-      {deployedContract && (
-        <a
-          href={getContractEtherscanLink(binderNetworkId, deployedContract)}
-          target="_blank"
-        >{`Deployed Contract Address: ${deployedContract}`}</a>
-      )}
-      {deployedContract && (
-        <Link
-          className="mt-4"
-          href={`/admin?contractAddress=${deployedContract}`}
-        >
-          <BinderButton title={"Create Campaign"} />
-        </Link>
+      {deployedContract && campaignId && (
+        <div className="cursor-pointer">
+          <Link
+            href={`/dashboard/${campaignId}/orders`}
+            target="_blank"
+            className="underline"
+          >
+            Click here if you are not redirected automatically.
+          </Link>
+        </div>
       )}
     </>
   );

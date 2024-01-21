@@ -7,6 +7,7 @@ import { getNftsForOwner, nftsPerPage } from "@/lib/alchemy";
 import { getOpenseaLink } from "@/lib/utils";
 import NFTDisplay from "../NftDisplay";
 import BinderButton from "../BinderButton";
+import Loader from "../Loader";
 
 export interface PageToKeyMapping {
   [address: string]: {
@@ -236,6 +237,7 @@ const NFTFeed = ({
                         title={nft.title}
                         tokenId={nft.tokenId}
                         networkId={Number(nft.networkId)}
+                        size="lg"
                       />
                     </Link>
                   )}
@@ -251,7 +253,6 @@ const NFTFeed = ({
                             nft?.media[0].raw
                       }
                       onClick={() => {
-                        console.log("click");
                         window.open(
                           getOpenseaLink(
                             Number(nft.networkId),
@@ -263,6 +264,7 @@ const NFTFeed = ({
                       title={nft.title}
                       tokenId={nft.tokenId}
                       networkId={Number(nft.networkId)}
+                      size="lg"
                     />
                   )}
                 </div>
@@ -272,11 +274,8 @@ const NFTFeed = ({
           <div className="flex justify-end mr-4 mt-4 gap-4">
             {currentPage !== 1 && (
               <BinderButton
-                className="bg-neural-800 text-neutral-300 px-4 py-2 rounded hover:cursor-pointer hover:text-neutral-100"
                 onClick={() => previousPage()}
-                title={"Previous"}
-                primary={true}
-              />
+              >Previous</BinderButton>
             )}
             {!Object.keys(pageToKeysMapping).every(
               (address) =>
@@ -284,30 +283,15 @@ const NFTFeed = ({
                 filteredData.length < nftsPerPage
             ) && (
               <BinderButton
-                className="bg-neural-800 text-neutral-300 px-4 py-2 rounded hover:cursor-pointer hover:text-neutral-100"
                 onClick={() => nextPage()}
-                title={"Next"}
-                primary={true}
-              />
+              >Next</BinderButton>
             )}
           </div>
         </>
       )}
-      {/* {nft && !filteredData.length && (
-        <div className='py-6'>
-          <NewRequestButton onClick={onNewRequestClick} nft={nft} />
-        </div>
-      )} */}
       {loading && (
         <div className="flex flex-row justify-center items-center">
-          <ThreeDots
-            height="100"
-            width="50"
-            radius="9"
-            color="#fffff"
-            ariaLabel="three-dots-loading"
-            visible={true}
-          />
+          <Loader />
         </div>
       )}
       {error && <ErrorDisplay error={error} />}

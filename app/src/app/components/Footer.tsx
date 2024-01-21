@@ -1,6 +1,6 @@
 const Footer = () => {
   return (
-    <div className="text-[10px] sm:text-sm p-2 whitespace-nowrap">
+    <div className="text-xs w-full text-center">
       By signing in you agreed to the
       <a
         className="mr-1 ml-1 font-bold"

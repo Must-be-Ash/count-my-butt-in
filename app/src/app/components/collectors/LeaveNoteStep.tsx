@@ -8,8 +8,8 @@ export default function CollectorNote() {
   const { setInstance } = useInstance();
   const { setCurrentStepIndex } = useSteps();
   return (
-    <div className="flex flex-col justify-between h-full">
-      <div className="flex flex-col gap-4 grow">
+    <div className="flex flex-col h-full">
+      <div className="flex flex-col gap-4">
         <h1>Leave a note for the artist (optional)</h1>
         <div className="text-sm text-neutral-500">
           What do you want the artist to draw, write or sign? Who do you want
@@ -36,10 +36,8 @@ export default function CollectorNote() {
       </div>
 
       <BinderButton
-        primary={false}
-        title="Next"
         onClick={() => setCurrentStepIndex(2)}
-      />
+      >Next</BinderButton>
     </div>
   );
 }

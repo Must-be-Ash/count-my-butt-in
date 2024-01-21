@@ -5,6 +5,7 @@ import { StepProvider } from "@/context/StepsContext";
 import { InstanceProvider } from "@/context/InstanceContext";
 import { PrivyWagmiConnector } from "@privy-io/wagmi-connector";
 import { configureChainsConfig } from "@/lib/wagmi";
+import { ThemeProvider } from "@/components/theme-provider"
 
 const PRIVY_APP_ID = process.env.NEXT_PUBLIC_PRIVY_APP_ID;
 
@@ -33,7 +34,16 @@ export function Providers({ children }: { children: React.ReactNode }) {
     >
       <PrivyWagmiConnector wagmiChainsConfig={configureChainsConfig}>
         <StepProvider>
-          <InstanceProvider>{children}</InstanceProvider>
+          <InstanceProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+            </ThemeProvider>
+          </InstanceProvider>
         </StepProvider>
       </PrivyWagmiConnector>
     </PrivyProvider>

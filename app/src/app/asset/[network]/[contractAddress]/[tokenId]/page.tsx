@@ -164,7 +164,7 @@ export default function NFTProfile({
                       fullRes={true}
                     />
                   )}
-                  {isLoading && <Loader />}
+                  {isLoading && <Loader color="white" />}
                 </div>
               </>
             )}

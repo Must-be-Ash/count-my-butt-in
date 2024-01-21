@@ -104,15 +104,12 @@ export default function ScanBlocks() {
         />
       </div>
       <BinderButton
-        primary={false}
-        textColor="text-black"
-        title="Scan"
         onClick={async () => {
           const result = await APIHelpers.post("/api/scan", {
             body: config as any,
           });
         }}
-      />
+      >Scan</BinderButton>
     </div>
   );
 }

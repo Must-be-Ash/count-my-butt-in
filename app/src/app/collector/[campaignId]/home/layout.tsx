@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Loader from "@/app/components/Loader";
 import { useEffect } from "react";
 import TopNav from "@/app/components/TopNav";
+import Main from "@/app/layouts/Main";
 
 export default function CollectorsLayout({
   children,
@@ -21,9 +22,9 @@ export default function CollectorsLayout({
   }, [ready, authenticated, router, params.campaignId]);
 
   return (
-    <main className="p-4">
+    <Main hideNav>
       <TopNav />
       {children}
-    </main>
+    </Main>
   );
 }

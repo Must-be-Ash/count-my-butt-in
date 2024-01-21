@@ -23,7 +23,7 @@ export default function CollectorTopNav() {
   }, [currentStepIndex]);
 
   return (
-    <nav aria-label="Progress" className="py-4">
+    <nav aria-label="Progress" className="pb-4 w-full">
       <div className="flex flex-row justify-between mb-5">
         {currentStepIndex > 0 ? (
           <ArrowLeftIcon
@@ -33,7 +33,7 @@ export default function CollectorTopNav() {
         ) : (
           <div />
         )}
-        <LogoutButton size="lg" />
+        <LogoutButton size="sm" />
       </div>
       <ol role="list" className="flex space-x-2 grow pt-2">
         {allSteps.map((step) => (

@@ -16,6 +16,7 @@ model Artist {
   email         String?
   walletAddress String?
 }
+
 enum Network {
   ETHEREUM
   POLYGON
@@ -32,40 +33,42 @@ enum NetworkStatus {
 }
 
 model Order {
-  orderId String @id @default(uuid())
-  campaignId String
-  collectionNetwork Network
-  collectionAddress String
-  selectedTokenId String
-  personalNote String?
-  transactionId String?
+  orderId               String         @id @default(uuid())
+  campaignId            String
+  collectionNetwork     Network
+  collectionAddress     String
+  selectedTokenId       String
+  personalNote          String?
+  transactionId         String?
+  mintedTokenId         String?
+  mintedNetworkId       Network?
   mintedContractAddress String?
-  mintedTokenId String?
-  mintedNetworkId Network?
-  @@index([mintedTokenId, mintedContractAddress, status])
-
   // cron job updates the following, based on the txId
-  status NetworkStatus?
-
+  status                NetworkStatus?
   // FULFILMENT ATTRIBUTES
-  autographData String?
-  autographDataURL String?
-  metadataUrl String? // after uploading to a decentralised storage
+  autographData         String?
+  autographDataURL      String?
+  metadataUrl           String? // after uploading to a decentralised storage
+  // TO UPLOAD
+  nftImageURL           String?
+  toUpload              String? // the generated image that the collector will see
 }
 
 model Campaign {
-  campaignId String @id @default(uuid())
-  networkId Network @default(ETHEREUM)
-  defaultURI String?
-  binderContract String?
-  manifestUrl String?
+  campaignId                     String   @id @default(uuid())
+  createdAt                      DateTime @default(now())
+  networkId                      Network  @default(ETHEREUM)
+  defaultURI                     String?
+  binderContract                 String?
+  manifestUrl                    String?
   whitelistedCollectionAddresses String[]
 }
 
 model Nft {
-  networkId Network @default(ETHEREUM)
+  networkId       Network @default(ETHEREUM)
   contractAddress String
-  tokenId String
-  tokenUri String?
+  tokenId         String
+  tokenUri        String?
+
   @@unique([networkId, contractAddress, tokenId])
 }

@@ -81,15 +81,12 @@ export default function ReviewAndPayStep() {
   }, [recipient, instance]);
 
   return (
-    <div className="flex flex-col justify-between h-full">
-      <div className="flex flex-col gap-4 grow p-2">
+    <div className="flex flex-col h-full w-full gap-2">
+      <div className="flex flex-col gap-2">
         <h1>Review and Pay</h1>
-        <div className="inline-flex bg-black p-4 rounded-md flex-col items-start gap-[8px] relative flex-[0_0_auto]">
-          <div className="relative w-fit mt-[-1.00px] [font-family:'Inter-SemiBold',Helvetica] font-semibold text-white text-[14px] tracking-[0] leading-[20px]">
-            NFT
-          </div>
+        <div className="bg-black p-4 rounded-md flex flex-col items-start gap-2 w-full">
           <a
-            className="inline-flex items-center gap-[16px] relative flex-[0_0_auto] cursor-pointer"
+            className="items-center gap-[16px] relative cursor-pointer w-full flex flex-row"
             href={getOpenseaLink(
               instance.nftNetworkId!,
               instance.contractAddress,
@@ -100,18 +97,18 @@ export default function ReviewAndPayStep() {
             <Image
               width={64}
               height={64}
-              className="relative w-[64px] h-[64px] object-cover"
+              className="relative w-[64px] h-[64px] object-cover rounded-md"
               alt="Aayadkmi"
               src={
                 instance.nftUrl ||
                 "/assets/c0302e13-7d87-4ca5-8002-d33354112ad3.png"
               }
             />
-            <div className="inline-flex flex-col items-start gap-[4px] relative flex-[0_0_auto]">
-              <div className="relative w-fit mt-[-1.00px] [font-family:'Inter-SemiBold',Helvetica] font-semibold text-white text-[16px] tracking-[0] leading-[24px]">
+            <div className="flex flex-col items-start gap-3 w-full">
+              <div className="mt-[-1.00px] font-semibold text-[16px]">
                 {`${instance.name}`}
               </div>
-              <div className="relative w-fit [font-family:'Inter-Regular',Helvetica] font-normal text-grey-200 text-[14px] tracking-[0] leading-[20px]">
+              <div className="text-grey-200 text-[14px]">
                 Token ID: {instance.tokenId}
               </div>
               <a
@@ -120,17 +117,21 @@ export default function ReviewAndPayStep() {
                   instance.contractAddress
                 )}
                 target="_blank"
-                className="relative w-fit [font-family:'Inter-Regular',Helvetica] font-normal text-grey-200 text-[14px] tracking-[0] leading-[20px]"
+                className="text-grey-200 text-[14px]"
               >
                 Contract: {shortenAddress(instance.contractAddress)}
               </a>
             </div>
           </a>
-          <div className="text-neutral-400 text-sm">Note for the artist</div>
-          <div>
-            {instance.note || "No note for you sorry. I'm a busy collector."}
-          </div>
         </div>
+        {instance.note && (
+            <div className="bg-black p-4 rounded-md">
+              <div className="text-neutral-400 text-sm">Note for the artist</div>
+              <div>
+                {instance.note}
+              </div>
+            </div>
+          )}
         <div className="inline-flex bg-black p-4 rounded-md flex-col items-start gap-[8px] relative flex-[0_0_auto]">
           <div className="flex flex-row justify-between w-full text-neutral-400">
             <div>Platform fee</div>

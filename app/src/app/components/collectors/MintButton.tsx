@@ -106,12 +106,9 @@ export default function MintButton({
   return (
     <>
       <BinderButton
-        primary={false}
-        title={wrongNetwork ? "Switch network" : "Mint"}
         onClick={!wrongNetwork ? () => mint() : () => switchCorrectNetwork()}
         isLoading={isLoading}
-        className="w-1/2 mx-auto mb-2"
-      />
+      >{wrongNetwork ? "Switch network" : "Mint"}</BinderButton>
       <ErrorDisplay error={error} />
     </>
   );

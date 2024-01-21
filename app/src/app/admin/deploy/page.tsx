@@ -8,8 +8,6 @@ import DeployButton from "@/app/components/admin/deploy/DeployButton";
 
 import { useWallets } from "@privy-io/react-auth";
 import { binderFactoryContract, binderNetworkId } from "@/utils/common";
-import BinderButton from "@/app/components/BinderButton";
-import Link from "next/link";
 
 export default function CreateCampaign() {
   const [config, setConfig] = useState<Partial<Campaign> | undefined>();

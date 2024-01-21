@@ -299,22 +299,16 @@ const NFTFeedProfile = ({
 
           <div className="flex justify-end mr-4 mt-4">
             {currentPage !== 1 && (
-              <BinderButton
-                className="bg-neural-800 text-neutral-300 px-4 py-2 rounded hover:cursor-pointer hover:text-neutral-100"
-                onClick={() => previousPage()}
-                title={"Previous"}
-                primary={true}
-              />
+              <BinderButton onClick={() => previousPage()}>
+                Previous
+              </BinderButton>
             )}
             {!Object.keys(pageToKeysMapping).every(
               (address) => pageToKeysMapping[address][currentPage] === null
             ) && (
-              <BinderButton
-                className="bg-neural-800 text-neutral-300 px-4 py-2 rounded hover:cursor-pointer hover:text-neutral-100"
-                onClick={() => nextPage()}
-                title={"Next"}
-                primary={true}
-              />
+              <BinderButton onClick={() => nextPage()}>
+                Next
+              </BinderButton>
             )}
           </div>
         </>

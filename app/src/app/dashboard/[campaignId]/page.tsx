@@ -1,10 +1,8 @@
 "use client";
-import BinderMainLogo from "@/app/components/BinderMainLogo";
-import LoginOrUserWidget from "../../components/LoginOrUserWidget";
-import Main from "@/app/layouts/Main";
 import { useEffect } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { usePrivy } from "@privy-io/react-auth";
+import BigLoginDisplayPage from "@/app/components/BigLoginDisplayPage";
 
 export default function Dashboard({
   params,
@@ -20,10 +18,5 @@ export default function Dashboard({
     }
   }, [ready, authenticated, router, params.campaignId]);
 
-  return (
-    <Main>
-      <BinderMainLogo />
-      <LoginOrUserWidget />
-    </Main>
-  );
+  return (<BigLoginDisplayPage />);
 }

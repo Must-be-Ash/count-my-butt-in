@@ -1,5 +1,5 @@
-import React, { Component, useEffect, useState } from "react";
-import CanvasDraw, { CanvasDrawProps } from "react-canvas-draw";
+import React, { useEffect, useState } from "react";
+import CanvasDraw from "react-canvas-draw";
 import BinderButton from "../BinderButton";
 import APIHelpers from "@/lib/apiHelper";
 import { NetworkStatus } from "@prisma/client";
@@ -13,8 +13,6 @@ export interface SignaturePadProps {
 
 type CanvasState = {
   color: string;
-  width: number;
-  height: number;
   brushRadius: number;
   lazyRadius: number;
   savedCanvasData: any;
@@ -33,10 +31,8 @@ export default function SignaturePadTest({
   const { refetchCampaign } = useCampaign(campaignId);
   const [state, setState] = useState<CanvasState>({
     color: "white",
-    width: 320,
-    height: 320,
     brushRadius: 5,
-    lazyRadius: 5,
+    lazyRadius: 1,
     savedCanvasData: ``,
   });
   const [drawingOn, setDrawingOn] =
@@ -63,11 +59,13 @@ export default function SignaturePadTest({
   }, [orderId]);
 
   const saveCanvas = async () => {
+    setLoading(true);
     await APIHelpers.patch(`/api/campaigns/${campaignId}/orders/${orderId}`, {
       body: {
         autographData: drawingOn.getSaveData(),
         autographDataURL: drawingOn.getDataURL(),
         status: NetworkStatus.CONFIRMED,
+        nftImageURL: backgroundImage
       },
     });
     // additionally upload data to ipfs, do this async to give better UX experience
@@ -76,6 +74,7 @@ export default function SignaturePadTest({
         twitterUsername: user?.twitter?.username,
       },
     }).then(() => refetchCampaign());
+    setLoading(false);
     closeModal();
   };
   const resetCanvas = async () => {
@@ -92,6 +91,8 @@ export default function SignaturePadTest({
         autographDataURL: "",
         metadataUrl: "",
         status: NetworkStatus.PENDING,
+        toUpload: "",
+        nftImageURL: ""
       },
     });
     await APIHelpers.patch(`/api/campaigns/${campaignId}/`, {
@@ -103,28 +104,26 @@ export default function SignaturePadTest({
     closeModal();
   };
   return (
-    <div className="m-auto">
-      <div className="pb-3">
+    <div className="m-auto w-[100%] p-3">
         <CanvasToDrawOn
           state={state}
           setDrawingOn={setDrawingOn}
           backgroundImage={backgroundImage}
         />
-      </div>
-      <div className="flex flex-col items-center">
+      <div className="pt-3 flex flex-row gap-1 items-center justify-center w-full">
         {!state.savedCanvasData && (
           <BinderButton
             onClick={async () => saveCanvas()}
-            title="Save"
-            primary
-          />
+            isLoading={loading}
+            className="w-full"
+          >
+            Save
+          </BinderButton>
         )}
         {state.savedCanvasData && (
-          <BinderButton
-            onClick={async () => resetCanvas()}
-            primary
-            title="Reset"
-          />
+          <BinderButton onClick={async () => resetCanvas()} className="w-full">
+            Reset
+          </BinderButton>
         )}
       </div>
     </div>
@@ -140,6 +139,13 @@ const CanvasToDrawOn = ({
   setDrawingOn: (arg: CanvasDraw) => void;
   backgroundImage: string;
 }) => {
+  const style = {
+    backgroundImage: `-webkit-linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.6)), url(${backgroundImage})`,
+    backgroundSize: `cover`,
+    borderRadius: `8px`,
+    // boxShadow: `rgba(0, 0, 0, 0.1) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px`,
+    width: "100%"
+  }
   if (state.savedCanvasData) {
     return (
       <CanvasDraw
@@ -153,11 +159,7 @@ const CanvasToDrawOn = ({
         lazyRadius={state.lazyRadius}
         disabled
         hideGrid
-        style={{
-          backgroundImage: `-webkit-linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.6)), url(${backgroundImage})`,
-          backgroundSize: `cover`,
-        }}
-        canvasWidth={state.width}
+        style={style}
       />
     );
   }
@@ -167,11 +169,7 @@ const CanvasToDrawOn = ({
       brushColor={state.color}
       brushRadius={state.brushRadius}
       lazyRadius={state.lazyRadius}
-      style={{
-        backgroundImage: `-webkit-linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.6)), url(${backgroundImage})`,
-        backgroundSize: `cover`,
-      }}
-      canvasWidth={state.width}
+      style={style}
       hideGrid
     />
   );

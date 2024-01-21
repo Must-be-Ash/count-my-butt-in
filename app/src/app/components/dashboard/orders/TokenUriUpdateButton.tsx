@@ -52,12 +52,9 @@ export default function TokenUriUpdateButton({
   return (
     <>
       <BinderButton
-        primary={false}
-        title={wrongNetwork ? "Switch network" : "Submit"}
         onClick={!wrongNetwork ? () => mint() : () => switchCorrectNetwork()}
         isLoading={isLoading}
-        className="w-3/4 mx-auto mb-2"
-      />
+      >{wrongNetwork ? "Switch network" : "Submit"}</BinderButton>
       <ErrorDisplay error={error} />
     </>
   );

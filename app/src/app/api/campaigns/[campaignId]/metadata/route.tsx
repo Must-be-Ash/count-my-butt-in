@@ -83,8 +83,8 @@ export async function POST(
               },
             ]
           : undefined,
-        image: order.autographDataURL,
-        image_url: order.autographDataURL,
+        image: order.toUpload,
+        image_url: order.toUpload,
       }))
   );
   // update metadata url of each order

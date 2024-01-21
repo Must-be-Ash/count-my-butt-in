@@ -84,9 +84,6 @@ export default function CreateCampaign() {
         />
       </div>
       <BinderButton
-        primary={false}
-        textColor="text-black"
-        title="Create Campaign"
         onClick={async () => {
           const result = await APIHelpers.post("/api/campaigns", {
             body: config,
@@ -94,7 +91,7 @@ export default function CreateCampaign() {
           const campaign = result.campaign;
           setCampaignId(campaign.campaignId);
         }}
-      />
+      >Create Campaign</BinderButton>
       {camapginId && <div>{`Created Campaign Id: ${camapginId}`}</div>}
       {camapginId && (
         <a

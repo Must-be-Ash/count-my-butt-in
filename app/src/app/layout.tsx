@@ -1,10 +1,13 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Inter as FontSans } from 'next/font/google'
 import { Providers } from './providers';
 import './globals.css'
+import { cn } from "@/lib/utils"
 
-const inter = Inter({ subsets: ['latin'] })
-
+export const fontSans = FontSans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+})
 export const metadata: Metadata = {
   title: 'Binder | Signature Booth',
   description: 'Powered by Binder',
@@ -16,13 +19,18 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
       </head>
-      <body className={inter.className}>
+      <body className={cn(
+      "min-h-screen bg-background font-sans antialiased",
+      fontSans.variable
+    )}>
       <Providers>
-        {children}
+        <div vaul-drawer-wrapper="" className="bg-background">
+          {children}
+        </div>
       </Providers>
       </body>
     </html>
