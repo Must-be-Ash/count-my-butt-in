@@ -15,17 +15,18 @@ import { AuthenticatedPage } from "@/app/components/page/AuthenticatedPage";
 import { IoCheckmark } from "react-icons/io5";
 import formatLongURL from "@/utils/formatLongURL";
 import { BiCopy } from "react-icons/bi";
-import {
-  Credenza,
-  CredenzaContent,
-} from "@/components/ui/credenza"
+import { Credenza, CredenzaContent } from "@/components/ui/credenza";
 
 export default function Orders({ params }: { params: { campaignId: string } }) {
   const [hostname, setHostname] = useState<string>("https://app.signed.gg");
   const COLLECTOR_LINK = `${hostname}/collector/${params.campaignId}/home`;
   const [isCopied, setIsCopied] = useState<boolean>(false);
 
-  useEffect(() => {if (window) {setHostname(window.location.origin)}}, [window])
+  useEffect(() => {
+    if (window) {
+      setHostname(window.location.origin);
+    }
+  }, [window]);
 
   const copyText = (text: string) => {
     setIsCopied((c) => !c);
@@ -35,9 +36,11 @@ export default function Orders({ params }: { params: { campaignId: string } }) {
   useEffect(() => {
     if (isCopied) {
       let tmr = setTimeout(() => setIsCopied(false), 1 * 1000);
-      return () => { clearTimeout(tmr); };
+      return () => {
+        clearTimeout(tmr);
+      };
     }
-  }, [isCopied])
+  }, [isCopied]);
 
   const { orders, refetchOrders } = useOrders(params.campaignId);
   const { campaign } = useCampaign(params.campaignId);
@@ -104,23 +107,25 @@ export default function Orders({ params }: { params: { campaignId: string } }) {
                   </div>
                   {/* content */}
                   <div className="p-3 w-full">
-                      <BinderButton
-                        onClick={async () => {
-                          const nft = await getNftMetadata(
-                            nameToNetwork(order.collectionNetwork),
-                            order.collectionAddress,
-                            order.selectedTokenId
-                          );
-                          const media = nft?.media[0];
-                          if (media) {
-                            const imageUrl =
-                              media.thumbnail || media.gateway || media.raw;
-                            setImageUrl(imageUrl);
-                          }
-                          triggerAutograph(order.orderId);
-                        }}
-                        className="w-full"
-                      >{order.status === "PENDING" ? "FILL ORDER" : "DONE"}</BinderButton>
+                    <BinderButton
+                      onClick={async () => {
+                        const nft = await getNftMetadata(
+                          nameToNetwork(order.collectionNetwork),
+                          order.collectionAddress,
+                          order.selectedTokenId
+                        );
+                        const media = nft?.media[0];
+                        if (media) {
+                          const imageUrl =
+                            media.thumbnail || media.gateway || media.raw;
+                          setImageUrl(imageUrl);
+                        }
+                        triggerAutograph(order.orderId);
+                      }}
+                      className="w-full"
+                    >
+                      {order.status === "PENDING" ? "FILL ORDER" : "DONE"}
+                    </BinderButton>
                   </div>
                 </div>
               );
@@ -128,26 +133,26 @@ export default function Orders({ params }: { params: { campaignId: string } }) {
           {orders?.length === 0 && <div>No orders found for the campaign</div>}
         </div>
 
-          {campaign &&
-            campaign.binderContract &&
-            !!orders &&
-            campaign.manifestUrl && (
-              <div className="w-full sticky bottom-0  pt-8 pb-8 mt-8 backdrop-blur-lg shadow-lg">
-                <div className="h-full w-full flex flex-col items-center">
-                  <TokenUriUpdateButton
-                    revealedTokenIdBoundary={
-                      orders
-                        .filter((order) => order.mintedTokenId)
-                        .map((order) => Number(order.mintedTokenId))
-                        .sort((a, b) => b - a)[0] || 0 // get the largest tokenId
-                    }
-                    revealedURI={campaign.manifestUrl}
-                    campaignNetworkId={nameToNetwork(campaign.networkId)}
-                    binderContract={campaign.binderContract}
-                  />
-                </div>
+        {campaign &&
+          campaign.binderContract &&
+          !!orders &&
+          campaign.manifestUrl && (
+            <div className="w-full sticky bottom-0  pt-8 pb-8 mt-8 backdrop-blur-lg shadow-lg">
+              <div className="h-full w-full flex flex-col items-center">
+                <TokenUriUpdateButton
+                  revealedTokenIdBoundary={
+                    orders
+                      .filter((order) => order.mintedTokenId)
+                      .map((order) => Number(order.mintedTokenId))
+                      .sort((a, b) => b - a)[0] || 0 // get the largest tokenId
+                  }
+                  revealedURI={campaign.manifestUrl}
+                  campaignNetworkId={nameToNetwork(campaign.networkId)}
+                  binderContract={campaign.binderContract}
+                />
               </div>
-            )}
+            </div>
+          )}
       </Main>
     </AuthenticatedPage>
   );

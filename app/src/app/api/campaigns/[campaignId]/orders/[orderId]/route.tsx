@@ -16,16 +16,14 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: { orderId: string } }
 ) {
-
-  const data = await request.json() as Order;
-  let toUpload = '';
+  const data = (await request.json()) as Order;
+  let toUpload = "";
   if (data.nftImageURL && data.autographDataURL) {
     toUpload = await overlayImages({
       url: data.nftImageURL,
-      overlaySignature: data.autographDataURL
-    })
+      overlaySignature: data.autographDataURL,
+    });
   }
-
 
   // // if autographDataURL is not ipfs link, upload to ipfs
   // if (data.autographDataURL && !data.autographDataURL.includes("ipfs")) {
@@ -42,7 +40,7 @@ export async function PATCH(
   //   const url = await uploadFile(blob);
   //   data.autographDataURL = url;
   // }
-  const order = await updateOrder(params.orderId, {...data, toUpload});
+  const order = await updateOrder(params.orderId, { ...data, toUpload });
 
   return NextResponse.json({ order });
 }

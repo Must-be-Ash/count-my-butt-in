@@ -87,14 +87,18 @@ export async function getNftsForOwner(
 
     if (!!nft) {
       try {
-        const response = await fetch(nft.tokenUri);
-        const metadata = await response.json();
-        ownedNft.title = metadata.name;
-        const imageUrl = metadata.image.replaceAll(
-          "ipfs://",
-          "https://ipfs.io/ipfs/"
-        );
-        ownedNft.media[0].gateway = imageUrl;
+        if (nft.tokenUri.includes("ipfs")) {
+          // resolve ipfs url
+          const { metadata } = await APIHelpers.post(`/api/nft/ipfs`, {
+            body: {
+              ipfsUrl: nft.tokenUri,
+            },
+          });
+
+          ownedNft.title = metadata.name;
+
+          ownedNft.media[0].gateway = metadata.image;
+        }
       } catch (e) {
         // non-blocking
         console.error(e);
