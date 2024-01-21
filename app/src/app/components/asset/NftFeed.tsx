@@ -20,13 +20,11 @@ const NFTFeed = ({
   addresses,
   searchWord,
   networkIds,
-  unclickable,
   fullRes,
 }: {
   addresses: string[];
   searchWord: string;
   networkIds: number[];
-  unclickable?: boolean;
   fullRes?: boolean;
 }) => {
   const [ownedNfts, setOwnedNfts] = useState<
@@ -206,86 +204,52 @@ const NFTFeed = ({
     <div>
       {!loading && filteredData.length > 0 && (
         <>
-          <div className="grid grid-cols-4 gap-4 cursor-pointer">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 cursor-pointer w-full">
             {filteredData
               .filter(
                 (nft: OwnedNft & { networkId: string }) => nft.media.length > 0
               )
               .map((nft: OwnedNft & { networkId: string }, index: number) => (
                 <div key={`${nft.title}-${index}`}>
-                  {!unclickable && (
-                    <Link
-                      href={{
-                        pathname: "/home/nftProfile",
-                        query: {
-                          contractAddress: nft.contract.address,
-                          tokenId: nft.tokenId,
-                          networkId: nft.networkId,
-                        },
-                      }}
-                    >
-                      <NFTDisplay
-                        imageUrl={
-                          fullRes
-                            ? nft?.media[0].gateway ||
-                              nft?.media[0].thumbnail ||
-                              nft?.media[0].raw
-                            : nft?.media[0].thumbnail ||
-                              nft?.media[0].gateway ||
-                              nft?.media[0].raw
-                        }
-                        title={nft.title}
-                        tokenId={nft.tokenId}
-                        networkId={Number(nft.networkId)}
-                        size="lg"
-                      />
-                    </Link>
-                  )}
-                  {unclickable && (
-                    <NFTDisplay
-                      imageUrl={
-                        fullRes
-                          ? nft?.media[0].gateway ||
-                            nft?.media[0].thumbnail ||
-                            nft?.media[0].raw
-                          : nft?.media[0].thumbnail ||
-                            nft?.media[0].gateway ||
-                            nft?.media[0].raw
-                      }
-                      onClick={() => {
-                        window.open(
-                          getOpenseaLink(
-                            Number(nft.networkId),
-                            nft.contract.address,
-                            nft.tokenId
-                          )
-                        );
-                      }}
-                      title={nft.title}
-                      tokenId={nft.tokenId}
-                      networkId={Number(nft.networkId)}
-                      size="lg"
-                    />
-                  )}
+                  <NFTDisplay
+                    imageUrl={
+                      fullRes
+                        ? nft?.media[0].gateway ||
+                          nft?.media[0].thumbnail ||
+                          nft?.media[0].raw
+                        : nft?.media[0].thumbnail ||
+                          nft?.media[0].gateway ||
+                          nft?.media[0].raw
+                    }
+                    onClick={() => {
+                      window.open(
+                        getOpenseaLink(
+                          Number(nft.networkId),
+                          nft.contract.address,
+                          nft.tokenId
+                        )
+                      );
+                    }}
+                    title={nft.title}
+                    tokenId={nft.tokenId}
+                    networkId={Number(nft.networkId)}
+                    size="lg"
+                  />
                 </div>
               ))}
           </div>
 
           <div className="flex justify-end mr-4 mt-4 gap-4">
             {currentPage !== 1 && (
-              <BinderButton
-                onClick={() => previousPage()}
-              >Previous</BinderButton>
+              <BinderButton onClick={() => previousPage()}>
+                Previous
+              </BinderButton>
             )}
             {!Object.keys(pageToKeysMapping).every(
               (address) =>
                 pageToKeysMapping[address][currentPage] === null ||
                 filteredData.length < nftsPerPage
-            ) && (
-              <BinderButton
-                onClick={() => nextPage()}
-              >Next</BinderButton>
-            )}
+            ) && <BinderButton onClick={() => nextPage()}>Next</BinderButton>}
           </div>
         </>
       )}

@@ -160,7 +160,6 @@ export default function NFTProfile({
                       addresses={tokenContracts}
                       searchWord=""
                       networkIds={childrenNetworkIds}
-                      unclickable={true}
                       fullRes={true}
                     />
                   )}

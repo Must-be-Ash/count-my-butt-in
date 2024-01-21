@@ -7,12 +7,12 @@ type Size = "default" | "lg" | "md";
 const sizeClass = {
   default: "h-[180px] w-full",
   lg: "h-[350px] w-[252px]",
-  md: "h-[250px] w-[200px]"
+  md: "w-[150px]",
 };
 
 const sizeToClass = (size: Size) => sizeClass[size];
 
-const ipadPro = "(min-width: 1024px)"
+const ipadPro = "(max-width: 1024px)";
 
 const NFTDisplay = ({
   imageUrl,
@@ -33,12 +33,14 @@ const NFTDisplay = ({
   return (
     <div
       {...props}
-      className={`flex flex-col rounded-2xl bg-black hover:opacity-80 ${isIpadPro ? sizeToClass("md") : sizeToClass(size)}`}
+      className={`flex flex-col rounded-2xl bg-black hover:opacity-80 ${
+        isIpadPro ? sizeToClass("md") : sizeToClass(size)
+      }`}
     >
       <img
         src={imageUrl}
         alt={`Unable to load asset`}
-        className="rounded-t-2xl h-full w-full object-cover"
+        className="rounded-t-2xl h-full sm:w-full object-cover"
       />
 
       <div className="flex flex-col items-start p-2 sm:p-3 truncate text-ellipsis">
