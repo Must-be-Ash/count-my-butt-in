@@ -5,12 +5,20 @@ import { useMediaQuery } from "@/hooks/useMediaQuery";
 type Size = "default" | "lg" | "md";
 
 const sizeClass = {
-  default: "h-[180px] w-full",
+  default: "h-[300px] w-full",
   lg: "h-[350px] w-[252px]",
-  md: "w-[150px]",
+  md: "h-[300px] w-[150px]",
 };
 
 const sizeToClass = (size: Size) => sizeClass[size];
+
+const imageSizeClass = {
+  default: "h-[250px] w-full",
+  lg: "h-[350px] w-[252px]",
+  md: "h-[250px] w-[200px]",
+};
+
+const imageSiToClass = (size: Size) => imageSizeClass[size];
 
 const ipadPro = "(max-width: 1024px)";
 
@@ -40,7 +48,9 @@ const NFTDisplay = ({
       <img
         src={imageUrl}
         alt={`Unable to load asset`}
-        className="rounded-t-2xl h-full sm:w-full object-cover"
+        className={`rounded-t-2xl  object-cover  ${
+          isIpadPro ? imageSiToClass("md") : imageSiToClass(size)
+        }`}
       />
 
       <div className="flex flex-col items-start p-2 sm:p-3 truncate text-ellipsis">

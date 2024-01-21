@@ -218,7 +218,7 @@ const NFTFeedProfile = ({
     <div>
       {!loading && filteredData.length > 0 && (
         <>
-          <div className="grid grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             {filteredData
               .filter(
                 (nft: OwnedNft & { networkId: string }) => nft.media.length > 0
@@ -305,11 +305,7 @@ const NFTFeedProfile = ({
             )}
             {!Object.keys(pageToKeysMapping).every(
               (address) => pageToKeysMapping[address][currentPage] === null
-            ) && (
-              <BinderButton onClick={() => nextPage()}>
-                Next
-              </BinderButton>
-            )}
+            ) && <BinderButton onClick={() => nextPage()}>Next</BinderButton>}
           </div>
         </>
       )}
