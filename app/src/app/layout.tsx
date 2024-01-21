@@ -1,9 +1,15 @@
 import type { Metadata } from 'next'
 import { Inter as FontSans } from 'next/font/google'
+import { Baskervville } from 'next/font/google'
 import { Providers } from './providers';
 import './globals.css'
 import { cn } from "@/lib/utils"
-
+const baskerville = Baskervville({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-baskerville',
+  weight: "400"
+})
 export const fontSans = FontSans({
   subsets: ["latin"],
   variable: "--font-sans",
@@ -24,11 +30,12 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" sizes="any" />
       </head>
       <body className={cn(
-      "min-h-screen bg-background font-sans antialiased",
-      fontSans.variable
-    )}>
+        "min-h-screen antialiased",
+        fontSans.variable,
+        baskerville.variable
+      )}>
       <Providers>
-        <div vaul-drawer-wrapper="" className="bg-background">
+        <div vaul-drawer-wrapper="" className="font-sans">
           {children}
         </div>
       </Providers>

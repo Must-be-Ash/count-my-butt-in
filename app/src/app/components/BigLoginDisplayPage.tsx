@@ -1,4 +1,3 @@
-import { ModeToggle } from "@/components/ModeToggle";
 import BinderMainLogo from "./BinderMainLogo";
 import LoginButton from "./LoginButton";
 

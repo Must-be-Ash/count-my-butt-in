@@ -13,7 +13,7 @@ const BinderMainLogo = () => {
         sizes="100vw"
       />
       <div className="text-2xl font-bold">
-        Binder <span className="font-light">Studio</span>
+        Binder <span className="font-light italic font-title">Studio</span>
       </div>
       <div className="text-sm mt-2">connecting through collecting</div>
     </div>

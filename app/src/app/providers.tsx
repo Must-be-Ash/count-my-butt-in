@@ -7,6 +7,8 @@ import { PrivyWagmiConnector } from "@privy-io/wagmi-connector";
 import { configureChainsConfig } from "@/lib/wagmi";
 import { ThemeProvider } from "@/components/theme-provider"
 
+
+
 const PRIVY_APP_ID = process.env.NEXT_PUBLIC_PRIVY_APP_ID;
 
 export function Providers({ children }: { children: React.ReactNode }) {
@@ -25,7 +27,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
         loginMethods: ["twitter", "wallet", "email"],
         appearance: {
           theme: "light",
-          accentColor: "#676FFF",
+          accentColor: "#82bd9e",
         },
         embeddedWallets: {
           createOnLogin: "users-without-wallets",
