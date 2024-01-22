@@ -10,7 +10,7 @@ const Main = ({
   hideNav?: boolean;
 }) => {
   return (
-    <main className="flex flex-col sm:mx-auto w-full h-screen p-3">
+    <main className="flex flex-col sm:max-w-[1024px] sm:mx-auto w-full h-screen p-3">
       {!hideNav && <Nav />}
       <div className="flex-1 flex flex-col items-center w-full">{children}</div>
     </main>
