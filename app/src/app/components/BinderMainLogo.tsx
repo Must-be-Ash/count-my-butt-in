@@ -8,8 +8,8 @@ const BinderMainLogo = () => {
         src="/assets/icon_white.svg"
         alt="binder-logo"
         className="mb-12 w-20 sm:w-24"
-        width="0"
-        height="0"
+        width="250"
+        height="250"
         sizes="100vw"
       />
       <div className="text-2xl font-bold">
