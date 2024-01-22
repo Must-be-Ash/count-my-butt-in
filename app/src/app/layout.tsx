@@ -30,12 +30,12 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" sizes="any" />
       </head>
       <body className={cn(
-        "min-h-screen antialiased",
+        "min-h-screen font-sans",
         fontSans.variable,
         baskerville.variable
       )}>
       <Providers>
-        <div vaul-drawer-wrapper="" className="font-sans">
+        <div vaul-drawer-wrapper="" className="">
           {children}
         </div>
       </Providers>
