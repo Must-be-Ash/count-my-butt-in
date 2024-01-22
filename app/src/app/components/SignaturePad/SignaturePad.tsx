@@ -32,7 +32,7 @@ export default function SignaturePadTest({
   const [state, setState] = useState<CanvasState>({
     color: "white",
     brushRadius: 5,
-    lazyRadius: 1,
+    lazyRadius: 5,
     savedCanvasData: ``,
   });
   const [drawingOn, setDrawingOn] =
