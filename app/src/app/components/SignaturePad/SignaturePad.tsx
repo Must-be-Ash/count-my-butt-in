@@ -65,7 +65,7 @@ export default function SignaturePadTest({
         autographData: drawingOn.getSaveData(),
         autographDataURL: drawingOn.getDataURL(),
         status: NetworkStatus.CONFIRMED,
-        nftImageURL: backgroundImage
+        nftImageURL: backgroundImage,
       },
     });
     // additionally upload data to ipfs, do this async to give better UX experience
@@ -92,7 +92,7 @@ export default function SignaturePadTest({
         metadataUrl: "",
         status: NetworkStatus.PENDING,
         toUpload: "",
-        nftImageURL: ""
+        nftImageURL: "",
       },
     });
     await APIHelpers.patch(`/api/campaigns/${campaignId}/`, {
@@ -105,12 +105,12 @@ export default function SignaturePadTest({
   };
   return (
     <div className="m-auto w-[100%] p-3">
-        <CanvasToDrawOn
-          state={state}
-          setDrawingOn={setDrawingOn}
-          backgroundImage={backgroundImage}
-        />
-      <div className="pt-3 flex flex-row gap-1 items-center justify-center w-full">
+      <CanvasToDrawOn
+        state={state}
+        setDrawingOn={setDrawingOn}
+        backgroundImage={backgroundImage}
+      />
+      <div className="pt-3 flex flex-row gap-1 items-center justify-center w-full font-sans">
         {!state.savedCanvasData && (
           <BinderButton
             onClick={async () => saveCanvas()}
@@ -144,8 +144,8 @@ const CanvasToDrawOn = ({
     backgroundSize: `cover`,
     borderRadius: `8px`,
     // boxShadow: `rgba(0, 0, 0, 0.1) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px`,
-    width: "100%"
-  }
+    width: "100%",
+  };
   if (state.savedCanvasData) {
     return (
       <CanvasDraw
