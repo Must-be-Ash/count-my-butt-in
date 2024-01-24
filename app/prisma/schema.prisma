@@ -61,7 +61,15 @@ model Campaign {
   defaultURI                     String?
   binderContract                 String?
   manifestUrl                    String?
-  whitelistedCollectionAddresses String[]
+}
+
+model CampaignWhiteList {
+  campaignId                     String  
+  createdAt                      DateTime @default(now())
+  networkId                      Network  @default(ETHEREUM)
+  contractAddress String
+  tokenId         String @default("") // empty string means all tokens
+  @@unique([campaignId, networkId, contractAddress, tokenId])
 }
 
 model Nft {

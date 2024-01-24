@@ -141,3 +141,11 @@ export function createNft(data: Prisma.NftCreateInput) {
     create: data,
   });
 }
+
+export function getCampaignWhiteList(campaignId: string) {
+  return prisma.campaignWhiteList.findMany({
+    where: {
+      campaignId,
+    },
+  });
+}

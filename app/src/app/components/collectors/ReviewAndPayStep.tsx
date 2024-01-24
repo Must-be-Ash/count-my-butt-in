@@ -18,28 +18,12 @@ import { getContractEtherscanLink } from "@/utils/common";
 
 export default function ReviewAndPayStep() {
   const { instance, setInstance } = useInstance();
-  const [recipient, setRecipient] = useState<string>();
   const [signature, setSignature] = useState<string>();
+  const [recipient, setRecipient] = useState<string>();
   const { campaign } = useCampaign(instance.campaignId);
 
   const gasFee = 0.1;
   const platformFee = 0.9;
-
-  useEffect(() => {
-    const run = async () => {
-      const tokenboundClient = new TokenboundClient({
-        chainId: instance.nftNetworkId,
-      });
-      setRecipient(
-        await tokenboundClient.getAccount({
-          tokenContract: instance.contractAddress as `0x${string}`,
-          tokenId: instance.tokenId,
-        })
-      );
-    };
-
-    run();
-  }, [instance, setInstance]);
 
   useEffect(() => {
     const run = async () => {
@@ -54,7 +38,7 @@ export default function ReviewAndPayStep() {
           personalNote: instance.note,
         },
       });
-      console.log("created new order", result.order.orderId);
+
       setInstance({
         ...instance,
         orderId: result.order.orderId,
@@ -66,19 +50,22 @@ export default function ReviewAndPayStep() {
 
   useEffect(() => {
     const run = async () => {
-      if (recipient) {
-        const signature = await APIHelpers.post("/api/sign", {
+      const { signature, recipient } = await APIHelpers.post(
+        `/api/campaign/${instance.campaignId}/sign`,
+        {
           body: {
-            recipient,
             tokenId: instance.tokenId,
+            contractAddress: instance.contractAddress,
+            networkId: instance.nftNetworkId,
           },
-        });
-        setSignature(signature.signature);
-      }
+        }
+      );
+      setSignature(signature.signature);
+      setRecipient(recipient);
     };
 
     run();
-  }, [recipient, instance]);
+  }, [instance]);
 
   return (
     <div className="flex flex-col h-full w-full gap-2">
@@ -125,13 +112,11 @@ export default function ReviewAndPayStep() {
           </a>
         </div>
         {instance.note && (
-            <div className="bg-black p-4 rounded-md">
-              <div className="text-neutral-400 text-sm">Note for the artist</div>
-              <div>
-                {instance.note}
-              </div>
-            </div>
-          )}
+          <div className="bg-black p-4 rounded-md">
+            <div className="text-neutral-400 text-sm">Note for the artist</div>
+            <div>{instance.note}</div>
+          </div>
+        )}
         <div className="inline-flex bg-black p-4 rounded-md flex-col items-start gap-[8px] relative flex-[0_0_auto]">
           <div className="flex flex-row justify-between w-full text-neutral-400">
             <div>Platform fee</div>
@@ -158,8 +143,8 @@ export default function ReviewAndPayStep() {
       !!instance.orderId ? (
         <MintButton
           campaignNetworkId={nameToNetwork(campaign.networkId)}
-          recipient={recipient}
           signature={signature}
+          recipient={recipient}
           binderContract={campaign.binderContract}
         />
       ) : (
