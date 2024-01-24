@@ -12,15 +12,18 @@ export async function POST(
   // grab whitelist from campaign
   const campaignWhiteLists = await getCampaignWhiteList(params.campaignId);
   const { networkId, tokenId, contractAddress } = data;
-  const validToken = campaignWhiteLists.find((whitelist) =>
-    whitelist.tokenId.length
-      ? whitelist.contractAddress === contractAddress &&
-        whitelist.tokenId === tokenId
-      : whitelist.contractAddress === contractAddress
-  );
-  if (!validToken) {
-    return NextResponse.json({ error: "Token not found in whitelist" });
+  if (campaignWhiteLists.length > 0) {
+    const validToken = campaignWhiteLists.find((whitelist) =>
+      whitelist.tokenId.length
+        ? whitelist.contractAddress === contractAddress &&
+          whitelist.tokenId === tokenId
+        : whitelist.contractAddress === contractAddress
+    );
+    if (!validToken) {
+      return NextResponse.json({ error: "Token not found in whitelist" });
+    }
   }
+
   const tokenboundClient = new TokenboundClient({
     chainId: networkId,
   });
