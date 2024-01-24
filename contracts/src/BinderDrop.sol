@@ -18,6 +18,7 @@ contract BinderDrop is ERC721, Admins, Initializable {
     using Strings for uint256;
 
     bool public publicMintsPaused;
+    uint public mintCost = 0;
     uint256 internal _tokenCount = 0;
     // the tokenId that is the boundary between revealed and pre-revealed tokens
     uint256 internal _revealedTokenIdBoundary;
@@ -27,11 +28,12 @@ contract BinderDrop is ERC721, Admins, Initializable {
 
     constructor() ERC721("BinderDrop", "BinderDropV1") {}
 
-    function initialize(address _creator, string memory defaultUri, address _server) external initializer {
+    function initialize(address _creator, string memory defaultUri, address _server, uint cost) external initializer {
       require(_creator != address(0));
       creator = _creator;
       defaultURI = defaultUri;
       server = _server;
+      mintCost = cost;
     }
 
     event AutographIncoming(address minter, string orderId, address recipient, uint256 tokenId, bytes32 hash);
@@ -76,7 +78,7 @@ contract BinderDrop is ERC721, Admins, Initializable {
      * @param recipient which address the tokenId goes to
      * @param signature string passed on from the server
      */
-    function mintTo(string memory orderId, address recipient, bytes memory signature) public {
+    function mintTo(string memory orderId, address recipient, bytes memory signature) public payable {
       // recipient-tokenid pair will always be unique
       // hash is the keccack256 over recipient,tokenId
       // tokenId is kept track of on the server
@@ -88,6 +90,9 @@ contract BinderDrop is ERC721, Admins, Initializable {
       if (balanceOf(recipient) > 0) {
         revert OnlyOneMintAllowed();
       }
+      // Check price
+      require(msg.value >= mintCost, "Must pay more.");
+      
       bytes32 payloadhash = keccak256(abi.encode(recipient));
       bytes32 hash = keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", payloadhash));
       if (!_verifyHash(hash, signature)) {
