@@ -9,7 +9,7 @@
     "lint": "next lint",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
-    "trigger-prod-build": "git commit --allow-empty -m 'Trigger Build' && git push"
+    "vercel:build": "git commit --allow-empty -m 'Trigger Build' && git push"
   },
   "dependencies": {
     "@prisma/client": "^5.8.0",
