@@ -11,6 +11,7 @@ export interface Instance {
   nftUrl: string;
   name: string;
   note: string;
+  tipAmount?: number;
 }
 
 const instanceContext = createContext({
@@ -24,6 +25,7 @@ const instanceContext = createContext({
     nftUrl: "",
     name: "",
     note: "",
+    tipAmount: 0,
   },
 
   setInstance: (_: Partial<Instance>) => {},
@@ -40,6 +42,7 @@ export function InstanceProvider({ children }: { children: React.ReactNode }) {
     nftUrl: "",
     name: "",
     note: "",
+    tipAmount: 0,
   });
 
   return (

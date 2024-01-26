@@ -7,6 +7,7 @@ import { useSteps } from "@/context/StepsContext";
 import { useInstance } from "@/context/InstanceContext";
 import { SuccessStep } from "@/app/components/collectors/SuccessStep";
 import { useEffect } from "react";
+import TipStep from "@/app/components/collectors/TipStep";
 
 export default function CollectorHome({
   params,
@@ -30,6 +31,8 @@ export default function CollectorHome({
       ) : currentStepIndex === 1 ? (
         <LeaveNoteStep />
       ) : currentStepIndex === 2 ? (
+        <TipStep />
+      ) : currentStepIndex === 3 ? (
         <ReviewAndPayStep />
       ) : (
         <SuccessStep />
