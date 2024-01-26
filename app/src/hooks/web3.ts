@@ -4,7 +4,6 @@ import { networkIdToString } from "@/utils/common";
 import { useEffect } from "react";
 import { useWaitForTransaction } from "wagmi";
 import { Interface } from "@ethersproject/abi";
-import { parseEther } from "ethers";
 
 export function useWrite(data: {
   networkId: number;
@@ -12,10 +11,8 @@ export function useWrite(data: {
   abi: any;
   functionName: string;
   args: any[];
-  tipAmount: number;
 }) {
-  const { contractAddress, abi, functionName, args, networkId, tipAmount } =
-    data;
+  const { contractAddress, abi, functionName, args, networkId } = data;
 
   const { wallets } = useWallets();
   const wallet = wallets[0];
@@ -41,7 +38,6 @@ export function useWrite(data: {
     address: contractAddress as `0x${string}`,
     abi,
     args,
-    value: parseEther(tipAmount.toString()),
     functionName,
   });
 
