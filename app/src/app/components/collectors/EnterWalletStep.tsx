@@ -28,7 +28,7 @@ export default function EnterWalletStep() {
   return (
     <div className="flex flex-col gap-4 grow w-full justify-start">
       <h1 className="text-2xl ">Enter a wallet address</h1>
-      <div className="text-gray-500">
+      <div className="text-neutral-500">
         Enter the wallet address that contains the NFT you want signed
       </div>
       <div className="flex flex-row w-full">
