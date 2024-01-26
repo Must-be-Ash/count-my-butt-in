@@ -69,7 +69,7 @@ export default function ReviewAndPayStep() {
 
   return (
     <div className="flex flex-col h-full w-full gap-2">
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 mb-5">
         <h1>Review and Pay</h1>
         <div className="bg-black p-4 rounded-md flex flex-col items-start gap-2 w-full">
           <a
@@ -128,6 +128,13 @@ export default function ReviewAndPayStep() {
 
             <div>${gasFee}</div>
           </div>
+          {instance.tipAmount > 0 && (
+            <div className="flex flex-row justify-between w-full text-neutral-400">
+              <div>tip</div>
+
+              <div>${instance.tipAmount}</div>
+            </div>
+          )}
           <div className="flex flex-row justify-between w-full text-xl font-bold">
             <div>You pay</div>
 

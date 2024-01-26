@@ -40,6 +40,7 @@ export default function MintButton({
     abi: BINDER_DROP_ABI,
     functionName: "mintTo",
     args: [instance.orderId, recipient, signature],
+    tipAmount: instance.tipAmount,
   });
   const { setCurrentStepIndex } = useSteps();
   async function mint() {
@@ -108,7 +109,9 @@ export default function MintButton({
       <BinderButton
         onClick={!wrongNetwork ? () => mint() : () => switchCorrectNetwork()}
         isLoading={isLoading}
-      >{wrongNetwork ? "Switch network" : "Mint"}</BinderButton>
+      >
+        {wrongNetwork ? "Switch network" : "Mint"}
+      </BinderButton>
       <ErrorDisplay error={error} />
     </>
   );
