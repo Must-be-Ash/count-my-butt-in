@@ -22,32 +22,31 @@ contract BinderDrop is ERC721, Admins, Initializable {
     uint256 internal _tokenCount = 0;
     // the tokenId that is the boundary between revealed and pre-revealed tokens
     uint256 internal _revealedTokenIdBoundary;
+    uint256 internal _maxTokenCount = 0;
     string public defaultURI;
     string public revealedURI;
     mapping(uint256 => bool) revealedTokens;
 
     constructor() ERC721("BinderDrop", "BinderDropV1") {}
 
-    function initialize(address _creator, string memory defaultUri, address _server, uint cost) external initializer {
+    function initialize(address _creator, string memory defaultUri, address _server, uint cost, uint256 _batchSize) external initializer {
       require(_creator != address(0));
       creator = _creator;
       defaultURI = defaultUri;
       server = _server;
       mintCost = cost;
+      _maxTokenCount =  _batchSize;
     }
 
     event AutographIncoming(address minter, string orderId, address recipient, uint256 tokenId, bytes32 hash);
 
     function pausePublicMints() external onlyAdmin {
-      if (publicMintsPaused) {
-          revert PublicMintsPaused();
-      }
+      require(!publicMintsPaused, "Public mints are already paused.");
       publicMintsPaused = true;
     }
+
     function unpausePublicMints() external onlyAdmin {
-      if (!publicMintsPaused) {
-          revert PublicMintsActive();
-      }
+      require(publicMintsPaused, "Public mints are already unpaused.");
       publicMintsPaused = false;
     }
 
@@ -96,7 +95,12 @@ contract BinderDrop is ERC721, Admins, Initializable {
       }
       // Check price
       require(msg.value >= mintCost, "Must pay more.");
-      
+      if (_maxTokenCount != 0 && _tokenCount == _maxTokenCount) {
+        // the last token mint was _maxTokenCount
+        // should revert here
+        // unless maxTokenCount is increased
+        revert MaxTokenCountReached();
+      }
       bytes32 payloadhash = keccak256(abi.encode(recipient));
       bytes32 hash = keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", payloadhash));
       if (!_verifyHash(hash, signature)) {
@@ -105,6 +109,11 @@ contract BinderDrop is ERC721, Admins, Initializable {
       ++_tokenCount;
       _safeMint(recipient, _tokenCount);
       emit AutographIncoming(msg.sender, orderId, recipient, _tokenCount, hash);
+    }
+
+    function bumpTokenCount(unint256 amount) public onlyAdmin returns (uint256) {
+      _maxTokenCount += amount;
+      return _maxTokenCount;
     }
 
     /**
@@ -122,9 +131,8 @@ contract BinderDrop is ERC721, Admins, Initializable {
     }
 
     function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
-      if (ownerOf(tokenId) == address(0)) {
-        revert NonExistentToken();
-      }
+      require(ownerOf(tokenId) != address(0), 'Non existent token');
+
       if (tokenId > _revealedTokenIdBoundary) {
         // default uri returned
         return bytes(defaultURI).length > 0 ? string(abi.encodePacked(defaultURI)) : "";
