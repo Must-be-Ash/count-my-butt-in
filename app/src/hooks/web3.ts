@@ -41,7 +41,7 @@ export function useWrite(data: {
     address: contractAddress as `0x${string}`,
     abi,
     args,
-    value: parseEther(tipAmount.toString()),
+    value: parseEther(tipAmount?.toString() || "0"),
     functionName,
   });
 
