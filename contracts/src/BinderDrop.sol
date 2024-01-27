@@ -54,14 +54,14 @@ contract BinderDrop is ERC721, Admins, Initializable {
     // soulbound
     function transferFrom(address from, address to, uint256 tokenId) public override {
       // tokens are only mintable, not transferrable
-      if (from != address(0)) {
-        revert IsSoulbound();
-      }
-      // if minting & public mints paused
-      if (publicMintsPaused) {
-        revert PublicMintsPaused();
-      }
+      require(from == address(0) || to == address(0), "This a Soulbound token. It cannot be transferred. It can only be burned by the token owner.");
+    
       super.transferFrom(from, to, tokenId);
+    }
+
+    function burn(uint256 tokenId) external {
+        require(ownerOf(tokenId) == msg.sender, "Only the owner of the token can burn it.");
+        _burn(tokenId);
     }
 
     function _verifyHash(bytes32 hash, bytes memory signature) internal view returns (bool) {
@@ -87,6 +87,10 @@ contract BinderDrop is ERC721, Admins, Initializable {
       // recipient will always be a tokenbound account address associated with
       // a selected NFT
       // tokenid is a unique integer selected by the server
+      // if minting & public mints paused
+      if (publicMintsPaused) {
+        revert PublicMintsPaused();
+      }
       if (balanceOf(recipient) > 0) {
         revert OnlyOneMintAllowed();
       }
@@ -112,8 +116,9 @@ contract BinderDrop is ERC721, Admins, Initializable {
       revealedURI = _revealedURI;
     }
 
-    function withdraw() external onlyAdmin {
-        payable(msg.sender).transfer(address(this).balance);
+    function withdraw(address receiver, uint256 amount) external onlyAdmin {
+        (bool sent, ) = receiver.call{value: amount}("");
+        require(sent, "Failed to transfer to receiver");
     }
 
     function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
