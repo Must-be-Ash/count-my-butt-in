@@ -51,6 +51,27 @@ export function getOrders(campaignId: string, status?: NetworkStatus) {
   });
 }
 
+export function getOrdersByPrivyUser(
+  privyUserId: string,
+  status?: NetworkStatus
+) {
+  return prisma.order.findMany({
+    where: {
+      privyUserId,
+      status,
+    },
+  });
+}
+
+export function getOrdersByUser(userId: string, status?: NetworkStatus) {
+  return prisma.order.findMany({
+    where: {
+      userId,
+      status,
+    },
+  });
+}
+
 export function getOrderByToken(tokenId: string, contractAddress: string) {
   return prisma.order.findMany({
     where: {
@@ -147,5 +168,44 @@ export function getCampaignWhiteList(campaignId: string) {
     where: {
       campaignId,
     },
+  });
+}
+
+export function createUser(data: Prisma.UserCreateInput) {
+  return prisma.user.create({
+    data,
+  });
+}
+
+export function createOrUpdateUser(data: Prisma.UserCreateInput) {
+  return prisma.user.upsert({
+    where: {
+      privyId: data.privyId,
+    },
+    update: data,
+    create: data,
+  });
+}
+
+export function getUser(id: string) {
+  return prisma.user.findUnique({
+    where: {
+      id,
+    },
+  });
+}
+
+export function getUserByPrivyId(privyId: string) {
+  return prisma.user.findUnique({
+    where: {
+      privyId,
+    },
+  });
+}
+
+export function updateUser(id: string, data: Prisma.UserUpdateInput) {
+  return prisma.user.update({
+    where: { id },
+    data,
   });
 }

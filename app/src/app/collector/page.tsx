@@ -14,7 +14,7 @@ export default function Dashboard({
 
   useEffect(() => {
     if (ready && authenticated) {
-      router.push(`/dashboard/${params.campaignId}/orders`);
+      router.push(`/collector/home`);
     }
   }, [ready, authenticated, router, params.campaignId]);
 

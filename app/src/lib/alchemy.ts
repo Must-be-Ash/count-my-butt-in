@@ -1,4 +1,11 @@
-import { Network, Alchemy, NftFilters, NftOrdering } from "alchemy-sdk";
+import {
+  Network,
+  Alchemy,
+  NftFilters,
+  NftOrdering,
+  Nft,
+  OwnedNft,
+} from "alchemy-sdk";
 import APIHelpers from "./apiHelper";
 
 export const mainnetAlchemy = new Alchemy({
@@ -55,13 +62,14 @@ export function getAlchemy(networkId: number) {
   return mainnetAlchemy;
 }
 
-export function getNftMetadata(
+export async function getNftMetadata(
   networkId: number,
   contractAddress: string,
   tokenId: string
 ) {
   const alchemy = getAlchemy(networkId);
-  return alchemy.nft.getNftMetadata(contractAddress, tokenId);
+  let nft = await alchemy.nft.getNftMetadata(contractAddress, tokenId);
+  return injectBinderMetadata(networkId, nft);
 }
 
 export async function getNftsForOwner(
@@ -77,35 +85,10 @@ export async function getNftsForOwner(
   });
   for (let i = 0; i < ownedNfts.ownedNfts.length; i++) {
     const ownedNft = ownedNfts.ownedNfts[i];
-    if (ownedNft.title !== "Binder Drop") {
-      continue;
-    }
-    // we want to get our own cached data to not relying on cache data on alchemy api
-    const { nft } = await APIHelpers.get(
-      `/api/nft?networkId=${networkId}&contractAddress=${ownedNft.contract.address}&tokenId=${ownedNft.tokenId}`
-    );
-
-    if (!!nft) {
-      try {
-        if (nft.tokenUri.includes("ipfs")) {
-          // resolve ipfs url
-          const { metadata } = await APIHelpers.post(`/api/nft/ipfs`, {
-            body: {
-              ipfsUrl: nft.tokenUri,
-            },
-          });
-
-          ownedNft.title = metadata.name;
-
-          ownedNft.media[0].gateway = metadata.image;
-        }
-      } catch (e) {
-        // non-blocking
-        console.error(e);
-      }
-    }
-
-    ownedNfts.ownedNfts[i] = ownedNft;
+    ownedNfts.ownedNfts[i] = (await injectBinderMetadata(
+      networkId,
+      ownedNft
+    )) as OwnedNft;
   }
 
   return ownedNfts;
@@ -121,4 +104,36 @@ export function getNFTsForContract(
     pageKey,
     pageSize: nftsPerPage,
   });
+}
+
+export async function injectBinderMetadata(
+  networkId: number,
+  nft: Nft | OwnedNft
+): Promise<Nft | OwnedNft> {
+  if (nft.title === "Binder Drop") {
+    // we want to get our own cached data to not relying on cache data on alchemy api
+    const { nft: binderNft } = await APIHelpers.get(
+      `/api/nft?networkId=${networkId}&contractAddress=${nft.contract.address}&tokenId=${nft.tokenId}`
+    );
+    if (!!binderNft) {
+      try {
+        if (binderNft.tokenUri.includes("ipfs")) {
+          // resolve ipfs url
+          const { metadata } = await APIHelpers.post(`/api/nft/ipfs`, {
+            body: {
+              ipfsUrl: binderNft.tokenUri,
+            },
+          });
+
+          nft.title = metadata.name;
+
+          nft.media[0].gateway = metadata.image;
+        }
+      } catch (e) {
+        // non-blocking
+        console.error(e);
+      }
+    }
+  }
+  return nft;
 }

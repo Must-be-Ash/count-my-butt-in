@@ -1,10 +1,10 @@
 "use client";
 
-import { usePrivy } from "@privy-io/react-auth";
 import { useRouter } from "next/navigation";
 import Loader from "@/app/components/Loader";
 import { useEffect } from "react";
 import Main from "@/app/layouts/Main";
+import { useAuthentication } from "@/hooks/useAuthentication";
 
 export default function CollectorsLayout({
   children,
@@ -13,7 +13,7 @@ export default function CollectorsLayout({
   children: React.ReactNode;
   params: { campaignId: string };
 }) {
-  const { ready, authenticated, user } = usePrivy();
+  const { ready, authenticated, user } = useAuthentication();
   const router = useRouter();
 
   useEffect(() => {
@@ -28,9 +28,5 @@ export default function CollectorsLayout({
     );
   }
 
-  return (
-    <Main hideNav>
-      {children}
-    </Main>
-  );
+  return <Main hideNav>{children}</Main>;
 }

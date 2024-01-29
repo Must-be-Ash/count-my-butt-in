@@ -123,6 +123,8 @@ export const MINT_FEE = 0.01;
 
 export const binderNetworkId = 11155111;
 export const binderFactoryContract =
-  "0x24E709007e017Bb54082d20d27f46DEbe2ad8D08";
+  "0xAF8A8d6823b4Ff069F6bC805cbD6675Bb4CEfa9f";
 
 export const childrenNetworkIds = [1, 137, 8453, 11155111];
+
+export const defaultNote = "I am a busy collector";

@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import CanvasDraw from "react-canvas-draw";
 import BinderButton from "../BinderButton";
 import APIHelpers from "@/lib/apiHelper";
-import { NetworkStatus } from "@prisma/client";
+import { NetworkStatus, Order } from "@prisma/client";
 import { useCampaign } from "@/hooks/useCampaign";
-import { usePrivy } from "@privy-io/react-auth";
+import { useAuthentication } from "@/hooks/useAuthentication";
+import CollectorDisplay from "./CollectorDisplay";
 
 export interface SignaturePadProps {
   closeModal: () => void;
@@ -19,12 +20,12 @@ type CanvasState = {
 };
 export default function SignaturePadTest({
   campaignId,
-  orderId,
+  order,
   closeModal,
   backgroundImage,
 }: {
   campaignId: string;
-  orderId: string;
+  order: Order;
   closeModal: () => void;
   backgroundImage: string;
 }) {
@@ -38,12 +39,12 @@ export default function SignaturePadTest({
   const [drawingOn, setDrawingOn] =
     useState<CanvasState["savedCanvasData"]>(``);
   const [loading, setLoading] = useState<boolean>(false);
-  const { user } = usePrivy();
+  const { user } = useAuthentication();
   useEffect(() => {
     const fetch = async () => {
       setLoading(true);
       const orderDetails = await APIHelpers.get(
-        `/api/campaigns/${campaignId}/orders/${orderId}`
+        `/api/campaigns/${campaignId}/orders/${order.orderId}`
       );
       const savedCanvasData = orderDetails.order.autographData
         ? `${orderDetails.order.autographData.toString()}`
@@ -56,18 +57,21 @@ export default function SignaturePadTest({
     };
     fetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [orderId]);
+  }, [order]);
 
   const saveCanvas = async () => {
     setLoading(true);
-    await APIHelpers.patch(`/api/campaigns/${campaignId}/orders/${orderId}`, {
-      body: {
-        autographData: drawingOn.getSaveData(),
-        autographDataURL: drawingOn.getDataURL(),
-        status: NetworkStatus.CONFIRMED,
-        nftImageURL: backgroundImage,
-      },
-    });
+    await APIHelpers.patch(
+      `/api/campaigns/${campaignId}/orders/${order.orderId}`,
+      {
+        body: {
+          autographData: drawingOn.getSaveData(),
+          autographDataURL: drawingOn.getDataURL(),
+          status: NetworkStatus.CONFIRMED,
+          nftImageURL: backgroundImage,
+        },
+      }
+    );
     // additionally upload data to ipfs, do this async to give better UX experience
     await APIHelpers.post(`/api/campaigns/${campaignId}/metadata`, {
       body: {
@@ -85,16 +89,19 @@ export default function SignaturePadTest({
       };
     });
     setDrawingOn(undefined);
-    await APIHelpers.patch(`/api/campaigns/${campaignId}/orders/${orderId}`, {
-      body: {
-        autographData: "",
-        autographDataURL: "",
-        metadataUrl: "",
-        status: NetworkStatus.PENDING,
-        toUpload: "",
-        nftImageURL: "",
-      },
-    });
+    await APIHelpers.patch(
+      `/api/campaigns/${campaignId}/orders/${order.orderId}`,
+      {
+        body: {
+          autographData: "",
+          autographDataURL: "",
+          metadataUrl: "",
+          status: NetworkStatus.PENDING,
+          toUpload: "",
+          nftImageURL: "",
+        },
+      }
+    );
     await APIHelpers.patch(`/api/campaigns/${campaignId}/`, {
       body: {
         manifestUrl: "",
@@ -109,6 +116,7 @@ export default function SignaturePadTest({
         state={state}
         setDrawingOn={setDrawingOn}
         backgroundImage={backgroundImage}
+        order={order}
       />
       <div className="pt-3 flex flex-row gap-1 items-center justify-center w-full font-sans">
         {!state.savedCanvasData && (
@@ -134,10 +142,12 @@ const CanvasToDrawOn = ({
   state,
   setDrawingOn,
   backgroundImage,
+  order,
 }: {
   state: CanvasState;
   setDrawingOn: (arg: CanvasDraw) => void;
   backgroundImage: string;
+  order: Order;
 }) => {
   const style = {
     backgroundImage: `-webkit-linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.6)), url(${backgroundImage})`,
@@ -148,29 +158,34 @@ const CanvasToDrawOn = ({
   };
   if (state.savedCanvasData) {
     return (
-      <CanvasDraw
-        ref={(canvasDraw) => {
-          if (canvasDraw && state.savedCanvasData) {
-            return canvasDraw.loadSaveData(state.savedCanvasData);
-          }
-        }}
-        brushColor={state.color}
-        brushRadius={state.brushRadius}
-        lazyRadius={state.lazyRadius}
-        disabled
-        hideGrid
-        style={style}
-      />
+      <>
+        <CanvasDraw
+          ref={(canvasDraw) => {
+            if (canvasDraw && state.savedCanvasData) {
+              return canvasDraw.loadSaveData(state.savedCanvasData);
+            }
+          }}
+          brushColor={state.color}
+          brushRadius={state.brushRadius}
+          lazyRadius={state.lazyRadius}
+          disabled
+          hideGrid
+          style={style}
+        />
+      </>
     );
   }
   return (
-    <CanvasDraw
-      onChange={(cd) => setDrawingOn(cd)}
-      brushColor={state.color}
-      brushRadius={state.brushRadius}
-      lazyRadius={state.lazyRadius}
-      style={style}
-      hideGrid
-    />
+    <>
+      <CollectorDisplay order={order} />
+      <CanvasDraw
+        onChange={(cd) => setDrawingOn(cd)}
+        brushColor={state.color}
+        brushRadius={state.brushRadius}
+        lazyRadius={state.lazyRadius}
+        style={style}
+        hideGrid
+      />
+    </>
   );
 };

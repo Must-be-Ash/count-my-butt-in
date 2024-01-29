@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
     BINDER_DROP_ABI,
     provider
   );
-
+  // Look for AutograhIncoming event
   const binderMint = binderContract.filters.AutographIncoming();
   const logsBinderMint = await binderContract.queryFilter(
     binderMint,

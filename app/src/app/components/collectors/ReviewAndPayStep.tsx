@@ -14,9 +14,11 @@ import MintButton from "./MintButton";
 import Loader from "../Loader";
 import { TokenboundClient } from "@tokenbound/sdk";
 import { useCampaign } from "@/hooks/useCampaign";
-import { getContractEtherscanLink } from "@/utils/common";
+import { defaultNote, getContractEtherscanLink } from "@/utils/common";
+import { useAuthentication } from "@/hooks/useAuthentication";
 
 export default function ReviewAndPayStep() {
+  const { user, authenticatedUser } = useAuthentication();
   const { instance, setInstance } = useInstance();
   const [signature, setSignature] = useState<string>();
   const [recipient, setRecipient] = useState<string>();
@@ -27,31 +29,49 @@ export default function ReviewAndPayStep() {
 
   useEffect(() => {
     const run = async () => {
-      // create new order and save to BE
+      if (authenticatedUser) {
+        // create new order and save to BE
+        const result = await APIHelpers.post(
+          `/api/campaigns/${instance.campaignId}/orders`,
+          {
+            body: {
+              campaignId: instance.campaignId,
+              collectionNetwork: networkToName(
+                instance.nftNetworkId
+              ).toUpperCase(),
+              collectionAddress: instance.contractAddress,
+              selectedTokenId: instance.tokenId,
+              personalNote: instance.note,
+              userId: authenticatedUser?.id,
+              privyUserId: user?.id, // user here is privy user
+            },
+          }
+        );
+        // update userId and priviUserId, for somereason, theses cannot be updated upon creation
+        await APIHelpers.patch(
+          `/api/campaigns/${instance.campaignId}/orders/${result.order.orderId}`,
+          {
+            body: {
+              userId: authenticatedUser?.id,
+              privyUserId: user?.id, // user here is privy user
+            },
+          }
+        );
 
-      const result = await APIHelpers.post("/api/campaigns/1/orders", {
-        body: {
-          campaignId: instance.campaignId,
-          collectionNetwork: networkToName(instance.nftNetworkId).toUpperCase(),
-          collectionAddress: instance.contractAddress,
-          selectedTokenId: instance.tokenId,
-          personalNote: instance.note,
-        },
-      });
-
-      setInstance({
-        ...instance,
-        orderId: result.order.orderId,
-      });
+        setInstance({
+          ...instance,
+          orderId: result.order.orderId,
+        });
+      }
     };
 
     run();
-  }, []);
+  }, [authenticatedUser]);
 
   useEffect(() => {
     const run = async () => {
       const { signature, recipient } = await APIHelpers.post(
-        `/api/campaign/${instance.campaignId}/sign`,
+        `/api/campaigns/${instance.campaignId}/sign`,
         {
           body: {
             tokenId: instance.tokenId,
@@ -60,7 +80,8 @@ export default function ReviewAndPayStep() {
           },
         }
       );
-      setSignature(signature.signature);
+
+      setSignature(signature);
       setRecipient(recipient);
     };
 
@@ -114,7 +135,7 @@ export default function ReviewAndPayStep() {
         {instance.note && (
           <div className="bg-black p-4 rounded-md">
             <div className="text-neutral-400 text-sm">Note for the artist</div>
-            <div>{instance.note}</div>
+            <div>{instance.note || defaultNote}</div>
           </div>
         )}
         <div className="inline-flex bg-black p-4 rounded-md flex-col items-start gap-[8px] relative flex-[0_0_auto]">

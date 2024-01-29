@@ -12,10 +12,9 @@ export function useWrite(data: {
   abi: any;
   functionName: string;
   args: any[];
-  tipAmount: number;
+  value?: number;
 }) {
-  const { contractAddress, abi, functionName, args, networkId, tipAmount } =
-    data;
+  const { contractAddress, abi, functionName, args, networkId, value } = data;
 
   const { wallets } = useWallets();
   const wallet = wallets[0];
@@ -41,7 +40,7 @@ export function useWrite(data: {
     address: contractAddress as `0x${string}`,
     abi,
     args,
-    value: parseEther(tipAmount?.toString() || "0"),
+    value: parseEther(value?.toString() || "0"),
     functionName,
   });
 

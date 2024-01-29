@@ -5,7 +5,7 @@ import BinderButton from "@/app/components/BinderButton";
 import APIHelpers from "@/lib/apiHelper";
 import LoginButton from "@/app/components/LoginButton";
 import { useWrite } from "@/hooks/web3";
-import { BINDER_DROP_ABI, BINDER_FACTORY_ABI } from "@/abi";
+import { BINDER_FACTORY_ABI } from "@/abi";
 import { usePrivy } from "@privy-io/react-auth";
 import LogoutButton from "@/app/components/LogoutButton";
 import { binderNetworkId, getContractEtherscanLink } from "@/utils/common";
@@ -45,13 +45,15 @@ export default function DeployButton({
     args: [
       creatorAddress,
       "https://arweave.net/ckSld6yHJxWxis45HhUxOcaP23Ksym1rv1rcDrz8Z-E",
+      0,
+      5,
     ],
   });
   useEffect(() => {
     if (campaignId) {
       router.push(`/dashboard/${campaignId}/orders`);
     }
-  }, [campaignId, router, deployedContract, parsed])
+  }, [campaignId, router, deployedContract, parsed]);
   useEffect(() => {
     const run = async () => {
       setIsLoading(true);
@@ -73,9 +75,7 @@ export default function DeployButton({
   }, [parsed, isSuccess, deployedContract, campaignId, contractAddress]);
 
   if (isLoading || loading) {
-    return (
-      <Loader />
-    )
+    return <Loader />;
   }
 
   return (
@@ -87,7 +87,9 @@ export default function DeployButton({
               ? () => write()
               : () => switchCorrectNetwork()
           }
-        >Start a Campaign</BinderButton>
+        >
+          Start a Campaign
+        </BinderButton>
       )}
       {deployedContract && campaignId && (
         <div className="cursor-pointer">

@@ -116,7 +116,6 @@ export default function NFTProfile({
                     <IoMdRefresh
                       className="text-2xl cursor-pointer"
                       onClick={async () => {
-                        console.log("qwdqwd", tokenContracts);
                         setRefreshLoading(true);
                         try {
                           for (const networkId of childrenNetworkIds) {

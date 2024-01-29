@@ -13,6 +13,7 @@ error PublicMintsPaused();
 error PublicMintsActive();
 error MintPriceNotPaid();
 error HashVerificationFailed();
+error MaxTokenCountReached();
 
 contract BinderDrop is ERC721, Admins, Initializable {
     using Strings for uint256;
@@ -111,7 +112,7 @@ contract BinderDrop is ERC721, Admins, Initializable {
       emit AutographIncoming(msg.sender, orderId, recipient, _tokenCount, hash);
     }
 
-    function bumpTokenCount(unint256 amount) public onlyAdmin returns (uint256) {
+    function bumpTokenCount(uint256 amount) public onlyAdmin returns (uint256) {
       _maxTokenCount += amount;
       return _maxTokenCount;
     }

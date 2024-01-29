@@ -18,6 +18,24 @@ export function useOrders(campaignId: string) {
     isLoading,
     isError: error,
     error: error,
-    refetchOrders: mutate
+    refetchOrders: mutate,
+  };
+}
+
+/*
+ * Get orders by userId (We refer to privyUserId as userId)
+ */
+export function useOrdersByUser(privyUserId: string) {
+  const { data, error, isLoading, mutate } = useSWR<Order[]>(
+    `/api/users/${privyUserId}/orders?usePrivyId=true`,
+    fetchSWR
+  );
+
+  return {
+    orders: data,
+    isLoading,
+    isError: error,
+    error: error,
+    refetchOrders: mutate,
   };
 }

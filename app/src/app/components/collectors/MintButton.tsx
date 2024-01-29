@@ -40,9 +40,10 @@ export default function MintButton({
     abi: BINDER_DROP_ABI,
     functionName: "mintTo",
     args: [instance.orderId, recipient, signature],
-    tipAmount: instance.tipAmount,
+    value: instance.tipAmount,
   });
   const { setCurrentStepIndex } = useSteps();
+
   async function mint() {
     if (write) {
       // create new order
@@ -79,9 +80,10 @@ export default function MintButton({
         console.log(`Error scanning:`);
         console.log(e);
       });
-      setCurrentStepIndex(3);
+      setCurrentStepIndex(4);
       // Sometime Sepolia can throw unexplained error, trigger our scanner anyway in this case
     } else if (transactionError) {
+      console.log("the transaction error", transactionError);
       setTimeout(() => {
         APIHelpers.post("/api/scan", {
           body: {

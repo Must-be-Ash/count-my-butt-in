@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { useOrders } from "@/hooks/useOrders";
 import NFTDisplayFull from "@/app/components/NftDisplayFull";
 import { nameToNetwork } from "@/lib/utils";
-import { NetworkStatus } from "@prisma/client";
+import { NetworkStatus, Order } from "@prisma/client";
 import { getNftMetadata } from "@/lib/alchemy";
 import TokenUriUpdateButton from "@/app/components/dashboard/orders/TokenUriUpdateButton";
 import { useCampaign } from "@/hooks/useCampaign";
@@ -16,6 +16,7 @@ import { IoCheckmark } from "react-icons/io5";
 import formatLongURL from "@/utils/formatLongURL";
 import { BiCopy } from "react-icons/bi";
 import { Credenza, CredenzaContent } from "@/components/ui/credenza";
+import CollectorDisplay from "@/app/components/SignaturePad/CollectorDisplay";
 
 export default function Orders({ params }: { params: { campaignId: string } }) {
   const [hostname, setHostname] = useState<string>("https://app.signed.gg");
@@ -23,8 +24,12 @@ export default function Orders({ params }: { params: { campaignId: string } }) {
   const [isCopied, setIsCopied] = useState<boolean>(false);
 
   useEffect(() => {
-    if (window) {
-      setHostname(window.location.origin);
+    try {
+      if (window) {
+        setHostname(window.location.origin);
+      }
+    } catch (e) {
+      console.log(e);
     }
   }, [window]);
 
@@ -44,10 +49,10 @@ export default function Orders({ params }: { params: { campaignId: string } }) {
 
   const { orders, refetchOrders } = useOrders(params.campaignId);
   const { campaign } = useCampaign(params.campaignId);
-  const [selectedOrderId, setSelectedOrderId] = useState<string>("");
+  const [selectedOrder, setSelectedOrder] = useState<Order>();
   const [imageUrl, setImageUrl] = useState<string>("");
-  const triggerAutograph = async (orderId: string) => {
-    setSelectedOrderId(orderId);
+  const triggerAutograph = async (order: Order) => {
+    setSelectedOrder(order);
     openModal();
   };
   const [modalIsOpen, setModalOpen] = useState<boolean>(false);
@@ -62,10 +67,10 @@ export default function Orders({ params }: { params: { campaignId: string } }) {
     <AuthenticatedPage homeRoute={`/dashboard/${params.campaignId}`}>
       <Main>
         <Credenza open={modalIsOpen} onOpenChange={setModalOpen}>
-          <CredenzaContent className="dark:bg-transparent dark:border-0">
+          <CredenzaContent className="dark:bg-transparent dark:border-0 flex flex-col">
             <SignaturePadTest
               campaignId={params.campaignId}
-              orderId={selectedOrderId}
+              order={selectedOrder!}
               closeModal={closeModal}
               backgroundImage={imageUrl}
             />
@@ -120,7 +125,7 @@ export default function Orders({ params }: { params: { campaignId: string } }) {
                             media.thumbnail || media.gateway || media.raw;
                           setImageUrl(imageUrl);
                         }
-                        triggerAutograph(order.orderId);
+                        triggerAutograph(order);
                       }}
                       className="w-full"
                     >
