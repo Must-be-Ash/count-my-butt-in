@@ -75,10 +75,12 @@ export async function getNftMetadata(
 export async function getNftsForOwner(
   networkId: number,
   address: string,
-  pageKey?: string
+  pageKey?: string,
+  contractAddresses?: string[] // only query from these specific contractAddresses
 ) {
   const alchemy = getAlchemy(networkId);
   const ownedNfts = await alchemy.nft.getNftsForOwner(address, {
+    contractAddresses: contractAddresses,
     pageKey,
     orderBy: NftOrdering.TRANSFERTIME,
     pageSize: nftsPerPage,
