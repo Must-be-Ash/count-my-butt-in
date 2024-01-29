@@ -17,9 +17,10 @@ import { TokenboundClient } from "@tokenbound/sdk";
 import { useCampaign } from "@/hooks/useCampaign";
 import { defaultNote, getContractEtherscanLink } from "@/utils/common";
 import { useAuthentication } from "@/hooks/useAuthentication";
+import LoginButton from "@/app/components/LoginButton";
 
 export default function ReviewAndPayStep() {
-  const { user, authenticatedUser } = useAuthentication();
+  const { user, authenticatedUser, authenticated } = useAuthentication();
   const { instance, setInstance } = useInstance();
   const [signature, setSignature] = useState<string>();
   const [recipient, setRecipient] = useState<string>();
@@ -178,7 +179,10 @@ export default function ReviewAndPayStep() {
         </div>
       </div>
 
-      {!!recipient &&
+      {!authenticated && <LoginButton />}
+
+      {authenticated &&
+      !!recipient &&
       !!signature &&
       !!campaign?.binderContract &&
       !!campaign.networkId &&
@@ -189,10 +193,12 @@ export default function ReviewAndPayStep() {
           recipient={recipient}
           binderContract={campaign.binderContract}
         />
-      ) : (
+      ) : authenticated ? (
         <div className="flex flex-row justify-center">
           <Loader />
         </div>
+      ) : (
+        <div />
       )}
     </div>
   );

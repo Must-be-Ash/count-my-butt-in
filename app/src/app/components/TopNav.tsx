@@ -2,8 +2,10 @@ import { useSteps } from "@/context/StepsContext";
 import LogoutButton from "./LogoutButton";
 import { useEffect, useState } from "react";
 import { ArrowLeftIcon } from "@heroicons/react/20/solid";
+import { useAuthentication } from "@/hooks/useAuthentication";
 
 export default function CollectorTopNav() {
+  const { authenticated } = useAuthentication();
   const { currentStepIndex, setCurrentStepIndex } = useSteps();
 
   const [allSteps, setAllSteps] = useState([
@@ -33,7 +35,7 @@ export default function CollectorTopNav() {
         ) : (
           <div />
         )}
-        <LogoutButton size="sm" />
+        {authenticated && <LogoutButton size="sm" />}
       </div>
       <ol role="list" className="flex space-x-2 grow pt-2">
         {allSteps.map((step) => (
