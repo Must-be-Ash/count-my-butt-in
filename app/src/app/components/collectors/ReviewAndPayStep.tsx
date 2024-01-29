@@ -31,7 +31,6 @@ export default function ReviewAndPayStep() {
 
   useEffect(() => {
     const run = async () => {
-      console.log("qwdqwd", Number(instance.tipAmount));
       if (instance.tipAmount && Number(instance.tipAmount) > 0) {
         const usd = await ethToUsd(Number(instance.tipAmount));
         setTipAmountInUSd(usd);
@@ -156,7 +155,7 @@ export default function ReviewAndPayStep() {
           <div className="flex flex-row justify-between w-full text-neutral-400">
             <div>Platform fee</div>
 
-            <div>${platformFee}</div>
+            <div className="line-through">${platformFee}</div>
           </div>
           <div className="flex flex-row justify-between w-full text-neutral-400">
             <div>Gas fee</div>
@@ -173,7 +172,7 @@ export default function ReviewAndPayStep() {
           <div className="flex flex-row justify-between w-full text-xl font-bold">
             <div>You pay</div>
 
-            <div>${(platformFee + gasFee + tipAmountInUSD).toFixed(2)}</div>
+            <div>${(gasFee + tipAmountInUSD).toFixed(2)}</div>
           </div>
         </div>
       </div>

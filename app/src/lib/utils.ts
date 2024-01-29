@@ -208,7 +208,6 @@ export async function ethToUsd(price: number) {
   const response = await fetch(
     "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd"
   );
-  console.log("adawdw", response);
   const data = await response.json();
   return price * data.ethereum.usd;
 }
