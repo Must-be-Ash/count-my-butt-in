@@ -7,8 +7,8 @@ import Image from "next/image";
 import Loader from "./Loader";
 import { User } from "@prisma/client";
 
-export default function UserInfo({ overrideUser }: { overrideUser: User }) {
-  const { user, authenticatedUser } = useAuthentication();
+export default function UserInfo({ overrideUser }: { overrideUser?: User }) {
+  const { authenticatedUser } = useAuthentication();
   let userToDisplay = overrideUser || authenticatedUser;
   const display = formatWalletAddress(userToDisplay?.walletAddresses[0]);
   if (!userToDisplay) {

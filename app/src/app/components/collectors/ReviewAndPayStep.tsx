@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import {
+  ethToUsd,
   getOpenseaLink,
   nameToNetwork,
   networkToName,
@@ -23,9 +24,22 @@ export default function ReviewAndPayStep() {
   const [signature, setSignature] = useState<string>();
   const [recipient, setRecipient] = useState<string>();
   const { campaign } = useCampaign(instance.campaignId);
+  const [tipAmountInUSD, setTipAmountInUSd] = useState(0);
 
   const gasFee = 0.1;
   const platformFee = 0.9;
+
+  useEffect(() => {
+    const run = async () => {
+      console.log("qwdqwd", Number(instance.tipAmount));
+      if (instance.tipAmount && Number(instance.tipAmount) > 0) {
+        const usd = await ethToUsd(Number(instance.tipAmount));
+        setTipAmountInUSd(usd);
+      }
+    };
+
+    run();
+  }, [instance.tipAmount]);
 
   useEffect(() => {
     const run = async () => {
@@ -47,7 +61,7 @@ export default function ReviewAndPayStep() {
             },
           }
         );
-        // update userId and priviUserId, for somereason, theses cannot be updated upon creation
+        // update userId and priviUserId, for some reason, these cannot be updated upon creation
         await APIHelpers.patch(
           `/api/campaigns/${instance.campaignId}/orders/${result.order.orderId}`,
           {
@@ -149,17 +163,17 @@ export default function ReviewAndPayStep() {
 
             <div>${gasFee}</div>
           </div>
-          {instance.tipAmount > 0 && (
+          {tipAmountInUSD > 0 && (
             <div className="flex flex-row justify-between w-full text-neutral-400">
               <div>tip</div>
 
-              <div>${instance.tipAmount}</div>
+              <div>${tipAmountInUSD.toFixed(2)}</div>
             </div>
           )}
           <div className="flex flex-row justify-between w-full text-xl font-bold">
             <div>You pay</div>
 
-            <div>${(platformFee + gasFee).toFixed(2)}</div>
+            <div>${(platformFee + gasFee + tipAmountInUSD).toFixed(2)}</div>
           </div>
         </div>
       </div>

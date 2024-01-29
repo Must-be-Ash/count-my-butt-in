@@ -9,7 +9,6 @@ import { Order } from "@prisma/client";
 import { defaultNote } from "@/utils/common";
 import UserInfo from "../UserInfo";
 import { useUser } from "@/hooks/useUser";
-import Loader from "../Loader";
 
 export default function CollectorDisplay({ order }: { order: Order }) {
   const { user } = useUser(order.userId);
