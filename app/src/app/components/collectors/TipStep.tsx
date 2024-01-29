@@ -9,7 +9,7 @@ export default function TipStep() {
   const { setCurrentStepIndex } = useSteps();
   return (
     <div className="flex flex-col h-full">
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 mb-6">
         <h1 className="text-2xl">Tip 🫶(optional)</h1>
         <div className=" text-neutral-500 font-bold">
           100% of your tips goes to Violetta. We highly recommend tipping!
@@ -37,7 +37,6 @@ export default function TipStep() {
             />
           </div>
         </div>
-        <div className="text-sm text-neutral-500 ml-auto">0/140</div>
       </div>
 
       <BinderButton onClick={() => setCurrentStepIndex(3)}>Next</BinderButton>

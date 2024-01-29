@@ -22,7 +22,7 @@ export default function EnterWalletStep() {
       return;
     }
 
-    setSelectedAddress(address);
+    setSelectedAddress(address.toLowerCase());
   }
 
   return (

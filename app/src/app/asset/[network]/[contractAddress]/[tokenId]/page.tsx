@@ -10,9 +10,10 @@ import Loader from "@/app/components/Loader";
 import NFTFeed from "@/app/components/asset/NftFeed";
 import { nameToNetwork } from "@/lib/utils";
 import { getOpenseaLink } from "@/lib/utils";
-import { IoMdRefresh } from "react-icons/io";
+import { IoMdRefresh, IoMdHome } from "react-icons/io";
 import APIHelpers from "@/lib/apiHelper";
 import { childrenNetworkIds } from "@/utils/common";
+import Link from "next/link";
 
 export default function NFTProfile({
   params,
@@ -80,6 +81,10 @@ export default function NFTProfile({
       <div className="">
         <main className="py-10">
           <div className="px-4 sm:px-6 lg:px-8">
+            <Link href="/collector">
+              <IoMdHome className="text-2xl curso-pointer mb-4" />
+            </Link>
+
             {nft && (
               <>
                 <div className="flex flex-row justify-between">

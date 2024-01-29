@@ -34,13 +34,13 @@ export function SuccessStep() {
           </p>
         </div>
       </div>
-      <div className="w-full flex flex-row justify-center items-center mt-4">
-        <Link href={`/collector`} className="w-full mx-10">
+      <div className="w-full flex flex-row justify-center items-center mt-4 gap-6">
+        <Link href={`/collector`} className="w-full">
           <BinderButton className="w-full">Go Home</BinderButton>
         </Link>
         <Link
           href={`/asset/ethereum/${instance.contractAddress}/${instance.tokenId}`}
-          className="w-full mx-10"
+          className="w-full"
         >
           <BinderButton className="w-full ">See NFT</BinderButton>
         </Link>
