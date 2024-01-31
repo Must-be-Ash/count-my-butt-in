@@ -12,7 +12,7 @@ export default function TipStep() {
       <div className="flex flex-col gap-4 mb-6">
         <h1 className="text-2xl">Tip 🫶(optional)</h1>
         <div className=" text-neutral-500 font-bold">
-          100% of your tips goes to Violetta. We highly recommend tipping!
+          100% of your tips goes to Jayden. We highly recommend tipping!
         </div>
         <div className=" text-neutral-500">
           Artists, musicians, celebrities and athlete’s signatures add value

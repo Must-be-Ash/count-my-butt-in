@@ -13,6 +13,7 @@ import SetAdminButton from "./SetAdminButton";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Loader from "../../Loader";
+import { useAuthentication } from "@/hooks/useAuthentication";
 
 export default function DeployButton({
   networkId,
@@ -23,6 +24,7 @@ export default function DeployButton({
   contractAddress: string;
   creatorAddress: string;
 }) {
+  const { authenticatedUser } = useAuthentication();
   const [deployedContract, setDeployedContract] = useState();
   const [campaignId, setCampaignId] = useState<string>();
   const router = useRouter();
@@ -68,6 +70,11 @@ export default function DeployButton({
         const campaign = result.campaign;
         setDeployedContract(contractAddress);
         setCampaignId(campaign.campaignId);
+        await APIHelpers.patch(`/api/campaigns/${campaign.campaignId}`, {
+          body: {
+            userId: authenticatedUser?.id,
+          },
+        });
       }
       setIsLoading(false);
     };

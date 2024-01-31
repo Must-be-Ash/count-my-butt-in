@@ -77,6 +77,7 @@ model Order {
 
 model Campaign {
   campaignId                     String   @id @default(uuid())
+  userId                         String   @default("") // generated userId by prisma
   createdAt                      DateTime @default(now())
   networkId                      Network  @default(ETHEREUM)
   defaultURI                     String?
