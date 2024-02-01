@@ -123,6 +123,14 @@ export function getCampaign(campaignId: string) {
   });
 }
 
+export function getCampaignForUser(userId: string) {
+  return prisma.campaign.findMany({
+    where: {
+      userId,
+    },
+  });
+}
+
 export function updateCampaign(
   campaignId: string,
   data: Prisma.CampaignUpdateInput
@@ -199,6 +207,14 @@ export function getUserByPrivyId(privyId: string) {
   return prisma.user.findUnique({
     where: {
       privyId,
+    },
+  });
+}
+
+export function getUserByDomain(domain: string) {
+  return prisma.user.findUnique({
+    where: {
+      domain,
     },
   });
 }

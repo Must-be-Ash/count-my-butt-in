@@ -31,7 +31,7 @@ export default function Orders({ params }: { params: { campaignId: string } }) {
     } catch (e) {
       console.log(e);
     }
-  }, [window]);
+  }, []);
 
   const copyText = (text: string) => {
     setIsCopied((c) => !c);
