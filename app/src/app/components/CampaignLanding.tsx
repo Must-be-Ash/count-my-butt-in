@@ -15,9 +15,9 @@ export default function CampaignLanding({
   const desktop = "(min-width: 768px)";
   const isDesktop = useMediaQuery(desktop);
   return (
-    <div className="grid sm:grid-cols-2 h-screen w-screen font-sans overflow-hidden">
-      <div className="shadow-2xl h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-stone-300 via-indigo-300 to-emerald-400 sm:bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] sm:from-[#101010] sm:via-[#121212] sm:to-black">
-        <div className="w-full h-full p-6 text-slate-800 sm:text-slate-200">
+    <div className="grid sm:grid-cols-2 grid-cols-1 sm:h-screen sm:w-screen h-[100vh] font-sans overflow-hidden">
+      <div className="sm:shadow-2xl h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-stone-300 via-indigo-300 to-emerald-400 sm:bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] sm:from-[#101010] sm:via-[#121212] sm:to-black">
+        <div className="w-full h-full sm:p-6 p-3 text-slate-800 sm:text-slate-200">
           <div className="flex flex-col items-center justify-between h-full">
             <div className="flex flex-row justify-between items-center w-full">
               <a
