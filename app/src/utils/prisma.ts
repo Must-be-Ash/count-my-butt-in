@@ -195,20 +195,32 @@ export function createOrUpdateUser(data: Prisma.UserCreateInput) {
   });
 }
 
-export function getUser(id: string) {
-  return prisma.user.findUnique({
+export async function getUser(id: string) {
+  const user = await prisma.user.findUnique({
     where: {
       id,
     },
   });
+  const campaign = await prisma.campaign.findFirst({
+    where: {
+      userId: user.id
+    }
+  });
+  return {...user, campaign}
 }
 
-export function getUserByPrivyId(privyId: string) {
-  return prisma.user.findUnique({
+export async function getUserByPrivyId(privyId: string) {
+  const user = await prisma.user.findUnique({
     where: {
       privyId,
     },
   });
+  const campaign = await prisma.campaign.findFirst({
+    where: {
+      userId: user.id
+    }
+  })
+  return {...user, campaign: campaign }
 }
 
 export function getUserByDomain(domain: string) {
