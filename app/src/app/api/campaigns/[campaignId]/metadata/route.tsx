@@ -69,8 +69,12 @@ export async function POST(
               order.collectionAddress && order.selectedTokenId
                 ? `Look it up at [Binder](https://jadyn.signed.gg/asset/ethereum/${order.collectionAddress}/${order.selectedTokenId}) or [TokenBound](https://tokenbound.org/assets/ethereum/${order.collectionAddress}/${order.selectedTokenId})`
                 : ""
-            } `
-          : "Signed Autograph",
+            }`
+          : `Signed Autograph. ${
+              order.collectionAddress && order.selectedTokenId
+                ? `Look it up at [Binder](https://jadyn.signed.gg/asset/ethereum/${order.collectionAddress}/${order.selectedTokenId}) or [TokenBound](https://tokenbound.org/assets/ethereum/${order.collectionAddress}/${order.selectedTokenId})`
+                : ""
+            }`,
         attributes: twitterUsername
           ? [
               {
