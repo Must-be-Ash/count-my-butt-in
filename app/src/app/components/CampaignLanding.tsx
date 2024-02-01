@@ -62,7 +62,7 @@ export default async function CampaignLanding({
       </div>
       <div className="sm:block hidden">
         {
-          !campaign.landingImageUrl ?
+          campaign.landingImageUrl ?
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={campaign.landingImageUrl}
