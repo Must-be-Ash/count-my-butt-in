@@ -34,7 +34,7 @@ export const AuthenticatedPage: React.FC<Props> = ({
         <div className="flex flex-col items-center mt-10">
           <LogoutButton />
           <div className="text-lg mt-10">
-            Nice try dude but no access here, you lucky I didn't steal yo
+            Nice try dude but no access here, you lucky I didn&apos;t steal yo
             private key
           </div>
         </div>
