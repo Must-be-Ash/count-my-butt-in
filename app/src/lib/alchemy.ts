@@ -25,7 +25,7 @@ export const polygonAlchemy = new Alchemy({
 
 export const baseAlchemy = new Alchemy({
   apiKey: process.env.NEXT_PUBLIC_ALCHEMY_BASE!, // Replace with your Alchemy API Key.
-  network: Network.OPT_MAINNET, // Replace with your network.
+  network: Network.BASE_MAINNET, // Replace with your network.
 });
 
 export const optimismAlchemy = new Alchemy({

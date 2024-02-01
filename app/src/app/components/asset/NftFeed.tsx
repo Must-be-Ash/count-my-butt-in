@@ -171,6 +171,7 @@ const NFTFeed = ({
         }
 
         setPageToKeyMapping(pageToKeyMapping);
+
         setOwnedNfts(alchemyNfts);
       } catch (e) {
         setError(e);
