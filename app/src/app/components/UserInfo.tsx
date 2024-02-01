@@ -30,15 +30,33 @@ export default function UserInfo({ overrideUser }: { overrideUser?: User }) {
       <div className="font-sans font-bold uppercase text-sm">
         {userToDisplay?.nickname || display}
       </div>
-      {userToDisplay?.nickname.includes("@") && <a href={`https://twitter.com/${userToDisplay?.nickname}`} target="_blank" className="cursor-pointer">
-        <FaXTwitter />
-      </a>}
-      {userToDisplay?.walletAddresses[0] && <a href={`https://etherscan.io/address/${userToDisplay?.walletAddresses[0]}`} target="_blank" className="cursor-pointer">
-        <FaWallet />
-      </a>}
-      {userToDisplay?.campaign.binderContract && <a href={`https://etherscan.io/address/${userToDisplay?.campaign.binderContract}`} target="_blank" className="cursor-pointer">
-        <TbCurrencyEthereum />
-      </a>}
+      {userToDisplay?.nickname?.includes("@") && (
+        <a
+          href={`https://twitter.com/${userToDisplay?.nickname}`}
+          target="_blank"
+          className="cursor-pointer"
+        >
+          <FaXTwitter />
+        </a>
+      )}
+      {userToDisplay?.walletAddresses[0] && (
+        <a
+          href={`https://etherscan.io/address/${userToDisplay?.walletAddresses[0]}`}
+          target="_blank"
+          className="cursor-pointer"
+        >
+          <FaWallet />
+        </a>
+      )}
+      {userToDisplay?.campaign?.binderContract && (
+        <a
+          href={`https://etherscan.io/address/${userToDisplay?.campaign?.binderContract}`}
+          target="_blank"
+          className="cursor-pointer"
+        >
+          <TbCurrencyEthereum />
+        </a>
+      )}
     </span>
   );
 }
