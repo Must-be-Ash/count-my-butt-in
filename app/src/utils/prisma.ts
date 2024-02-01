@@ -201,15 +201,15 @@ export async function getUser(id: string) {
       id,
     },
   });
-  let campaign = {};
   if (user && user.id) {
-    campaign = await prisma.campaign.findFirst({
+    const campaign = await prisma.campaign.findFirst({
       where: {
         userId: user.id
       }
     });
+    return {...user, campaign}
   }
-  return {...user, campaign}
+  return user;
 }
 
 export async function getUserByPrivyId(privyId: string) {
@@ -218,15 +218,15 @@ export async function getUserByPrivyId(privyId: string) {
       privyId,
     },
   });
-  let campaign = {};
   if (user && user.id) {
-    campaign = await prisma.campaign.findFirst({
+    const campaign = await prisma.campaign.findFirst({
       where: {
         userId: user.id
       }
     })
+    return {...user, campaign: campaign }
   }
-  return {...user, campaign: campaign }
+  return user;
 }
 
 export function getUserByDomain(domain: string) {
