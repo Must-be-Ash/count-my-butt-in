@@ -4,11 +4,13 @@ import { Baskervville } from 'next/font/google'
 import { Providers } from './providers';
 import './globals.css'
 import { cn } from "@/lib/utils"
+
 const baskerville = Baskervville({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-baskerville',
-  weight: "400"
+  weight: "400",
+  style: ['italic', 'normal']
 })
 export const fontSans = FontSans({
   subsets: ["latin"],
