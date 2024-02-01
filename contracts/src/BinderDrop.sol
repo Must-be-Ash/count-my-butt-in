@@ -19,7 +19,7 @@ contract BinderDrop is ERC721, Admins, Initializable {
     using Strings for uint256;
 
     bool public publicMintsPaused;
-    uint public mintCost = 0;
+    uint256 public mintCost = 0;
     uint256 internal _tokenCount = 0;
     // the tokenId that is the boundary between revealed and pre-revealed tokens
     uint256 internal _revealedTokenIdBoundary;
@@ -30,7 +30,7 @@ contract BinderDrop is ERC721, Admins, Initializable {
 
     constructor() ERC721("BinderDrop", "BinderDropV1") {}
 
-    function initialize(address _creator, string memory defaultUri, address _server, uint cost, uint256 _batchSize) external initializer {
+    function initialize(address _creator, string memory defaultUri, address _server, uint256 cost, uint256 _batchSize) external initializer {
       require(_creator != address(0));
       creator = _creator;
       defaultURI = defaultUri;
@@ -72,22 +72,8 @@ contract BinderDrop is ERC721, Admins, Initializable {
         bytes32 hash = keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", payloadhash));
         return _verifyHash(hash, signature);
     }
-    /**
-     * @dev mintTo to create a new token defaults to pre-revealed art
-     *
-     * @param recipient which address the tokenId goes to
-     * @param signature string passed on from the server
-     */
+   
     function mintTo(string memory orderId, address recipient, bytes memory signature) public payable {
-      // recipient-tokenid pair will always be unique
-      // hash is the keccack256 over recipient,tokenId
-      // tokenId is kept track of on the server
-      // if a tokenid is already minted, the function will revert (erc721 standard)
-      // check if hash is signed by an admin
-      // recipient will always be a tokenbound account address associated with
-      // a selected NFT
-      // tokenid is a unique integer selected by the server
-      // if minting & public mints paused
       if (publicMintsPaused) {
         revert PublicMintsPaused();
       }
@@ -97,9 +83,6 @@ contract BinderDrop is ERC721, Admins, Initializable {
       // Check price
       require(msg.value >= mintCost, "Must pay more.");
       if (_maxTokenCount != 0 && _tokenCount == _maxTokenCount) {
-        // the last token mint was _maxTokenCount
-        // should revert here
-        // unless maxTokenCount is increased
         revert MaxTokenCountReached();
       }
       bytes32 payloadhash = keccak256(abi.encode(recipient));
