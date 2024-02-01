@@ -20,7 +20,8 @@ import CollectorDisplay from "@/app/components/SignaturePad/CollectorDisplay";
 
 export default function Orders({ params }: { params: { campaignId: string } }) {
   const [hostname, setHostname] = useState<string>("https://app.signed.gg");
-  const COLLECTOR_LINK = `${hostname}/collector/${params.campaignId}/home`;
+  // const COLLECTOR_LINK = `${hostname}/collector/${params.campaignId}/home`;
+  const COLLECTOR_LINK = `${hostname}`;
   const [isCopied, setIsCopied] = useState<boolean>(false);
 
   useEffect(() => {

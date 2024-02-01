@@ -32,6 +32,7 @@ export default function UserInfo({ overrideUser }: { overrideUser?: User }) {
         }
         target="_blank"
         rel="noreferrer"
+        className="font-sans font-bold uppercase text-sm"
       >
         {userToDisplay?.nickname || display}
       </a>
