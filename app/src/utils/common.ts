@@ -14,6 +14,9 @@ export function getOpenseaLink(
   if (networkId === 8453) {
     return `https://opensea.io/assets/base/${contractAddress}/${tokenId}`;
   }
+  if (networkId === 10) {
+    return `https://opensea.io/assets/optimism/${contractAddress}/${tokenId}`;
+  }
   if (networkId === 5) {
     return `https://testnets.opensea.io/assets/goerli/${contractAddress}/${tokenId}`;
   }
@@ -42,6 +45,9 @@ export function getContractEtherscanLink(
   if (networkId === 11155111) {
     return `https://sepolia.etherscan.io/address/${contractAddress}`;
   }
+  if (networkId === 10) {
+    return `https://optimism.etherscan.io/address/${contractAddress}`;
+  }
   return `https://etherscan.io/address/${contractAddress}`;
 }
 
@@ -56,6 +62,9 @@ export function getTokenBoundLink(
   if (networkId === 137) {
     return `https://tokenbound.org/assets/matic/${contractAddress}/${tokenId}`;
   }
+  if (networkId === 10) {
+    return `https://tokenbound.org/assets/optimism/${contractAddress}/${tokenId}`;
+  }
   if (networkId === 8453) {
     return `https://tokenbound.org/assets/base/${contractAddress}/${tokenId}`;
   }
@@ -65,13 +74,13 @@ export function getTokenBoundLink(
   return `https://tokenbound.org/assets/ethereum/${contractAddress}/${tokenId}`;
 }
 
-export const NETWORK_ID = 5;
+export const NETWORK_ID = 10;
 
 export function networkIdToString(networkId: number) {
   return `eip155:${networkId}`;
 }
 
-export const SUPPORTED_NETWORKS = [5];
+export const SUPPORTED_NETWORKS = [10];
 
 export const goerliProvider = new JsonRpcProvider(
   `https://eth-goerli.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_GOERLI}`
@@ -121,11 +130,11 @@ export function getProvider(networkId: number) {
 
 export const MINT_FEE = 0.01;
 
-export const binderNetworkId = 11155111;
+export const binderNetworkId = 10;
 export const binderFactoryContract =
-  "0xAF8A8d6823b4Ff069F6bC805cbD6675Bb4CEfa9f";
+  "0x7e7d154dbad3853aeeef8a35e92044795ae56851";
 
-export const childrenNetworkIds = [1, 137, 8453, 11155111];
+export const childrenNetworkIds = [1, 137, 8453, 11155111, 10];
 
 export const defaultNote = "I am a busy collector";
 
