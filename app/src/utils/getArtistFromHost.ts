@@ -14,6 +14,7 @@ export default async function getArtistCampaignFromHost(host: string | null) {
   }
   return { campaign: campaign[0], artist: {
     nickname: artist.nickname,
-    twitterUsername: artist.twitterUsername
+    twitterUsername: artist.twitterUsername,
+    imageUrl: artist.imageUrl
   } }
 }
