@@ -13,7 +13,7 @@ export async function POST(
   const campaignWhiteLists = await getCampaignWhiteList(params.campaignId);
   const { networkId, tokenId, contractAddress } = data;
   if (campaignWhiteLists.length > 0) {
-    const validToken = campaignWhiteLists.find((whitelist) =>
+    const validToken = campaignWhiteLists.find((whitelist: any) =>
       whitelist.tokenId.length
         ? whitelist.contractAddress === contractAddress &&
           whitelist.tokenId === tokenId
