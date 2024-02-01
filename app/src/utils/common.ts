@@ -39,6 +39,9 @@ export function getContractEtherscanLink(
   if (networkId === 8453) {
     return `https://basescan.org/address/${contractAddress}`;
   }
+  if (networkId === 10) {
+    return `https://optimistic,etherscan.io/address/${contractAddress}`;
+  }
   if (networkId === 5) {
     return `https://goerli.etherscan.io/address/${contractAddress}`;
   }
@@ -151,3 +154,5 @@ export const ARTIST_WHITELIST_TOKEN_IDS = [
   569, 580, 585, 598, 588, 592, 610, 628, 631, 642, 649, 648, 655, 659, 661,
   663,
 ];
+
+export const CAMPAIGN_NETWORK = "OPTIMISM";

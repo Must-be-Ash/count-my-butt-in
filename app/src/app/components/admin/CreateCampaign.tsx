@@ -5,6 +5,7 @@ import BinderButton from "@/app/components/BinderButton";
 import APIHelpers from "@/lib/apiHelper";
 import { useSearchParams } from "next/navigation";
 import { useAuthentication } from "@/hooks/useAuthentication";
+import { CAMPAIGN_NETWORK } from "@/utils/common";
 
 export default function CreateCampaign() {
   const { authenticatedUser } = useAuthentication();
@@ -13,7 +14,7 @@ export default function CreateCampaign() {
 
   const [config, setConfig] = useState<Partial<Campaign>>({
     binderContract: contractAddress,
-    networkId: "SEPOLIA",
+    networkId: CAMPAIGN_NETWORK,
     userId: authenticatedUser?.id,
   });
   const [camapginId, setCampaignId] = useState();
