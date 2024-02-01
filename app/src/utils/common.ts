@@ -142,7 +142,7 @@ export const childrenNetworkIds = [1, 137, 8453, 11155111, 10];
 export const defaultNote = "I am a busy collector";
 
 export const ARTIST_COLLECTION_ADDRESS =
-  "0xbd3531da5cf5857e7cfaa92426877b022e612cf8";
+  "0xb2c7f411aa425d3fce42751e576a01b1ff150385";
 
 export const ARTIST_WHITELIST_TOKEN_IDS = [
   1, 101, 44, 4, 8, 15, 13, 19, 60, 21, 53, 37, 131, 69, 55, 105, 107, 112, 115,
