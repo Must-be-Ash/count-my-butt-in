@@ -6,6 +6,9 @@ import DefaultPfp from "public/assets/defaults/pfp.jpg";
 import Image from "next/image";
 import Loader from "./Loader";
 import { User } from "@prisma/client";
+import { FaXTwitter } from "react-icons/fa6";
+import { TbCurrencyEthereum } from "react-icons/tb";
+import { FaWallet } from "react-icons/fa";
 
 export default function UserInfo({ overrideUser }: { overrideUser?: User }) {
   const { authenticatedUser } = useAuthentication();
@@ -24,17 +27,17 @@ export default function UserInfo({ overrideUser }: { overrideUser?: User }) {
         width={32}
         height={32}
       />
-      <a
-        href={
-          userToDisplay?.nickname?.includes("@")
-            ? `https://twitter.com/${userToDisplay?.nickname}`
-            : `https://etherscan.io/address/${userToDisplay?.walletAddresses[0]}`
-        }
-        target="_blank"
-        rel="noreferrer"
-        className="font-sans font-bold uppercase text-sm"
-      >
+      <div className="font-sans font-bold uppercase text-sm">
         {userToDisplay?.nickname || display}
+      </div>
+      <a href={`https://twitter.com/${userToDisplay?.nickname}`} target="_blank" className="cursor-pointer">
+        <FaXTwitter />
+      </a>
+      <a href={`https://etherscan.io/address/${userToDisplay?.walletAddresses[0]}`} target="_blank" className="cursor-pointer">
+        <FaWallet />
+      </a>
+      <a href={`https://etherscan.io/address/${userToDisplay?.campaign.binderContract}`} target="_blank" className="cursor-pointer">
+        <TbCurrencyEthereum />
       </a>
     </span>
   );
