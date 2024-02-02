@@ -81,7 +81,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
               enableSystem
               disableTransitionOnChange
             >
+            <div vaul-drawer-wrapper="" className="">
               {children}
+            </div>
             </ThemeProvider>
           </InstanceProvider>
         </StepProvider>

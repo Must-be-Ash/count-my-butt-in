@@ -37,9 +37,7 @@ export default function RootLayout({
         baskerville.variable
       )}>
       <Providers>
-        <div vaul-drawer-wrapper="" className="">
           {children}
-        </div>
       </Providers>
       </body>
     </html>
