@@ -112,7 +112,9 @@ export async function injectBinderMetadata(
   networkId: number,
   nft: Nft | OwnedNft
 ): Promise<Nft | OwnedNft> {
-  if (nft.title === "Binder Drop" || !nft.title) {
+  console.log("qwdqwd", nft);
+  if (nft.title === "Binder Drop" || !nft.title?.length) {
+    console.log("qwdqwdqwd");
     // we want to get our own cached data to not relying on cache data on alchemy api
     const { nft: binderNft } = await APIHelpers.get(
       `/api/nft?networkId=${networkId}&contractAddress=${nft.contract.address}&tokenId=${nft.tokenId}`
@@ -126,10 +128,15 @@ export async function injectBinderMetadata(
               ipfsUrl: binderNft.tokenUri,
             },
           });
-
+          console.log("nft", nft);
           nft.title = metadata.name;
+          if (!nft.media?.length) {
+            nft.media = [{ raw: "", gateway: metadata.image }];
+          } else {
+            nft.media[0].gateway = metadata.image;
+          }
 
-          nft.media[0].gateway = metadata.image;
+          console.log("fixed nft", nft);
         }
       } catch (e) {
         // non-blocking
