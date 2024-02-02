@@ -79,9 +79,9 @@ export default function CampaignLanding({
                   Check out the collection here!
                 </a>
               </div>
-              <BinderButton className="cursor-pointer dark:bg-slate-900 dark:text-white sm:dark:bg-slate-300 sm:dark:text-slate-900">
+              {/* <BinderButton className="cursor-pointer dark:bg-slate-900 dark:text-white sm:dark:bg-slate-300 sm:dark:text-slate-900">
                 Request Signature
-              </BinderButton>
+              </BinderButton> */}
             </a>
           </div>
         </div>
