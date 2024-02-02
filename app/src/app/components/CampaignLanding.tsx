@@ -74,6 +74,7 @@ export default function CampaignLanding({
                 <a
                   href="https://opensea.io/assets/optimism/0x2cabc36bf9410488a6066d5902ece3ce2423cc5b"
                   target="_blank"
+                  className="font-bold underline"
                 >
                   {" "}
                   Check out the collection here!
