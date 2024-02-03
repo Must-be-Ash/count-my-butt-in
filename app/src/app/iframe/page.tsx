@@ -9,8 +9,8 @@ const useIframeData = ({
   tokenId, collectionAddress
 }: {
   tokenId: string|null, collectionAddress: string|null
-}): { data: Order, loading: boolean } => {
-  const [data, setData] = useState<Order>();
+}): { data: Order| undefined, loading: boolean } => {
+  const [data, setData] = useState<Order|undefined>();
   const [loading, setLoading] = useState<boolean>(false);
   const get = async () => {
     setLoading(true);

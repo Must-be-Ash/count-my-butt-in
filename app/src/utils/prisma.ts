@@ -30,11 +30,11 @@ export const OrderCreateInput = z.object({
 const prisma = new PrismaClient().$extends({
   query: {
     order: {
-      create({ args, query }) {
+      create({ args, query }: {args: any, query: any}) {
         args.data = OrderCreateInput.parse(args.data);
         return query(args);
       },
-      update({ args, query }) {
+      update({ args, query }: {args: any, query: any}) {
         args.data = OrderCreateInput.partial().parse(args.data);
         return query(args);
       },

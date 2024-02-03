@@ -59,8 +59,8 @@ export async function POST(
   const manifestUrl = await uploadMetadata(
     defaultMetadata,
     ordersToUpload
-      .sort((a, b) => Number(a.mintedTokenId) - Number(b.mintedTokenId))
-      .map((order) => ({
+      .sort((a: any, b: any) => Number(a.mintedTokenId) - Number(b.mintedTokenId))
+      .map((order: any) => ({
         name: "Signed Autograph",
         description: twitterUsername
           ? `Signed by [@${twitterUsername}](https://twitter.com/${twitterUsername})`
