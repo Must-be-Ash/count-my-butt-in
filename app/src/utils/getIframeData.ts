@@ -1,4 +1,4 @@
-import { getCampaignForUser, getOrderBySubmittedToken, getUserByDomain } from "./prisma";
+import { getOrderBySubmittedToken } from "./prisma";
 
 export default async function getIframeData({
   collectionAddress,
