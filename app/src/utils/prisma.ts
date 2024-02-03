@@ -61,6 +61,22 @@ export function getOrderByToken(tokenId: string, contractAddress: string) {
   });
 }
 
+export function getOrderBySubmittedToken(tokenId: string, collectionAddress: string) {
+  return prisma.order.findFirst({
+    where: {
+      AND: [
+        {
+          selectedTokenId: tokenId,
+          collectionAddress: collectionAddress.toLowerCase(),
+        },
+      ],
+      NOT: {
+        toUpload: null
+      }
+    },
+  });
+}
+
 export function getOrder(orderId: string) {
   return prisma.order.findUnique({
     where: {
