@@ -69,7 +69,7 @@ export default function CampaignLanding({
           )}
           <div className="">
             <a href={`/collector/${campaign.campaignId}/home`} target="_blank">
-              <div>
+              {/* <div>
                 The campaign has ended 🥲.{" "}
                 <a
                   href="https://opensea.io/assets/optimism/0x2cabc36bf9410488a6066d5902ece3ce2423cc5b"
@@ -79,10 +79,10 @@ export default function CampaignLanding({
                   {" "}
                   Check out the collection here!
                 </a>
-              </div>
-              {/* <BinderButton className="cursor-pointer dark:bg-slate-900 dark:text-white sm:dark:bg-slate-300 sm:dark:text-slate-900">
+              </div> */}
+              <BinderButton className="cursor-pointer dark:bg-slate-900 dark:text-white sm:dark:bg-slate-300 sm:dark:text-slate-900">
                 Request Signature
-              </BinderButton> */}
+              </BinderButton>
             </a>
           </div>
         </div>
