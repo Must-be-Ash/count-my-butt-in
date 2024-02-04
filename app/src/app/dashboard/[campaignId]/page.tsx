@@ -1,15 +1,15 @@
 "use client";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { usePrivy } from "@privy-io/react-auth";
 import BigLoginDisplayPage from "@/app/components/BigLoginDisplayPage";
+import { useAuthentication } from "@/hooks/useAuthentication";
 
 export default function Dashboard({
   params,
 }: {
   params: { campaignId: string };
 }) {
-  const { ready, authenticated } = usePrivy();
+  const { ready, authenticated } = useAuthentication();
   const router = useRouter();
 
   useEffect(() => {
@@ -18,5 +18,5 @@ export default function Dashboard({
     }
   }, [ready, authenticated, router, params.campaignId]);
 
-  return (<BigLoginDisplayPage />);
+  return <BigLoginDisplayPage />;
 }

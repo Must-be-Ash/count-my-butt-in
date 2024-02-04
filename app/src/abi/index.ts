@@ -61,11 +61,9 @@ export const BINDER_DROP_ABI = [
   },
   { inputs: [], name: "HashVerificationFailed", type: "error" },
   { inputs: [], name: "InvalidInitialization", type: "error" },
-  { inputs: [], name: "IsSoulbound", type: "error" },
-  { inputs: [], name: "NonExistentToken", type: "error" },
+  { inputs: [], name: "MaxTokenCountReached", type: "error" },
   { inputs: [], name: "NotInitializing", type: "error" },
   { inputs: [], name: "OnlyOneMintAllowed", type: "error" },
-  { inputs: [], name: "PublicMintsActive", type: "error" },
   { inputs: [], name: "PublicMintsPaused", type: "error" },
   { inputs: [], name: "ZeroAddressNotAllowed", type: "error" },
   {
@@ -229,6 +227,20 @@ export const BINDER_DROP_ABI = [
     type: "function",
   },
   {
+    inputs: [{ internalType: "uint256", name: "amount", type: "uint256" }],
+    name: "bumpTokenCount",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "tokenId", type: "uint256" }],
+    name: "burn",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
     inputs: [],
     name: "creator",
     outputs: [{ internalType: "address", name: "", type: "address" }],
@@ -253,6 +265,9 @@ export const BINDER_DROP_ABI = [
     inputs: [
       { internalType: "address", name: "_creator", type: "address" },
       { internalType: "string", name: "defaultUri", type: "string" },
+      { internalType: "address", name: "_server", type: "address" },
+      { internalType: "uint256", name: "cost", type: "uint256" },
+      { internalType: "uint256", name: "_batchSize", type: "uint256" },
     ],
     name: "initialize",
     outputs: [],
@@ -277,6 +292,13 @@ export const BINDER_DROP_ABI = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "mintCost",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [
       { internalType: "string", name: "orderId", type: "string" },
       { internalType: "address", name: "recipient", type: "address" },
@@ -284,7 +306,7 @@ export const BINDER_DROP_ABI = [
     ],
     name: "mintTo",
     outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "payable",
     type: "function",
   },
   {
@@ -427,7 +449,10 @@ export const BINDER_DROP_ABI = [
     type: "function",
   },
   {
-    inputs: [],
+    inputs: [
+      { internalType: "address", name: "receiver", type: "address" },
+      { internalType: "uint256", name: "amount", type: "uint256" },
+    ],
     name: "withdraw",
     outputs: [],
     stateMutability: "nonpayable",
@@ -436,7 +461,11 @@ export const BINDER_DROP_ABI = [
 ];
 
 export const BINDER_FACTORY_ABI = [
-  { inputs: [], stateMutability: "nonpayable", type: "constructor" },
+  {
+    inputs: [{ internalType: "address", name: "_server", type: "address" }],
+    stateMutability: "nonpayable",
+    type: "constructor",
+  },
   { inputs: [], name: "ERC1167FailedCreateClone", type: "error" },
   {
     anonymous: false,
@@ -468,6 +497,8 @@ export const BINDER_FACTORY_ABI = [
     inputs: [
       { internalType: "address", name: "creator", type: "address" },
       { internalType: "string", name: "defaultUri", type: "string" },
+      { internalType: "uint256", name: "cost", type: "uint256" },
+      { internalType: "uint256", name: "batchSize", type: "uint256" },
     ],
     name: "createBinderDrop",
     outputs: [{ internalType: "address", name: "", type: "address" }],

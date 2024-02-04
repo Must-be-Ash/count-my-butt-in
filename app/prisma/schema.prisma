@@ -10,12 +10,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Artist {
-  id            String  @id @default(uuid())
-  nickname      String
-  email         String?
-  walletAddress String?
-}
 
 enum Network {
   ETHEREUM
@@ -32,8 +26,31 @@ enum NetworkStatus {
   FAILED
 }
 
+enum UserType {
+  MINION
+  ARTIST
+}
+
+model User {
+  id            String  @id @default(uuid())
+  privyId       String  @unique               // userId coming from privy
+  imageUrl      String?
+  nickname      String?
+  email         String?
+  walletAddresses String[]
+  twitterUsername String?
+  twitterSubject  String?
+  twitterName     String?
+  twitterImageUrl String?
+  userType      UserType @default(MINION)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
 model Order {
   orderId               String         @id @default(uuid())
+  userId                String         @default("") // generated userId by prisma
+  privyUserId           String         @default("") // userId coming from privy
   campaignId            String
   collectionNetwork     Network
   collectionAddress     String
@@ -52,6 +69,10 @@ model Order {
   // TO UPLOAD
   nftImageURL           String?
   toUpload              String? // the generated image that the collector will see
+  createdAt             DateTime       @default(now())
+  updatedAt             DateTime       @default(now()) @updatedAt
+  @@index([userId, status], name: "userId_status_index")
+  @@index([privyUserId, status], name: "privyUserId_status_index")
 }
 
 model Campaign {
@@ -61,7 +82,15 @@ model Campaign {
   defaultURI                     String?
   binderContract                 String?
   manifestUrl                    String?
-  whitelistedCollectionAddresses String[]
+}
+
+model CampaignWhiteList {
+  campaignId                     String  
+  createdAt                      DateTime @default(now())
+  networkId                      Network  @default(ETHEREUM)
+  contractAddress String
+  tokenId         String @default("") // empty string means all tokens
+  @@unique([campaignId, networkId, contractAddress, tokenId])
 }
 
 model Nft {

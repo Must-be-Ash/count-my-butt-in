@@ -2,17 +2,17 @@
 import { useState } from "react";
 import { Campaign } from "@prisma/client";
 import LoginButton from "@/app/components/LoginButton";
-import { usePrivy } from "@privy-io/react-auth";
 import LogoutButton from "@/app/components/LogoutButton";
 import DeployButton from "@/app/components/admin/deploy/DeployButton";
 
 import { useWallets } from "@privy-io/react-auth";
 import { binderFactoryContract, binderNetworkId } from "@/utils/common";
+import { useAuthentication } from "@/hooks/useAuthentication";
 
 export default function CreateCampaign() {
   const [config, setConfig] = useState<Partial<Campaign> | undefined>();
   const [camapginId, setCampaignId] = useState();
-  const { login, authenticated, user } = usePrivy();
+  const { login, authenticated, user } = useAuthentication();
   const { wallets } = useWallets();
 
   return (

@@ -13,53 +13,55 @@ error PublicMintsPaused();
 error PublicMintsActive();
 error MintPriceNotPaid();
 error HashVerificationFailed();
+error MaxTokenCountReached();
 
 contract BinderDrop is ERC721, Admins, Initializable {
     using Strings for uint256;
 
     bool public publicMintsPaused;
+    uint public mintCost = 0;
     uint256 internal _tokenCount = 0;
     // the tokenId that is the boundary between revealed and pre-revealed tokens
     uint256 internal _revealedTokenIdBoundary;
+    uint256 internal _maxTokenCount = 0;
     string public defaultURI;
     string public revealedURI;
     mapping(uint256 => bool) revealedTokens;
 
     constructor() ERC721("BinderDrop", "BinderDropV1") {}
 
-    function initialize(address _creator, string memory defaultUri, address _server) external initializer {
+    function initialize(address _creator, string memory defaultUri, address _server, uint cost, uint256 _batchSize) external initializer {
       require(_creator != address(0));
       creator = _creator;
       defaultURI = defaultUri;
       server = _server;
+      mintCost = cost;
+      _maxTokenCount =  _batchSize;
     }
 
     event AutographIncoming(address minter, string orderId, address recipient, uint256 tokenId, bytes32 hash);
 
     function pausePublicMints() external onlyAdmin {
-      if (publicMintsPaused) {
-          revert PublicMintsPaused();
-      }
+      require(!publicMintsPaused, "Public mints are already paused.");
       publicMintsPaused = true;
     }
+
     function unpausePublicMints() external onlyAdmin {
-      if (!publicMintsPaused) {
-          revert PublicMintsActive();
-      }
+      require(publicMintsPaused, "Public mints are already unpaused.");
       publicMintsPaused = false;
     }
 
     // soulbound
     function transferFrom(address from, address to, uint256 tokenId) public override {
       // tokens are only mintable, not transferrable
-      if (from != address(0)) {
-        revert IsSoulbound();
-      }
-      // if minting & public mints paused
-      if (publicMintsPaused) {
-        revert PublicMintsPaused();
-      }
+      require(from == address(0) || to == address(0), "This a Soulbound token. It cannot be transferred. It can only be burned by the token owner.");
+    
       super.transferFrom(from, to, tokenId);
+    }
+
+    function burn(uint256 tokenId) external {
+        require(ownerOf(tokenId) == msg.sender, "Only the owner of the token can burn it.");
+        _burn(tokenId);
     }
 
     function _verifyHash(bytes32 hash, bytes memory signature) internal view returns (bool) {
@@ -76,7 +78,7 @@ contract BinderDrop is ERC721, Admins, Initializable {
      * @param recipient which address the tokenId goes to
      * @param signature string passed on from the server
      */
-    function mintTo(string memory orderId, address recipient, bytes memory signature) public {
+    function mintTo(string memory orderId, address recipient, bytes memory signature) public payable {
       // recipient-tokenid pair will always be unique
       // hash is the keccack256 over recipient,tokenId
       // tokenId is kept track of on the server
@@ -85,8 +87,20 @@ contract BinderDrop is ERC721, Admins, Initializable {
       // recipient will always be a tokenbound account address associated with
       // a selected NFT
       // tokenid is a unique integer selected by the server
+      // if minting & public mints paused
+      if (publicMintsPaused) {
+        revert PublicMintsPaused();
+      }
       if (balanceOf(recipient) > 0) {
         revert OnlyOneMintAllowed();
+      }
+      // Check price
+      require(msg.value >= mintCost, "Must pay more.");
+      if (_maxTokenCount != 0 && _tokenCount == _maxTokenCount) {
+        // the last token mint was _maxTokenCount
+        // should revert here
+        // unless maxTokenCount is increased
+        revert MaxTokenCountReached();
       }
       bytes32 payloadhash = keccak256(abi.encode(recipient));
       bytes32 hash = keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", payloadhash));
@@ -98,6 +112,11 @@ contract BinderDrop is ERC721, Admins, Initializable {
       emit AutographIncoming(msg.sender, orderId, recipient, _tokenCount, hash);
     }
 
+    function bumpTokenCount(uint256 amount) public onlyAdmin returns (uint256) {
+      _maxTokenCount += amount;
+      return _maxTokenCount;
+    }
+
     /**
      *
      * @param revealedTokenIdBoundary the tokenId that is the boundary between revealed and pre-revealed tokens. This determined which tokenUrl to return
@@ -107,14 +126,14 @@ contract BinderDrop is ERC721, Admins, Initializable {
       revealedURI = _revealedURI;
     }
 
-    function withdraw() external onlyAdmin {
-        payable(msg.sender).transfer(address(this).balance);
+    function withdraw(address receiver, uint256 amount) external onlyAdmin {
+        (bool sent, ) = receiver.call{value: amount}("");
+        require(sent, "Failed to transfer to receiver");
     }
 
     function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
-      if (ownerOf(tokenId) == address(0)) {
-        revert NonExistentToken();
-      }
+      require(ownerOf(tokenId) != address(0), 'Non existent token');
+
       if (tokenId > _revealedTokenIdBoundary) {
         // default uri returned
         return bytes(defaultURI).length > 0 ? string(abi.encodePacked(defaultURI)) : "";

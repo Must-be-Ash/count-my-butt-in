@@ -3,13 +3,12 @@
 import BinderButton from "@/app/components/BinderButton";
 import LoginButton from "@/app/components/LoginButton";
 import APIHelpers from "@/lib/apiHelper";
-import { usePrivy, useWallets } from "@privy-io/react-auth";
 import { useState } from "react";
 import LogoutButton from "@/app/components/LogoutButton";
+import { useAuthentication } from "@/hooks/useAuthentication";
 
 export default function HeyYo() {
-  const { authenticated, user } = usePrivy();
-  const { wallets } = useWallets();
+  const { authenticated, user, wallets } = useAuthentication();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   return (
@@ -29,7 +28,9 @@ export default function HeyYo() {
             setLoading(false);
           }}
           isLoading={loading}
-        >Fund me</BinderButton>
+        >
+          Fund me
+        </BinderButton>
       )}
       {!authenticated && <LoginButton />}
       {authenticated && <LogoutButton size="lg" withText />}

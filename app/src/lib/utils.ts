@@ -203,3 +203,11 @@ export const poll = (pollConfig: any): any => {
   };
   return new Promise(executePoll);
 };
+
+export async function ethToUsd(price: number) {
+  const response = await fetch(
+    "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd"
+  );
+  const data = await response.json();
+  return price * data.ethereum.usd;
+}

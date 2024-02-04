@@ -6,6 +6,10 @@ import ErrorDisplay from "@/app/components/ErrorDisplay";
 import { getNftsForOwner } from "@/lib/alchemy";
 import BinderButton from "@/app/components/BinderButton";
 import Loader from "./Loader";
+import {
+  VIOLETTA_COLLECTION_ADDRESS,
+  VIOLETTA_WHITELIST_TOKEN_IDS,
+} from "@/utils/common";
 export interface PageToKeyMapping {
   [address: string]: {
     [page: number]: string | null;
@@ -72,14 +76,19 @@ const NFTFeedProfile = ({
         const theNFT = await getNftsForOwner(
           theNetwork,
           addresses[i],
-          pageToKeysMapping[addresses[i]][currentPage] || undefined
+          pageToKeysMapping[addresses[i]][currentPage] || undefined,
+          [VIOLETTA_COLLECTION_ADDRESS]
         );
         nfts.push(theNFT);
         alchemyNfts.push(
-          ...theNFT.ownedNfts.map((ownedNft) => ({
-            ...ownedNft,
-            networkId: theNetwork.toString(),
-          }))
+          ...theNFT.ownedNfts
+            .filter((ownedNFT) =>
+              VIOLETTA_WHITELIST_TOKEN_IDS.includes(Number(ownedNFT.tokenId))
+            )
+            .map((ownedNft) => ({
+              ...ownedNft,
+              networkId: theNetwork.toString(),
+            }))
         );
 
         for (const nft of nfts) {
@@ -130,14 +139,19 @@ const NFTFeedProfile = ({
           addresses[i],
           currentPage > 2
             ? pageToKeysMapping[addresses[i]][currentPage - 2] || undefined
-            : undefined
+            : undefined,
+          [VIOLETTA_COLLECTION_ADDRESS]
         );
         nfts.push(theNFT);
         alchemyNfts.push(
-          ...theNFT.ownedNfts.map((ownedNft) => ({
-            ...ownedNft,
-            networkId: theNetwork.toString(),
-          }))
+          ...theNFT.ownedNfts
+            .filter((ownedNFT) =>
+              VIOLETTA_WHITELIST_TOKEN_IDS.includes(Number(ownedNFT.tokenId))
+            )
+            .map((ownedNft) => ({
+              ...ownedNft,
+              networkId: theNetwork.toString(),
+            }))
         );
       }
       if (currentPage !== 1) {
@@ -167,13 +181,22 @@ const NFTFeedProfile = ({
             return;
           }
 
-          const theNFT = await getNftsForOwner(theNetwork, addresses[i]);
+          const theNFT = await getNftsForOwner(
+            theNetwork,
+            addresses[i],
+            undefined,
+            [VIOLETTA_COLLECTION_ADDRESS]
+          );
           nfts.push(theNFT);
           alchemyNfts.push(
-            ...theNFT.ownedNfts.map((ownedNft) => ({
-              ...ownedNft,
-              networkId: theNetwork.toString(),
-            }))
+            ...theNFT.ownedNfts
+              .filter((ownedNFT) =>
+                VIOLETTA_WHITELIST_TOKEN_IDS.includes(Number(ownedNFT.tokenId))
+              )
+              .map((ownedNft) => ({
+                ...ownedNft,
+                networkId: theNetwork.toString(),
+              }))
           );
 
           for (const nft of nfts) {

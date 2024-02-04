@@ -39,7 +39,7 @@ export default function CreateCampaign() {
           }
         />
       </div>
-      <div className="">
+      {/* <div className="">
         <label htmlFor="search" className="sr-only">
           Enter Whitelist Collection Address
         </label>
@@ -60,7 +60,7 @@ export default function CreateCampaign() {
             })
           }
         />
-      </div>
+      </div> */}
       <div className="">
         <label htmlFor="search" className="sr-only">
           Enter Network
@@ -91,7 +91,9 @@ export default function CreateCampaign() {
           const campaign = result.campaign;
           setCampaignId(campaign.campaignId);
         }}
-      >Create Campaign</BinderButton>
+      >
+        Create Campaign
+      </BinderButton>
       {camapginId && <div>{`Created Campaign Id: ${camapginId}`}</div>}
       {camapginId && (
         <a

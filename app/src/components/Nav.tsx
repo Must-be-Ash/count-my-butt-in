@@ -4,29 +4,22 @@
  */
 
 "use client";
-import { usePrivy } from "@privy-io/react-auth";
+
 import formatWalletAddress from "@/utils/formatWalletAddress";
-import DefaultPfp from "public/assets/defaults/pfp.jpg";
-import Image from "next/image";
 import LoginButton from "@/app/components/LoginButton";
 import LogoutButton from "@/app/components/LogoutButton";
+import { useAuthentication } from "@/hooks/useAuthentication";
+import UserInfo from "@/app/components/UserInfo";
 
 const LoginOrUserWidget = () => {
-  const { user } = usePrivy();
-  const display = formatWalletAddress(user?.wallet?.address);
+  const { user } = useAuthentication();
+
   if (!user) {
     return <LoginButton />;
   }
   return (
     <div className="flex flex-row gap-2 items-center w-full justify-between pb-6">
-      <span className="flex flex-row gap-2 items-center">
-        <Image
-          src={DefaultPfp}
-          alt="profile picture"
-          className="rounded-full w-8 h-8"
-        />
-        <span>{display}</span>
-      </span>
+      <UserInfo />
       <LogoutButton size="sm" />
     </div>
   );

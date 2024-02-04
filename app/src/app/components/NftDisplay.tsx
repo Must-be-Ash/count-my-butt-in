@@ -55,7 +55,7 @@ const NFTDisplay = ({
 
       <div className="flex flex-col items-start p-2 sm:p-3 truncate text-ellipsis">
         <div className="text-xs sm:text-md truncate text-ellipsis w-full">
-          {title} {tokenId ? `#${tokenId}` : ""}
+          {title} {tokenId && !title?.includes("#") ? `#${tokenId}` : ""}
         </div>
         <div className="relative text-xs text-gray-500 truncate text-ellipsis">
           {networkToName(networkId)}

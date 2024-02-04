@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import {
+  ethToUsd,
   getOpenseaLink,
   nameToNetwork,
   networkToName,
@@ -14,71 +15,93 @@ import MintButton from "./MintButton";
 import Loader from "../Loader";
 import { TokenboundClient } from "@tokenbound/sdk";
 import { useCampaign } from "@/hooks/useCampaign";
-import { getContractEtherscanLink } from "@/utils/common";
+import { defaultNote, getContractEtherscanLink } from "@/utils/common";
+import { useAuthentication } from "@/hooks/useAuthentication";
+import LoginButton from "@/app/components/LoginButton";
 
 export default function ReviewAndPayStep() {
+  const { user, authenticatedUser, authenticated } = useAuthentication();
   const { instance, setInstance } = useInstance();
-  const [recipient, setRecipient] = useState<string>();
   const [signature, setSignature] = useState<string>();
+  const [recipient, setRecipient] = useState<string>();
   const { campaign } = useCampaign(instance.campaignId);
+  const [tipAmountInUSD, setTipAmountInUSd] = useState(0);
 
   const gasFee = 0.1;
   const platformFee = 0.9;
 
   useEffect(() => {
     const run = async () => {
-      const tokenboundClient = new TokenboundClient({
-        chainId: instance.nftNetworkId,
-      });
-      setRecipient(
-        await tokenboundClient.getAccount({
-          tokenContract: instance.contractAddress as `0x${string}`,
-          tokenId: instance.tokenId,
-        })
-      );
-    };
-
-    run();
-  }, [instance, setInstance]);
-
-  useEffect(() => {
-    const run = async () => {
-      // create new order and save to BE
-
-      const result = await APIHelpers.post("/api/campaigns/1/orders", {
-        body: {
-          campaignId: instance.campaignId,
-          collectionNetwork: networkToName(instance.nftNetworkId).toUpperCase(),
-          collectionAddress: instance.contractAddress,
-          selectedTokenId: instance.tokenId,
-          personalNote: instance.note,
-        },
-      });
-      console.log("created new order", result.order.orderId);
-      setInstance({
-        ...instance,
-        orderId: result.order.orderId,
-      });
-    };
-
-    run();
-  }, []);
-
-  useEffect(() => {
-    const run = async () => {
-      if (recipient) {
-        const signature = await APIHelpers.post("/api/sign", {
-          body: {
-            recipient,
-            tokenId: instance.tokenId,
-          },
-        });
-        setSignature(signature.signature);
+      if (instance.tipAmount && Number(instance.tipAmount) > 0) {
+        console.log("qwdqdqw", instance.tipAmount);
+        const usd = await ethToUsd(Number(instance.tipAmount));
+        setTipAmountInUSd(usd);
       }
     };
 
     run();
-  }, [recipient, instance]);
+  }, [instance.tipAmount]);
+
+  useEffect(() => {
+    const run = async () => {
+      if (authenticatedUser) {
+        // create new order and save to BE
+        const result = await APIHelpers.post(
+          `/api/campaigns/${instance.campaignId}/orders`,
+          {
+            body: {
+              campaignId: instance.campaignId,
+              collectionNetwork: networkToName(
+                instance.nftNetworkId
+              ).toUpperCase(),
+              collectionAddress: instance.contractAddress,
+              selectedTokenId: instance.tokenId,
+              personalNote: instance.note,
+              userId: authenticatedUser?.id,
+              privyUserId: user?.id, // user here is privy user
+            },
+          }
+        );
+        // update userId and priviUserId, for some reason, these cannot be updated upon creation
+        await APIHelpers.patch(
+          `/api/campaigns/${instance.campaignId}/orders/${result.order.orderId}`,
+          {
+            body: {
+              userId: authenticatedUser?.id,
+              privyUserId: user?.id, // user here is privy user
+            },
+          }
+        );
+
+        setInstance({
+          ...instance,
+          orderId: result.order.orderId,
+        });
+      }
+    };
+
+    run();
+  }, [authenticatedUser]);
+
+  useEffect(() => {
+    const run = async () => {
+      const { signature, recipient } = await APIHelpers.post(
+        `/api/campaigns/${instance.campaignId}/sign`,
+        {
+          body: {
+            tokenId: instance.tokenId,
+            contractAddress: instance.contractAddress,
+            networkId: instance.nftNetworkId,
+          },
+        }
+      );
+
+      setSignature(signature);
+      setRecipient(recipient);
+    };
+
+    run();
+  }, [instance]);
 
   return (
     <div className="flex flex-col h-full w-full gap-2">
@@ -125,47 +148,57 @@ export default function ReviewAndPayStep() {
           </a>
         </div>
         {instance.note && (
-            <div className="bg-black p-4 rounded-md">
-              <div className="text-neutral-400 text-sm">Note for the artist</div>
-              <div>
-                {instance.note}
-              </div>
-            </div>
-          )}
+          <div className="bg-black p-4 rounded-md">
+            <div className="text-neutral-400 text-sm">Note for the artist</div>
+            <div>{instance.note || defaultNote}</div>
+          </div>
+        )}
         <div className="inline-flex bg-black p-4 rounded-md flex-col items-start gap-[8px] relative flex-[0_0_auto]">
           <div className="flex flex-row justify-between w-full text-neutral-400">
             <div>Platform fee</div>
 
-            <div>${platformFee}</div>
+            <div className="line-through">${platformFee}</div>
           </div>
           <div className="flex flex-row justify-between w-full text-neutral-400">
             <div>Gas fee</div>
 
             <div>${gasFee}</div>
           </div>
+          {tipAmountInUSD > 0 && (
+            <div className="flex flex-row justify-between w-full text-neutral-400">
+              <div>tip</div>
+
+              <div>${tipAmountInUSD.toFixed(2)}</div>
+            </div>
+          )}
           <div className="flex flex-row justify-between w-full text-xl font-bold">
             <div>You pay</div>
 
-            <div>${(platformFee + gasFee).toFixed(2)}</div>
+            <div>${(gasFee + tipAmountInUSD).toFixed(2)}</div>
           </div>
         </div>
       </div>
 
-      {!!recipient &&
+      {!authenticated && <LoginButton />}
+
+      {authenticated &&
+      !!recipient &&
       !!signature &&
       !!campaign?.binderContract &&
       !!campaign.networkId &&
       !!instance.orderId ? (
         <MintButton
           campaignNetworkId={nameToNetwork(campaign.networkId)}
-          recipient={recipient}
           signature={signature}
+          recipient={recipient}
           binderContract={campaign.binderContract}
         />
-      ) : (
+      ) : authenticated ? (
         <div className="flex flex-row justify-center">
           <Loader />
         </div>
+      ) : (
+        <div />
       )}
     </div>
   );
