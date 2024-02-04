@@ -1,16 +1,30 @@
-// import { prisma } from "@/utils/db";
-import BigLoginDisplayPage from "./components/BigLoginDisplayPage";
+/**
+ * this is the landing page of a particular campaign for
+ * an artist, based on
+ */
+import { headers } from 'next/headers'
+import CampaignLanding from './components/CampaignLanding';
+import BigLoginDisplayPage from './components/BigLoginDisplayPage';
+import getArtistAndCampaignFromHost from '@/utils/getArtistFromHost';
 
-// async function users() {
-//   'use server'
-//   const artists = await prisma.artist.findMany({});
-//   return;
-// }
+async function getArtist() {
+  'use server'
+  const headersList = headers();
+  const host = headersList.get('host');
+  const res = getArtistAndCampaignFromHost(host);
+  return res;
+}
 
 export default async function Home() {
-  // await users();
-  return (
-    <BigLoginDisplayPage />
-  )
+  const data = await getArtist();
 
+  if (!data) {
+    return <BigLoginDisplayPage />
+  }
+
+  return (
+    <div>
+      <CampaignLanding artist={data.artist} campaign={data.campaign} />
+    </div>
+  )
 }

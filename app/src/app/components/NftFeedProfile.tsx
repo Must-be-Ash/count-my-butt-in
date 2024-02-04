@@ -7,8 +7,8 @@ import { getNftsForOwner } from "@/lib/alchemy";
 import BinderButton from "@/app/components/BinderButton";
 import Loader from "./Loader";
 import {
-  VIOLETTA_COLLECTION_ADDRESS,
-  VIOLETTA_WHITELIST_TOKEN_IDS,
+  ARTIST_COLLECTION_ADDRESS,
+  ARTIST_WHITELIST_TOKEN_IDS,
 } from "@/utils/common";
 export interface PageToKeyMapping {
   [address: string]: {
@@ -77,13 +77,13 @@ const NFTFeedProfile = ({
           theNetwork,
           addresses[i],
           pageToKeysMapping[addresses[i]][currentPage] || undefined,
-          [VIOLETTA_COLLECTION_ADDRESS]
+          [ARTIST_COLLECTION_ADDRESS]
         );
         nfts.push(theNFT);
         alchemyNfts.push(
           ...theNFT.ownedNfts
             .filter((ownedNFT) =>
-              VIOLETTA_WHITELIST_TOKEN_IDS.includes(Number(ownedNFT.tokenId))
+              ARTIST_WHITELIST_TOKEN_IDS.includes(Number(ownedNFT.tokenId))
             )
             .map((ownedNft) => ({
               ...ownedNft,
@@ -140,13 +140,13 @@ const NFTFeedProfile = ({
           currentPage > 2
             ? pageToKeysMapping[addresses[i]][currentPage - 2] || undefined
             : undefined,
-          [VIOLETTA_COLLECTION_ADDRESS]
+          [ARTIST_COLLECTION_ADDRESS]
         );
         nfts.push(theNFT);
         alchemyNfts.push(
           ...theNFT.ownedNfts
             .filter((ownedNFT) =>
-              VIOLETTA_WHITELIST_TOKEN_IDS.includes(Number(ownedNFT.tokenId))
+              ARTIST_WHITELIST_TOKEN_IDS.includes(Number(ownedNFT.tokenId))
             )
             .map((ownedNft) => ({
               ...ownedNft,
@@ -185,13 +185,13 @@ const NFTFeedProfile = ({
             theNetwork,
             addresses[i],
             undefined,
-            [VIOLETTA_COLLECTION_ADDRESS]
+            [ARTIST_COLLECTION_ADDRESS]
           );
           nfts.push(theNFT);
           alchemyNfts.push(
             ...theNFT.ownedNfts
               .filter((ownedNFT) =>
-                VIOLETTA_WHITELIST_TOKEN_IDS.includes(Number(ownedNFT.tokenId))
+                ARTIST_WHITELIST_TOKEN_IDS.includes(Number(ownedNFT.tokenId))
               )
               .map((ownedNft) => ({
                 ...ownedNft,

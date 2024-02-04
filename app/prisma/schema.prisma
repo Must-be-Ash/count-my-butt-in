@@ -10,13 +10,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 enum Network {
   ETHEREUM
   POLYGON
   GNOSIS
   BASE
   GOERLI
+  OPTIMISM
   SEPOLIA
 }
 
@@ -32,19 +32,20 @@ enum UserType {
 }
 
 model User {
-  id            String  @id @default(uuid())
-  privyId       String  @unique               // userId coming from privy
-  imageUrl      String?
-  nickname      String?
-  email         String?
+  id              String   @id @default(uuid())
+  privyId         String   @unique // userId coming from privy
+  imageUrl        String?
+  nickname        String?
+  email           String?
   walletAddresses String[]
   twitterUsername String?
   twitterSubject  String?
   twitterName     String?
   twitterImageUrl String?
-  userType      UserType @default(MINION)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  userType        UserType @default(MINION)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  domain          String?  @unique // domain name for the artist. eg., jadyn.signed.gg or violetta.signed.gg
 }
 
 model Order {
@@ -71,25 +72,30 @@ model Order {
   toUpload              String? // the generated image that the collector will see
   createdAt             DateTime       @default(now())
   updatedAt             DateTime       @default(now()) @updatedAt
+
   @@index([userId, status], name: "userId_status_index")
   @@index([privyUserId, status], name: "privyUserId_status_index")
 }
 
 model Campaign {
-  campaignId                     String   @id @default(uuid())
-  createdAt                      DateTime @default(now())
-  networkId                      Network  @default(ETHEREUM)
-  defaultURI                     String?
-  binderContract                 String?
-  manifestUrl                    String?
+  campaignId      String   @id @default(uuid())
+  userId          String   @default("") // generated userId by prisma
+  createdAt       DateTime @default(now())
+  networkId       Network  @default(ETHEREUM)
+  defaultURI      String?
+  binderContract  String?
+  manifestUrl     String?
+  name            String?
+  landingImageUrl String?
 }
 
 model CampaignWhiteList {
-  campaignId                     String  
-  createdAt                      DateTime @default(now())
-  networkId                      Network  @default(ETHEREUM)
+  campaignId      String
+  createdAt       DateTime @default(now())
+  networkId       Network  @default(ETHEREUM)
   contractAddress String
-  tokenId         String @default("") // empty string means all tokens
+  tokenId         String   @default("") // empty string means all tokens
+
   @@unique([campaignId, networkId, contractAddress, tokenId])
 }
 

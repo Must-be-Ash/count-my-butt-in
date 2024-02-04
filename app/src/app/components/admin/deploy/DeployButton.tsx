@@ -8,11 +8,16 @@ import { useWrite } from "@/hooks/web3";
 import { BINDER_FACTORY_ABI } from "@/abi";
 import { usePrivy } from "@privy-io/react-auth";
 import LogoutButton from "@/app/components/LogoutButton";
-import { binderNetworkId, getContractEtherscanLink } from "@/utils/common";
+import {
+  CAMPAIGN_NETWORK,
+  binderNetworkId,
+  getContractEtherscanLink,
+} from "@/utils/common";
 import SetAdminButton from "./SetAdminButton";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Loader from "../../Loader";
+import { useAuthentication } from "@/hooks/useAuthentication";
 
 export default function DeployButton({
   networkId,
@@ -23,6 +28,7 @@ export default function DeployButton({
   contractAddress: string;
   creatorAddress: string;
 }) {
+  const { authenticatedUser } = useAuthentication();
   const [deployedContract, setDeployedContract] = useState();
   const [campaignId, setCampaignId] = useState<string>();
   const router = useRouter();
@@ -62,12 +68,17 @@ export default function DeployButton({
         const result = await APIHelpers.post("/api/campaigns", {
           body: {
             binderContract: parsed?.args.clone,
-            networkId: "SEPOLIA",
+            networkId: CAMPAIGN_NETWORK,
           },
         });
         const campaign = result.campaign;
         setDeployedContract(contractAddress);
         setCampaignId(campaign.campaignId);
+        await APIHelpers.patch(`/api/campaigns/${campaign.campaignId}`, {
+          body: {
+            userId: authenticatedUser?.id,
+          },
+        });
       }
       setIsLoading(false);
     };

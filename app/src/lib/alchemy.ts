@@ -25,7 +25,7 @@ export const polygonAlchemy = new Alchemy({
 
 export const baseAlchemy = new Alchemy({
   apiKey: process.env.NEXT_PUBLIC_ALCHEMY_BASE!, // Replace with your Alchemy API Key.
-  network: Network.OPT_MAINNET, // Replace with your network.
+  network: Network.BASE_MAINNET, // Replace with your network.
 });
 
 export const optimismAlchemy = new Alchemy({
@@ -112,7 +112,7 @@ export async function injectBinderMetadata(
   networkId: number,
   nft: Nft | OwnedNft
 ): Promise<Nft | OwnedNft> {
-  if (nft.title === "Binder Drop") {
+  if (nft.title === "Binder Drop" || !nft.title?.length) {
     // we want to get our own cached data to not relying on cache data on alchemy api
     const { nft: binderNft } = await APIHelpers.get(
       `/api/nft?networkId=${networkId}&contractAddress=${nft.contract.address}&tokenId=${nft.tokenId}`
@@ -126,10 +126,12 @@ export async function injectBinderMetadata(
               ipfsUrl: binderNft.tokenUri,
             },
           });
-
           nft.title = metadata.name;
-
-          nft.media[0].gateway = metadata.image;
+          if (!nft.media?.length) {
+            nft.media = [{ raw: "", gateway: metadata.image }];
+          } else {
+            nft.media[0].gateway = metadata.image;
+          }
         }
       } catch (e) {
         // non-blocking

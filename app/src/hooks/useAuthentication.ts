@@ -1,5 +1,5 @@
 import APIHelpers from "@/lib/apiHelper";
-import { User } from "@prisma/client";
+import { Campaign, User } from "@prisma/client";
 import { usePrivy, useWallets } from "@privy-io/react-auth";
 import { useEffect, useState } from "react";
 import { blo } from "blo";
@@ -12,7 +12,9 @@ import { getAlchemy } from "@/lib/alchemy";
 export function useAuthentication() {
   const privyData = usePrivy();
   const { wallets } = useWallets();
-  const [authenticatedUser, setAuthenticatedUser] = useState<User>();
+  const [authenticatedUser, setAuthenticatedUser] = useState<User & {
+    campaign: Campaign
+  }>();
 
   async function refreshUser() {
     if (!!privyData.user) {

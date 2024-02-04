@@ -4,14 +4,18 @@ import { Campaign, Network } from "@prisma/client";
 import BinderButton from "@/app/components/BinderButton";
 import APIHelpers from "@/lib/apiHelper";
 import { useSearchParams } from "next/navigation";
+import { useAuthentication } from "@/hooks/useAuthentication";
+import { CAMPAIGN_NETWORK } from "@/utils/common";
 
 export default function CreateCampaign() {
+  const { authenticatedUser } = useAuthentication();
   const searchParams = useSearchParams();
   const contractAddress = searchParams.get("contractAddress");
 
   const [config, setConfig] = useState<Partial<Campaign>>({
     binderContract: contractAddress,
-    networkId: "SEPOLIA",
+    networkId: CAMPAIGN_NETWORK,
+    userId: authenticatedUser?.id,
   });
   const [camapginId, setCampaignId] = useState();
 
@@ -88,8 +92,14 @@ export default function CreateCampaign() {
           const result = await APIHelpers.post("/api/campaigns", {
             body: config,
           });
+
           const campaign = result.campaign;
           setCampaignId(campaign.campaignId);
+          await APIHelpers.patch(`/api/campaigns/${campaign.campaignId}`, {
+            body: {
+              userId: authenticatedUser?.id,
+            },
+          });
         }}
       >
         Create Campaign

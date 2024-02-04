@@ -55,12 +55,16 @@ export function getOpenseaLink(
   if (networkId === 8453) {
     return `https://opensea.io/assets/base/${contractAddress}/${tokenId}`;
   }
+  if (networkId === 10) {
+    return `https://opensea.io/assets/optimism/${contractAddress}/${tokenId}`;
+  }
   if (networkId === 5) {
     return `https://testnets.opensea.io/assets/goerli/${contractAddress}/${tokenId}`;
   }
   if (networkId === 11155111) {
     return `https://testnets.opensea.io/assets/sepolia/${contractAddress}/${tokenId}`;
   }
+
   return `https://opensea.io/assets/ethereum/${contractAddress}/${tokenId}`;
 }
 
@@ -76,6 +80,9 @@ export function getContractEtherscanLink(
   }
   if (networkId === 8453) {
     return `https://basescan.org/address/${contractAddress}`;
+  }
+  if (networkId === 10) {
+    return `https://optimistic.etherscan.io/address/${contractAddress}`;
   }
   if (networkId === 5) {
     return `https://goerli.etherscan.io/address/${contractAddress}`;
@@ -99,6 +106,9 @@ export function getTokenBoundLink(
   }
   if (networkId === 8453) {
     return `https://tokenbound.org/assets/base/${contractAddress}/${tokenId}`;
+  }
+  if (networkId === 10) {
+    return `https://tokenbound.org/assets/optimistic/${contractAddress}/${tokenId}`;
   }
   if (networkId === 5) {
     return `https://tokenbound.org/assets/goerli/${contractAddress}/${tokenId}`;
@@ -131,6 +141,9 @@ export function networkToName(networkId: number) {
   if (networkId === 8453) {
     return "Base";
   }
+  if (networkId === 10) {
+    return "Optimism";
+  }
   if (networkId === 5) {
     return "Goerli";
   }
@@ -151,6 +164,9 @@ export function nameToNetwork(name: string): number {
   if (name === "base") {
     return 8453;
   }
+  if (name === "optimism") {
+    return 10;
+  }
   if (name === "goerli") {
     return 5;
   }
@@ -169,6 +185,9 @@ export function networkToCurrency(networkId: number) {
   }
   if (networkId === 8453) {
     return "BETH";
+  }
+  if (networkId === 10) {
+    return "OETH";
   }
   if (networkId === 5) {
     return "GETH";

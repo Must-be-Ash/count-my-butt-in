@@ -80,7 +80,7 @@ export function useWrite(data: {
       }
     }
   }
-
+  console.log(`error`, error);
   return {
     write,
     error: error && formatError(error),

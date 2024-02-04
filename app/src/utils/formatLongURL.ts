@@ -4,7 +4,7 @@ export default function formatLongURL(
   endSuffix?: number
 ): string {
   if (!url) return "";
-  if (url.length <= 12) return url;
+  if (url.length <= ((endPrefix || 0) + (endSuffix || 0))) return url;
   const prefix = url.substring(0, endPrefix || 8);
   const suffix =
     endSuffix === 0 ? "" : url.substring(url.length - (endSuffix || 4));

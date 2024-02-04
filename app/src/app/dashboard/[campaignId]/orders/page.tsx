@@ -20,7 +20,8 @@ import CollectorDisplay from "@/app/components/SignaturePad/CollectorDisplay";
 
 export default function Orders({ params }: { params: { campaignId: string } }) {
   const [hostname, setHostname] = useState<string>("https://app.signed.gg");
-  const COLLECTOR_LINK = `${hostname}/collector/${params.campaignId}/home`;
+  // const COLLECTOR_LINK = `${hostname}/collector/${params.campaignId}/home`;
+  const COLLECTOR_LINK = `${hostname}`;
   const [isCopied, setIsCopied] = useState<boolean>(false);
 
   useEffect(() => {
@@ -31,7 +32,7 @@ export default function Orders({ params }: { params: { campaignId: string } }) {
     } catch (e) {
       console.log(e);
     }
-  }, [window]);
+  }, []);
 
   const copyText = (text: string) => {
     setIsCopied((c) => !c);
@@ -64,7 +65,10 @@ export default function Orders({ params }: { params: { campaignId: string } }) {
     refetchOrders();
   }
   return (
-    <AuthenticatedPage homeRoute={`/dashboard/${params.campaignId}`}>
+    <AuthenticatedPage
+      homeRoute={`/dashboard/${params.campaignId}`}
+      requiredUserId={campaign?.userId}
+    >
       <Main>
         <Credenza open={modalIsOpen} onOpenChange={setModalOpen}>
           <CredenzaContent className="dark:bg-transparent dark:border-0 flex flex-col">
