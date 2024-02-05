@@ -1,23 +1,15 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Campaign, Network } from "@prisma/client";
 import BinderButton from "@/app/components/BinderButton";
 import APIHelpers from "@/lib/apiHelper";
-import LoginButton from "@/app/components/LoginButton";
 import { useWrite } from "@/hooks/web3";
 import { BINDER_FACTORY_ABI } from "@/abi";
-import { usePrivy } from "@privy-io/react-auth";
-import LogoutButton from "@/app/components/LogoutButton";
-import {
-  CAMPAIGN_NETWORK,
-  binderNetworkId,
-  getContractEtherscanLink,
-} from "@/utils/common";
-import SetAdminButton from "./SetAdminButton";
+import { DEFAULT_METADATA_URL } from "@/utils/common";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Loader from "../../Loader";
 import { useAuthentication } from "@/hooks/useAuthentication";
+import { networkToName } from "@/lib/utils";
 
 export default function DeployButton({
   networkId,
@@ -48,12 +40,7 @@ export default function DeployButton({
     contractAddress,
     abi: BINDER_FACTORY_ABI,
     functionName: "createBinderDrop",
-    args: [
-      creatorAddress,
-      "https://arweave.net/ckSld6yHJxWxis45HhUxOcaP23Ksym1rv1rcDrz8Z-E",
-      0,
-      5,
-    ],
+    args: [creatorAddress, DEFAULT_METADATA_URL, 0, 5],
   });
   useEffect(() => {
     if (campaignId) {
@@ -68,7 +55,7 @@ export default function DeployButton({
         const result = await APIHelpers.post("/api/campaigns", {
           body: {
             binderContract: parsed?.args.clone,
-            networkId: CAMPAIGN_NETWORK,
+            networkId: networkToName(networkId).toUpperCase(),
           },
         });
         const campaign = result.campaign;

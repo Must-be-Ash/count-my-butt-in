@@ -7,7 +7,6 @@ import { networkToName } from "@/lib/utils";
 import { useInstance } from "@/context/InstanceContext";
 import ErrorDisplay from "@/app/components/ErrorDisplay";
 import { BINDER_DROP_ABI } from "@/abi";
-import { NETWORK_ID } from "@/utils/common";
 import { useWrite } from "@/hooks/web3";
 import APIHelpers from "@/lib/apiHelper";
 import { useCampaign } from "@/hooks/useCampaign";

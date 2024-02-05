@@ -20,10 +20,16 @@ export async function POST(
   if (networkId !== 1) {
     return NextResponse.json({ error: "Token not found in whitelist" });
   }
-  if (!ARTIST_COLLECTION_ADDRESS.includes(contractAddress.toLowerCase())) {
+  if (
+    ARTIST_COLLECTION_ADDRESS &&
+    !ARTIST_COLLECTION_ADDRESS.includes(contractAddress.toLowerCase())
+  ) {
     return NextResponse.json({ error: "Token not found in whitelist" });
   }
-  if (!ARTIST_WHITELIST_TOKEN_IDS.includes(parseInt(tokenId))) {
+  if (
+    ARTIST_WHITELIST_TOKEN_IDS &&
+    !ARTIST_WHITELIST_TOKEN_IDS.includes(parseInt(tokenId))
+  ) {
     return NextResponse.json({ error: "Token not found in whitelist" });
   }
   // const validToken = campaignWhiteLists.find((whitelist: any) =>

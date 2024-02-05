@@ -77,13 +77,15 @@ const NFTFeedProfile = ({
           theNetwork,
           addresses[i],
           pageToKeysMapping[addresses[i]][currentPage] || undefined,
-          [ARTIST_COLLECTION_ADDRESS]
+          ARTIST_COLLECTION_ADDRESS ? [ARTIST_COLLECTION_ADDRESS] : undefined
         );
         nfts.push(theNFT);
         alchemyNfts.push(
           ...theNFT.ownedNfts
             .filter((ownedNFT) =>
-              ARTIST_WHITELIST_TOKEN_IDS.includes(Number(ownedNFT.tokenId))
+              ARTIST_WHITELIST_TOKEN_IDS
+                ? ARTIST_WHITELIST_TOKEN_IDS.includes(Number(ownedNFT.tokenId))
+                : true
             )
             .map((ownedNft) => ({
               ...ownedNft,
@@ -140,13 +142,15 @@ const NFTFeedProfile = ({
           currentPage > 2
             ? pageToKeysMapping[addresses[i]][currentPage - 2] || undefined
             : undefined,
-          [ARTIST_COLLECTION_ADDRESS]
+          ARTIST_COLLECTION_ADDRESS ? [ARTIST_COLLECTION_ADDRESS] : undefined
         );
         nfts.push(theNFT);
         alchemyNfts.push(
           ...theNFT.ownedNfts
             .filter((ownedNFT) =>
-              ARTIST_WHITELIST_TOKEN_IDS.includes(Number(ownedNFT.tokenId))
+              ARTIST_WHITELIST_TOKEN_IDS
+                ? ARTIST_WHITELIST_TOKEN_IDS.includes(Number(ownedNFT.tokenId))
+                : true
             )
             .map((ownedNft) => ({
               ...ownedNft,
@@ -185,13 +189,17 @@ const NFTFeedProfile = ({
             theNetwork,
             addresses[i],
             undefined,
-            [ARTIST_COLLECTION_ADDRESS]
+            ARTIST_COLLECTION_ADDRESS ? [ARTIST_COLLECTION_ADDRESS] : undefined
           );
           nfts.push(theNFT);
           alchemyNfts.push(
             ...theNFT.ownedNfts
               .filter((ownedNFT) =>
-                ARTIST_WHITELIST_TOKEN_IDS.includes(Number(ownedNFT.tokenId))
+                ARTIST_WHITELIST_TOKEN_IDS
+                  ? ARTIST_WHITELIST_TOKEN_IDS.includes(
+                      Number(ownedNFT.tokenId)
+                    )
+                  : true
               )
               .map((ownedNft) => ({
                 ...ownedNft,
