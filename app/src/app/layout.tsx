@@ -12,7 +12,7 @@ const baskerville = Baskervville({
   weight: "400",
   style: ['italic', 'normal']
 })
-export const fontSans = FontSans({
+const fontSans = FontSans({
   subsets: ["latin"],
   variable: "--font-sans",
 })

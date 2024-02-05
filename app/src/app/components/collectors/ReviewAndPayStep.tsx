@@ -36,13 +36,16 @@ export default function ReviewAndPayStep() {
 
   useEffect(() => {
     const run = async () => {
+      // @ts-ignore
       if (instance.tipAmount && Number(instance.tipAmount) > 0) {
+        // @ts-ignore
         const usd = await ethToUsd(Number(instance.tipAmount));
         setTipAmountInUSd(usd);
       }
     };
 
     run();
+    // @ts-ignore
   }, [instance.tipAmount]);
 
   useEffect(() => {
@@ -103,6 +106,23 @@ export default function ReviewAndPayStep() {
 
     run();
   }, [instance]);
+
+  console.log(
+    authenticated &&
+    !!recipient &&
+    !!signature &&
+    !!campaign?.binderContract &&
+    !!campaign.networkId &&
+    !!instance.orderId
+  )
+
+  console.log({
+    authenticated,
+      recipient,
+      signature,
+      campaign,
+      instance,
+  })
 
   return (
     <div className="flex flex-col h-full w-full gap-2">

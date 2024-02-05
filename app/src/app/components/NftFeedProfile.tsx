@@ -84,6 +84,7 @@ const NFTFeedProfile = ({
           ...theNFT.ownedNfts
             .filter((ownedNFT) =>
               ARTIST_WHITELIST_TOKEN_IDS
+              // @ts-ignore
                 ? ARTIST_WHITELIST_TOKEN_IDS.includes(Number(ownedNFT.tokenId))
                 : true
             )
