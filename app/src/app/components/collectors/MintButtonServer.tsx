@@ -35,7 +35,6 @@ export default function MintButtonServer({
     write,
     isLoading,
   } = useTransferETH({
-    networkId: campaignNetworkId,
     to: PAYMENT_WALLET[campaignNetworkId],
     value: instance.tipAmount,
   });

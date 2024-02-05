@@ -100,30 +100,15 @@ export function useWrite(data: {
   };
 }
 
-export function useTransferETH(data: {
-  networkId: number;
-  to: string;
-  value?: number;
-}) {
+export function useTransferETH(data: { to: string; value?: number }) {
   const { data: hash, sendTransaction, isLoading } = useSendTransaction();
 
-  const { networkId, value, to } = data;
+  const { value, to } = data;
 
   const { wallets } = useWallets();
   const wallet = wallets[0];
 
   let error = null;
-
-  // check if the user is connected to the correct network
-  const wrongNetwork = wallet?.chainId !== networkIdToString(networkId);
-  // Set error if user is on wrong network
-  if (wrongNetwork) {
-    error = {
-      name: "Wrong Network",
-      message: "Please connect to the correct network",
-      networkId: wallet?.chainId,
-    };
-  }
 
   const {
     isLoading: isMintLoading,
@@ -136,13 +121,6 @@ export function useTransferETH(data: {
 
   error = error;
 
-  // prompt for network switch if user is on wrong network
-  useEffect(() => {
-    if (wrongNetwork && wallet) {
-      wallet.switchChain(networkId);
-    }
-  }, [networkId, wallet, wrongNetwork]);
-
   let parsed;
   console.log(`error`, error);
   return {
@@ -152,8 +130,6 @@ export function useTransferETH(data: {
     transactionError,
     isLoading: isLoading || isMintLoading,
     currentNetwork: wallet?.chainId,
-    wrongNetwork,
-    switchCorrectNetwork: () => wallet.switchChain(networkId),
     isSuccess,
     wallet,
     parsed,
