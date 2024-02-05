@@ -102,6 +102,23 @@ export default function ReviewAndPayStep() {
     run();
   }, [instance]);
 
+  console.log(
+    authenticated &&
+    !!recipient &&
+    !!signature &&
+    !!campaign?.binderContract &&
+    !!campaign.networkId &&
+    !!instance.orderId
+  )
+
+  console.log({
+    authenticated,
+      recipient,
+      signature,
+      campaign,
+      instance,
+  })
+
   return (
     <div className="flex flex-col h-full w-full gap-2">
       <div className="flex flex-col gap-2">

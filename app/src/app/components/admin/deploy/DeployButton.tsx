@@ -40,7 +40,15 @@ export default function DeployButton({
     contractAddress,
     abi: BINDER_FACTORY_ABI,
     functionName: "createBinderDrop",
-    args: [creatorAddress, DEFAULT_METADATA_URL, 0, 5],
+    args: [
+      creatorAddress,
+      // "https://arweave.net/ckSld6yHJxWxis45HhUxOcaP23Ksym1rv1rcDrz8Z-E",
+      // "https://arweave.net/M5Q3_Par8qCHfxmy54-HxHchi_-DE-FrqdFdbYemshQ",
+      // "https://arweave.net/QqvTJMEs0cb3WrKZGsFtviWkUxEjk2r_IY4n4v7zhJM",
+      "https://arweave.net/sXdaPFgUktBdJyWyc7ftay74xSkXCHovj_7zRh4u6K8",
+      0,
+      5,
+    ],
   });
   useEffect(() => {
     if (campaignId) {
