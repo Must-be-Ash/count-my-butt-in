@@ -11,6 +11,7 @@ import { useWrite } from "@/hooks/web3";
 import APIHelpers from "@/lib/apiHelper";
 import { useCampaign } from "@/hooks/useCampaign";
 import { BigNumber } from "alchemy-sdk";
+
 export default function MintButton({
   campaignNetworkId,
   recipient,
@@ -45,17 +46,6 @@ export default function MintButton({
 
   async function mint() {
     if (write) {
-      // create new order
-      await APIHelpers.post("/api/campaigns/1/orders", {
-        body: {
-          campaignId: instance.campaignId,
-          collectionNetwork: networkToName(instance.nftNetworkId).toUpperCase(),
-          collectionAddress: instance.contractAddress,
-          selectedTokenId: instance.tokenId,
-          personalNote: instance.note,
-        },
-      });
-
       await write();
     }
   }

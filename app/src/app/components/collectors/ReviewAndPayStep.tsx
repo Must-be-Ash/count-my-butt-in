@@ -15,9 +15,13 @@ import MintButton from "./MintButton";
 import Loader from "../Loader";
 import { TokenboundClient } from "@tokenbound/sdk";
 import { useCampaign } from "@/hooks/useCampaign";
-import { defaultNote, getContractEtherscanLink } from "@/utils/common";
+import {
+  defaultNote,
+  getContractEtherscanLink,
+  serverPay,
+} from "@/utils/common";
 import { useAuthentication } from "@/hooks/useAuthentication";
-import LoginButton from "@/app/components/LoginButton";
+import MintButtonServer from "./MintButtonServer";
 
 export default function ReviewAndPayStep() {
   const { user, authenticatedUser, authenticated } = useAuthentication();
@@ -43,44 +47,42 @@ export default function ReviewAndPayStep() {
 
   useEffect(() => {
     const run = async () => {
-      if (authenticatedUser) {
-        // create new order and save to BE
-        const result = await APIHelpers.post(
-          `/api/campaigns/${instance.campaignId}/orders`,
-          {
-            body: {
-              campaignId: instance.campaignId,
-              collectionNetwork: networkToName(
-                instance.nftNetworkId
-              ).toUpperCase(),
-              collectionAddress: instance.contractAddress,
-              selectedTokenId: instance.tokenId,
-              personalNote: instance.note,
-              userId: authenticatedUser?.id,
-              privyUserId: user?.id, // user here is privy user
-            },
-          }
-        );
-        // update userId and priviUserId, for some reason, these cannot be updated upon creation
-        await APIHelpers.patch(
-          `/api/campaigns/${instance.campaignId}/orders/${result.order.orderId}`,
-          {
-            body: {
-              userId: authenticatedUser?.id,
-              privyUserId: user?.id, // user here is privy user
-            },
-          }
-        );
+      // create new order and save to BE
+      const result = await APIHelpers.post(
+        `/api/campaigns/${instance.campaignId}/orders`,
+        {
+          body: {
+            campaignId: instance.campaignId,
+            collectionNetwork: networkToName(
+              instance.nftNetworkId
+            ).toUpperCase(),
+            collectionAddress: instance.contractAddress,
+            selectedTokenId: instance.tokenId,
+            personalNote: instance.note,
+            userId: authenticatedUser?.id,
+            privyUserId: user?.id, // user here is privy user
+          },
+        }
+      );
+      // update userId and priviUserId, for some reason, these cannot be updated upon creation
+      await APIHelpers.patch(
+        `/api/campaigns/${instance.campaignId}/orders/${result.order.orderId}`,
+        {
+          body: {
+            userId: authenticatedUser?.id,
+            privyUserId: user?.id, // user here is privy user
+          },
+        }
+      );
 
-        setInstance({
-          ...instance,
-          orderId: result.order.orderId,
-        });
-      }
+      setInstance({
+        ...instance,
+        orderId: result.order.orderId,
+      });
     };
 
     run();
-  }, [authenticatedUser]);
+  }, []);
 
   useEffect(() => {
     const run = async () => {
@@ -178,26 +180,32 @@ export default function ReviewAndPayStep() {
         </div>
       </div>
 
-      {!authenticated && <LoginButton />}
-
-      {authenticated &&
-      !!recipient &&
+      {!!recipient &&
       !!signature &&
       !!campaign?.binderContract &&
       !!campaign.networkId &&
       !!instance.orderId ? (
-        <MintButton
-          campaignNetworkId={nameToNetwork(campaign.networkId)}
-          signature={signature}
-          recipient={recipient}
-          binderContract={campaign.binderContract}
-        />
-      ) : authenticated ? (
+        serverPay ? (
+          <MintButtonServer
+            campaignNetworkId={nameToNetwork(campaign.networkId)}
+            signature={signature}
+            recipient={recipient}
+            binderContract={campaign.binderContract}
+          />
+        ) : authenticated ? (
+          <MintButtonServer
+            campaignNetworkId={nameToNetwork(campaign.networkId)}
+            signature={signature}
+            recipient={recipient}
+            binderContract={campaign.binderContract}
+          />
+        ) : (
+          <Loader />
+        )
+      ) : (
         <div className="flex flex-row justify-center">
           <Loader />
         </div>
-      ) : (
-        <div />
       )}
     </div>
   );

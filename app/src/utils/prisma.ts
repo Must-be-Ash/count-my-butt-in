@@ -30,11 +30,11 @@ export const OrderCreateInput = z.object({
 const prisma = new PrismaClient().$extends({
   query: {
     order: {
-      create({ args, query }: {args: any, query: any}) {
+      create({ args, query }: { args: any; query: any }) {
         args.data = OrderCreateInput.parse(args.data);
         return query(args);
       },
-      update({ args, query }: {args: any, query: any}) {
+      update({ args, query }: { args: any; query: any }) {
         args.data = OrderCreateInput.partial().parse(args.data);
         return query(args);
       },
@@ -82,7 +82,10 @@ export function getOrderByToken(tokenId: string, contractAddress: string) {
   });
 }
 
-export function getOrderBySubmittedToken(tokenId: string, collectionAddress: string) {
+export function getOrderBySubmittedToken(
+  tokenId: string,
+  collectionAddress: string
+) {
   return prisma.order.findFirst({
     where: {
       AND: [
@@ -92,8 +95,8 @@ export function getOrderBySubmittedToken(tokenId: string, collectionAddress: str
         },
       ],
       NOT: {
-        toUpload: null
-      }
+        toUpload: null,
+      },
     },
   });
 }
@@ -220,10 +223,10 @@ export async function getUser(id: string) {
   if (user && user.id) {
     const campaign = await prisma.campaign.findFirst({
       where: {
-        userId: user.id
-      }
+        userId: user.id,
+      },
     });
-    return {...user, campaign}
+    return { ...user, campaign };
   }
   return user;
 }
@@ -237,10 +240,10 @@ export async function getUserByPrivyId(privyId: string) {
   if (user && user.id) {
     const campaign = await prisma.campaign.findFirst({
       where: {
-        userId: user.id
-      }
-    })
-    return {...user, campaign: campaign }
+        userId: user.id,
+      },
+    });
+    return { ...user, campaign: campaign };
   }
   return user;
 }
