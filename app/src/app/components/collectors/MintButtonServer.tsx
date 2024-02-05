@@ -93,16 +93,11 @@ export default function MintButtonServer({
       mint();
     }
   }, [transferETHSuccess, mint]);
-
+  console.log("qwdqwd", instance.tipAmount);
   return (
     <>
-      {instance.tipAmount === 0 && (
-        <BinderButton
-          isLoading={loading}
-          onClick={() =>
-            instance.tipAmount === 0 ? mint() : setOpenTipModal(true)
-          }
-        >
+      {!instance.tipAmount && (
+        <BinderButton isLoading={loading} onClick={() => mint()}>
           {"Buy now"}
         </BinderButton>
       )}
