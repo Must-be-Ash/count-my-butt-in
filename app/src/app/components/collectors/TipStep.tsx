@@ -32,6 +32,7 @@ export default function TipStep() {
               className="block w-full pl-2 placeholder:pl-2 rounded-md border-0 py-1.5 text-white bg-neutral-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6"
               placeholder="0.001"
               onChange={(e) =>
+                // @ts-ignore
                 setInstance({ tipAmount: e.target.value as unknown as number })
               }
             />

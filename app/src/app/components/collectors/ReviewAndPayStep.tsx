@@ -32,13 +32,16 @@ export default function ReviewAndPayStep() {
 
   useEffect(() => {
     const run = async () => {
+      // @ts-ignore
       if (instance.tipAmount && Number(instance.tipAmount) > 0) {
+        // @ts-ignore
         const usd = await ethToUsd(Number(instance.tipAmount));
         setTipAmountInUSd(usd);
       }
     };
 
     run();
+    // @ts-ignore
   }, [instance.tipAmount]);
 
   useEffect(() => {

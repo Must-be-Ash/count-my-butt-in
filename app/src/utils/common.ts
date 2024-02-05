@@ -140,9 +140,9 @@ export const childrenNetworkIds = [1, 137, 8453, 11155111, 10];
 
 export const defaultNote = "I am a busy collector";
 
-export const ARTIST_COLLECTION_ADDRESS = undefined;
+export const ARTIST_COLLECTION_ADDRESS: string | undefined = undefined;
 
-export const ARTIST_WHITELIST_TOKEN_IDS = undefined;
+export const ARTIST_WHITELIST_TOKEN_IDS: number[] | undefined = undefined;
 
 export const DEFAULT_METADATA_URL =
   "https://arweave.net/ckSld6yHJxWxis45HhUxOcaP23Ksym1rv1rcDrz8Z-E"; // CHANGE THIS IF U WANT TO CHANGE THE DEFAULT METADATA

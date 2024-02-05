@@ -39,6 +39,7 @@ export default function MintButton({
     abi: BINDER_DROP_ABI,
     functionName: "mintTo",
     args: [instance.orderId, recipient, signature],
+    // @ts-ignore
     value: instance.tipAmount,
   });
   const { setCurrentStepIndex } = useSteps();
