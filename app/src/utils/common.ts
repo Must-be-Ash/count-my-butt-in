@@ -177,3 +177,11 @@ export const DEFAULT_METADATA = {
 };
 
 export const serverPay = true;
+
+export const PAYMENT_WALLET: Record<number, string> = {
+  [1]: "0xcd56df7b4705a99ebebe2216e350638a1582bec4",
+  [8453]: "0xcd56df7b4705a99ebebe2216e350638a1582bec4",
+  [137]: "0xcd56df7b4705a99ebebe2216e350638a1582bec4",
+  [10]: "0xcd56df7b4705a99ebebe2216e350638a1582bec4",
+  [11155111]: "0xcd56df7b4705a99ebebe2216e350638a1582bec4",
+};

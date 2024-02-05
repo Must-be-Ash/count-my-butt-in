@@ -22,6 +22,7 @@ import {
 } from "@/utils/common";
 import { useAuthentication } from "@/hooks/useAuthentication";
 import MintButtonServer from "./MintButtonServer";
+import LoginButton from "../LoginButton";
 
 export default function ReviewAndPayStep() {
   const { user, authenticatedUser, authenticated } = useAuthentication();
@@ -106,23 +107,6 @@ export default function ReviewAndPayStep() {
 
     run();
   }, [instance]);
-
-  console.log(
-    authenticated &&
-    !!recipient &&
-    !!signature &&
-    !!campaign?.binderContract &&
-    !!campaign.networkId &&
-    !!instance.orderId
-  )
-
-  console.log({
-    authenticated,
-      recipient,
-      signature,
-      campaign,
-      instance,
-  })
 
   return (
     <div className="flex flex-col h-full w-full gap-2">
@@ -213,14 +197,14 @@ export default function ReviewAndPayStep() {
             binderContract={campaign.binderContract}
           />
         ) : authenticated ? (
-          <MintButtonServer
+          <MintButton
             campaignNetworkId={nameToNetwork(campaign.networkId)}
             signature={signature}
             recipient={recipient}
             binderContract={campaign.binderContract}
           />
         ) : (
-          <Loader />
+          <LoginButton />
         )
       ) : (
         <div className="flex flex-row justify-center">

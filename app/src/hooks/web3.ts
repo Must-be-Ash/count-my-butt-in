@@ -1,4 +1,8 @@
-import { usePrepareContractWrite, useContractWrite } from "wagmi";
+import {
+  usePrepareContractWrite,
+  useContractWrite,
+  useSendTransaction,
+} from "wagmi";
 import { useWallets } from "@privy-io/react-auth";
 import { networkIdToString } from "@/utils/common";
 import { useEffect } from "react";
@@ -87,6 +91,66 @@ export function useWrite(data: {
     transactionError,
     isLoading: isLoading || isWriteLoading || isMintLoading,
     data: writeData,
+    currentNetwork: wallet?.chainId,
+    wrongNetwork,
+    switchCorrectNetwork: () => wallet.switchChain(networkId),
+    isSuccess,
+    wallet,
+    parsed,
+  };
+}
+
+export function useTransferETH(data: {
+  networkId: number;
+  to: string;
+  value?: number;
+}) {
+  const { data: hash, sendTransaction, isLoading } = useSendTransaction();
+
+  const { networkId, value, to } = data;
+
+  const { wallets } = useWallets();
+  const wallet = wallets[0];
+
+  let error = null;
+
+  // check if the user is connected to the correct network
+  const wrongNetwork = wallet?.chainId !== networkIdToString(networkId);
+  // Set error if user is on wrong network
+  if (wrongNetwork) {
+    error = {
+      name: "Wrong Network",
+      message: "Please connect to the correct network",
+      networkId: wallet?.chainId,
+    };
+  }
+
+  const {
+    isLoading: isMintLoading,
+    isSuccess,
+    data: receipt,
+    error: transactionError,
+  } = useWaitForTransaction({
+    hash: hash?.hash,
+  });
+
+  error = error;
+
+  // prompt for network switch if user is on wrong network
+  useEffect(() => {
+    if (wrongNetwork && wallet) {
+      wallet.switchChain(networkId);
+    }
+  }, [networkId, wallet, wrongNetwork]);
+
+  let parsed;
+  console.log(`error`, error);
+  return {
+    write: () =>
+      sendTransaction({ to, value: parseEther(value?.toString() || "0") }),
+    error: error && formatError(error),
+    transactionError,
+    isLoading: isLoading || isMintLoading,
     currentNetwork: wallet?.chainId,
     wrongNetwork,
     switchCorrectNetwork: () => wallet.switchChain(networkId),

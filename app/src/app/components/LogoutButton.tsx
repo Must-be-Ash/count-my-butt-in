@@ -16,13 +16,18 @@ const sizeToClass = (size: Size) => sizeClass[size];
 export default function LogoutButton({
   size = "default",
   withText = false,
+  className,
 }: {
   size?: Size;
   withText?: boolean;
+  className?: any;
 }) {
   const { logout } = useAuthentication();
   return (
-    <BinderButton className="flex flex-row items-center gap-2" onClick={logout}>
+    <BinderButton
+      className={`flex flex-row items-center gap-2 ${className}`}
+      onClick={logout}
+    >
       <ArrowRightOnRectangleIcon className={classNames(sizeToClass(size))} />
       {withText && "Logout"}
     </BinderButton>

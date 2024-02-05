@@ -33,7 +33,7 @@ enum UserType {
 
 model User {
   id              String   @id @default(uuid())
-  privyId         String   @unique // userId coming from privy
+  privyId         String?   @unique // userId coming from privy
   imageUrl        String?
   nickname        String?
   email           String?
