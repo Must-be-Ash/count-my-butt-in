@@ -9,6 +9,7 @@ export default function ErrorDisplay({ error }: { error: any }) {
   } else {
     errorMessage = `${error}`.slice(0, 500);
   }
+  console.log("ErrorDisplay", error, errorMessage);
   return (
     <>
       {error && (
