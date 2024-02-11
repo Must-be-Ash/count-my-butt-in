@@ -26,6 +26,31 @@ export function getOpenseaLink(
   return `https://opensea.io/assets/ethereum/${contractAddress}/${tokenId}`;
 }
 
+export function getOpenseaCollectionLink(
+  networkId: number,
+  contractAddress: string
+) {
+  if (networkId === 1) {
+    return `https://opensea.io/assets/ethereum/${contractAddress}`;
+  }
+  if (networkId === 137) {
+    return `https://opensea.io/assets/matic/${contractAddress}`;
+  }
+  if (networkId === 8453) {
+    return `https://opensea.io/assets/base/${contractAddress}`;
+  }
+  if (networkId === 10) {
+    return `https://opensea.io/assets/optimism/${contractAddress}`;
+  }
+  if (networkId === 5) {
+    return `https://testnets.opensea.io/assets/goerli/${contractAddress}`;
+  }
+  if (networkId === 11155111) {
+    return `https://testnets.opensea.io/assets/sepolia/${contractAddress}`;
+  }
+  return `https://opensea.io/assets/ethereum/${contractAddress}`;
+}
+
 export function getContractEtherscanLink(
   networkId: number,
   contractAddress: string

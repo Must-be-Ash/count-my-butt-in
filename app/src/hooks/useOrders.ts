@@ -39,3 +39,21 @@ export function useOrdersByUser(privyUserId: string) {
     refetchOrders: mutate,
   };
 }
+
+/*
+ * Get orders by campaignId
+ */
+export function useOrdersByCampaignId(campaignId: string) {
+  const { data, error, isLoading, mutate } = useSWR<Order[]>(
+    `/api/campaigns/${campaignId}/orders?status=CONFIRMED`,
+    fetchSWR
+  );
+
+  return {
+    orders: data,
+    isLoading,
+    isError: error,
+    error: error,
+    refetchOrders: mutate,
+  };
+}

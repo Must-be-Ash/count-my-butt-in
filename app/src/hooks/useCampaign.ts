@@ -1,4 +1,4 @@
-import { Campaign } from "@prisma/client";
+import { Campaign, User } from "@prisma/client";
 import useSWR from "swr";
 
 export const fetchSWR = async (url: string) => {
@@ -7,14 +7,14 @@ export const fetchSWR = async (url: string) => {
     .then((data) => data.campaign);
 };
 
-export function useCampaign(campaignId: string) {
+export function useCampaign(campaignId: string, includeUser = false) {
   const { data, error, isLoading, mutate } = useSWR<Campaign>(
-    `/api/campaigns/${campaignId}`,
+    `/api/campaigns/${campaignId}?includeUser=${includeUser}`,
     fetchSWR
   );
 
   return {
-    campaign: data,
+    campaign: data as Campaign & { user?: User },
     isLoading,
     isError: error,
     error: error,

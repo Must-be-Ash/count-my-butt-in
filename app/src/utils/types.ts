@@ -1,3 +1,5 @@
+import { Order as PrismaOrder } from "@prisma/client";
+
 /**
  * PENDING = Token is waiting to be autographed on
  * AUTOGRAPHED = Artist has created and uploaded an autograph (from the UI - uploaded on arweave) and the autograph link has been stored in the database
@@ -5,9 +7,10 @@
  */
 type Status = "PENDING" | "AUTOGRAPHED" | "REJECTED";
 type Order = {
-  collectionTitle: string,
-  tokenId: string,
-  image: string,
-  autograph?: string,
-  status: Status
-}
+  collectionTitle: string;
+  tokenId: string;
+  image: string;
+  autograph?: string;
+  status: Status;
+  autographData?: any;
+} & PrismaOrder;

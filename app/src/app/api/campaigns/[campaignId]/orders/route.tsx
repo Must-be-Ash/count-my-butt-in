@@ -1,13 +1,22 @@
 import { createOrder, getOrders } from "@/utils/prisma";
+import { NetworkStatus } from "@prisma/client";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function GET(
-  _: NextRequest,
+  request: NextRequest,
   { params }: { params: { campaignId: string } }
 ) {
-  const pendingOrders = await getOrders(params.campaignId, "PENDING");
-  const confirmedOrders = await getOrders(params.campaignId, "CONFIRMED");
-  return NextResponse.json({ orders: [...pendingOrders, ...confirmedOrders] });
+  const status = request.nextUrl.searchParams.get("status") as
+    | NetworkStatus
+    | undefined;
+  const orders = [];
+  if (status) {
+    orders.push(...(await getOrders(params.campaignId, status)));
+  } else {
+    orders.push(...(await getOrders(params.campaignId, "PENDING")));
+    orders.push(...(await getOrders(params.campaignId, "CONFIRMED")));
+  }
+  return NextResponse.json({ orders });
 }
 
 export async function POST(request: NextRequest) {

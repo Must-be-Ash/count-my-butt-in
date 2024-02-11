@@ -50,7 +50,7 @@ const NFTDisplayFull = ({
           <img
             src={nft.imageUrl}
             alt={`Unable to load asset`}
-            className="rounded-t-2xl w-full h-[252px] object-cover"
+            className="rounded-t-2xl w-full sm:h-[252px] h-[200px] object-cover"
           />
 
           {!imageOnly && (
