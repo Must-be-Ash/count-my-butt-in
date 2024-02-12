@@ -23,7 +23,7 @@ contract BinderDrop is ERC721, ERC721URIStorage, Ownable {
     uint256 public mintCost = 0;
     uint256 internal _tokenCount = 0;
     string public defaultURI;
-    mapping(uint256 => bool) revealedTokens;
+    mapping(bytes32 => bool) nonceMapping;
 
     event AutographIncoming(address minter, string orderId, address recipient, uint256 tokenId, bytes32 hash);
 
@@ -66,8 +66,8 @@ contract BinderDrop is ERC721, ERC721URIStorage, Ownable {
     }
 
     function burn(uint256 tokenId) external {
-        require(ownerOf(tokenId) == msg.sender, "Only the owner of the token can burn it.");
-        _burn(tokenId);
+      require(ownerOf(tokenId) == msg.sender, "Only the owner of the token can burn it.");
+      _burn(tokenId);
     }
 
     function _verifyHash(bytes32 hash, bytes memory signature) internal view returns (bool) {
@@ -78,6 +78,7 @@ contract BinderDrop is ERC721, ERC721URIStorage, Ownable {
       if (publicMintsPaused) {
         revert PublicMintsPaused();
       }
+      require(nonceMapping[nonce] == false, "Nonce already used");
 
       bytes32 payloadhash = keccak256(abi.encode(recipient, nonce));
       bytes32 hash = keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", payloadhash));
@@ -87,6 +88,7 @@ contract BinderDrop is ERC721, ERC721URIStorage, Ownable {
       ++_tokenCount;
       _safeMint(recipient, _tokenCount);
       _setTokenURI(_tokenCount, uri);
+      nonceMapping[nonce] = true;
       emit AutographIncoming(msg.sender, orderId, recipient, _tokenCount, hash);
     }
 
