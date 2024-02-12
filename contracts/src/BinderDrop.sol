@@ -4,7 +4,8 @@ pragma solidity 0.8.20;
 import "openzeppelin-contracts/contracts/token/ERC721/ERC721.sol";
 import "openzeppelin-contracts/contracts/utils/cryptography/ECDSA.sol";
 import "openzeppelin-contracts/contracts/proxy/utils/Initializable.sol";
-import "./Admins.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
 error NonExistentToken();
 error IsSoulbound();
@@ -15,38 +16,43 @@ error MintPriceNotPaid();
 error HashVerificationFailed();
 error MaxTokenCountReached();
 
-contract BinderDrop is ERC721, Admins, Initializable {
+contract BinderDrop is ERC721, ERC721URIStorage, Ownable {
     using Strings for uint256;
 
     bool public publicMintsPaused;
     uint256 public mintCost = 0;
     uint256 internal _tokenCount = 0;
-    // the tokenId that is the boundary between revealed and pre-revealed tokens
-    uint256 internal _revealedTokenIdBoundary;
-    uint256 internal _maxTokenCount = 0;
     string public defaultURI;
-    string public revealedURI;
     mapping(uint256 => bool) revealedTokens;
-
-    constructor() ERC721("BinderDrop", "BinderDropV1") {}
-
-    function initialize(address _creator, string memory defaultUri, address _server, uint256 cost, uint256 _batchSize) external initializer {
-      require(_creator != address(0));
-      creator = _creator;
-      defaultURI = defaultUri;
-      server = _server;
-      mintCost = cost;
-      _maxTokenCount =  _batchSize;
-    }
 
     event AutographIncoming(address minter, string orderId, address recipient, uint256 tokenId, bytes32 hash);
 
-    function pausePublicMints() external onlyAdmin {
+    constructor(address initialOwner, string memory _defaultURI)
+        ERC721("BinderDrop", "BinderDropV1")
+        Ownable(initialOwner)
+    {
+      defaultURI = _defaultURI;
+    }
+
+    function _baseURI() internal pure override returns (string memory) {
+        return defaultURI;
+    }
+
+    function supportsInterface(bytes4 interfaceId)
+        public
+        view
+        override(ERC721, ERC721URIStorage)
+        returns (bool)
+    {
+        return super.supportsInterface(interfaceId);
+    }
+
+    function pausePublicMints() external onlyOwner {
       require(!publicMintsPaused, "Public mints are already paused.");
       publicMintsPaused = true;
     }
 
-    function unpausePublicMints() external onlyAdmin {
+    function unpausePublicMints() external onlyOwner {
       require(publicMintsPaused, "Public mints are already unpaused.");
       publicMintsPaused = false;
     }
@@ -65,63 +71,36 @@ contract BinderDrop is ERC721, Admins, Initializable {
     }
 
     function _verifyHash(bytes32 hash, bytes memory signature) internal view returns (bool) {
-        return isAdmin(ECDSA.recover(hash, signature));
-    }
-    function verifyMintCall(address recipient, uint256 tokenId, bytes memory signature) public view returns (bool) {
-        bytes32 payloadhash = keccak256(abi.encode(recipient, tokenId));
-        bytes32 hash = keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", payloadhash));
-        return _verifyHash(hash, signature);
+        return owner() == ECDSA.recover(hash, signature);
     }
    
-    function mintTo(string memory orderId, address recipient, bytes memory signature) public payable {
+    function mintTo(string memory orderId, address recipient, bytes memory signature, string memory uri, bytes32 nonce) public payable {
       if (publicMintsPaused) {
         revert PublicMintsPaused();
       }
-      if (balanceOf(recipient) > 0) {
-        revert OnlyOneMintAllowed();
-      }
-      // Check price
-      require(msg.value >= mintCost, "Must pay more.");
-      if (_maxTokenCount != 0 && _tokenCount == _maxTokenCount) {
-        revert MaxTokenCountReached();
-      }
-      bytes32 payloadhash = keccak256(abi.encode(recipient));
+
+      bytes32 payloadhash = keccak256(abi.encode(recipient, nonce));
       bytes32 hash = keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", payloadhash));
       if (!_verifyHash(hash, signature)) {
         revert HashVerificationFailed();
       }
       ++_tokenCount;
       _safeMint(recipient, _tokenCount);
+      _setTokenURI(_tokenCount, uri);
       emit AutographIncoming(msg.sender, orderId, recipient, _tokenCount, hash);
     }
 
-    function bumpTokenCount(uint256 amount) public onlyAdmin returns (uint256) {
-      _maxTokenCount += amount;
-      return _maxTokenCount;
-    }
-
-    /**
-     *
-     * @param revealedTokenIdBoundary the tokenId that is the boundary between revealed and pre-revealed tokens. This determined which tokenUrl to return
-     */
-    function revealTokens(uint256 revealedTokenIdBoundary, string memory _revealedURI) public onlyAdmin {
-      _revealedTokenIdBoundary = revealedTokenIdBoundary;
-      revealedURI = _revealedURI;
-    }
-
-    function withdraw(address receiver, uint256 amount) external onlyAdmin {
+    function withdraw(address receiver, uint256 amount) external onlyOwner {
         (bool sent, ) = receiver.call{value: amount}("");
         require(sent, "Failed to transfer to receiver");
     }
 
-    function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
-      require(ownerOf(tokenId) != address(0), 'Non existent token');
-
-      if (tokenId > _revealedTokenIdBoundary) {
-        // default uri returned
-        return bytes(defaultURI).length > 0 ? string(abi.encodePacked(defaultURI)) : "";
-      }
-      // returned revealed uri
-      return string(abi.encodePacked(revealedURI, "/", uint256(tokenId).toString()));
+    function tokenURI(uint256 tokenId)
+      public
+      view
+      override(ERC721, ERC721URIStorage)
+      returns (string memory)
+    {
+        return super.tokenURI(tokenId);
     }
 }
