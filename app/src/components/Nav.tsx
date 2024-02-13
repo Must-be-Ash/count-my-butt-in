@@ -27,7 +27,7 @@ const ViewAllCampaignsButton = () => {
 const LoginOrUserWidget = () => {
   const { user } = useAuthentication();
   const path = usePathname();
-  const isOnAllCampaigns = path === "/dashboard/campaigns"
+  const isOnDashboard = path.includes("/dashboard") && path !== ("/dashboard/campaigns");
 
   if (!user) {
     return <LoginButton />;
@@ -36,7 +36,7 @@ const LoginOrUserWidget = () => {
     <div className="flex flex-row gap-2 items-center w-full justify-between pb-6">
       <UserInfo />
         <div className="flex flex-row gap-2">
-        {!isOnAllCampaigns && <ViewAllCampaignsButton />}
+        {!isOnDashboard && <ViewAllCampaignsButton />}
         <LogoutButton size="sm" />
       </div>
     </div>
