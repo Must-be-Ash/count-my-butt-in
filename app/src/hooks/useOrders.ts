@@ -1,5 +1,6 @@
 import useSWR from "swr";
-import { Order } from "@prisma/client";
+import { NetworkStatus, Order } from "@prisma/client";
+import { Network } from "ethers";
 
 export const fetchSWR = async (url: string) => {
   return fetch(url)
@@ -45,7 +46,7 @@ export function useOrdersByUser(privyUserId: string) {
  */
 export function useOrdersByCampaignId(campaignId: string) {
   const { data, error, isLoading, mutate } = useSWR<Order[]>(
-    `/api/campaigns/${campaignId}/orders?status=CONFIRMED`,
+    `/api/campaigns/${campaignId}/orders`,
     fetchSWR
   );
 

@@ -15,11 +15,13 @@ const NFTDisplayFull = ({
   tokenId,
   networkId,
   imageOnly,
+  notClickable,
 }: {
   contractAddress: string;
   tokenId: string;
   networkId: number;
   imageOnly?: boolean;
+  notClickable?: boolean;
 }) => {
   const [nft, setNft] = useState<BinderNFT | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -46,7 +48,11 @@ const NFTDisplayFull = ({
   return (
     <>
       {nft && !isLoading && (
-        <div className="flex flex-col items-center justify-center rounded-2xl bg-black cursor-pointer">
+        <div
+          className={`flex flex-col items-center justify-center rounded-2xl bg-black ${
+            notClickable ? "" : "cursor-pointer"
+          }`}
+        >
           <img
             src={nft.imageUrl}
             alt={`Unable to load asset`}

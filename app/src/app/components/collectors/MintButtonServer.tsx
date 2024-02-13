@@ -1,29 +1,23 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import BinderButton from "@/app/components/BinderButton";
 import { useSteps } from "@/context/StepsContext";
 import { useInstance } from "@/context/InstanceContext";
 import ErrorDisplay from "@/app/components/ErrorDisplay";
 import APIHelpers from "@/lib/apiHelper";
-import { BigNumber } from "alchemy-sdk";
 import { PAYMENT_WALLET } from "@/utils/common";
 import { useAuthentication } from "@/hooks/useAuthentication";
 import { useTransferETH } from "@/hooks/web3";
 import LoginButton from "../LoginButton";
+import { NetworkStatus } from "@prisma/client";
 
 export default function MintButtonServer({
   campaignNetworkId,
-  recipient,
-  signature,
-  binderContract,
 }: {
   campaignNetworkId: number;
-  recipient: string;
-  signature: string;
-  binderContract: string;
 }) {
-  const { instance, setInstance } = useInstance();
+  const { instance } = useInstance();
   const [error, setError] = useState<any>();
   const [loading, setLoading] = useState(false);
   const [openTipModal, setOpenTipModal] = useState(false);
@@ -38,65 +32,42 @@ export default function MintButtonServer({
     to: PAYMENT_WALLET[campaignNetworkId],
     value: instance.tipAmount,
   });
-  const mint = useCallback(async () => {
+
+  async function submitOrder() {
     if (!instance.orderId) {
       setError("No orderId found");
       return;
     }
 
-    // Mint on server
     try {
       setLoading(true);
-      const { tokenId } = await APIHelpers.post("/api/mint", {
-        body: {
-          campaignId: instance.campaignId,
-          orderId: instance.orderId,
-          networkId: campaignNetworkId,
-          recipient,
-          signature,
-        },
-      });
-      setInstance({
-        mintedTokenId: (tokenId as BigNumber).toString(), // tokenId will be a BigNumber
-      });
-
-      // trigger scanner
-      APIHelpers.post("/api/scan", {
-        body: {
-          contractAddress: binderContract,
-          networkId: campaignNetworkId,
-        } as any,
-      }).catch((e) => {
-        console.log(`Error scanning:`);
-        console.log(e);
-      });
+      // update order status to pending
+      await APIHelpers.patch(
+        `/api/campaigns/${instance.campaignId}/orders/${instance.orderId}`,
+        {
+          body: {
+            status: NetworkStatus.PENDING,
+          },
+        }
+      );
       setCurrentStepIndex(4);
     } catch (e) {
       setError(e);
     } finally {
       setLoading(false);
     }
-  }, [
-    binderContract,
-    campaignNetworkId,
-    instance.campaignId,
-    instance.orderId,
-    recipient,
-    setCurrentStepIndex,
-    setInstance,
-    signature,
-  ]);
+  }
 
   useEffect(() => {
     if (transferETHSuccess) {
-      mint();
+      submitOrder();
     }
-  }, [transferETHSuccess, mint]);
+  }, [transferETHSuccess, submitOrder]);
   return (
     <>
       {!instance.tipAmount && (
-        <BinderButton isLoading={loading} onClick={() => mint()}>
-          {"Buy now"}
+        <BinderButton isLoading={loading} onClick={() => submitOrder()}>
+          {"Get it now"}
         </BinderButton>
       )}
       {instance.tipAmount > 0 && (
@@ -105,7 +76,6 @@ export default function MintButtonServer({
             We cover the gas fees but not the tips 😈. Choose method of payment
             for your tips!
           </div>
-          <BinderButton className="w-full"> Paypal </BinderButton>
           {authenticated && (
             <BinderButton
               isLoading={isLoading || loading}

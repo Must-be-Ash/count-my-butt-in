@@ -32,7 +32,7 @@ export default function ReviewAndPayStep() {
   const { campaign } = useCampaign(instance.campaignId);
   const [tipAmountInUSD, setTipAmountInUSd] = useState(0);
 
-  const gasFee = 0.1;
+  const gasFee = 0;
   const platformFee = 0.9;
 
   useEffect(() => {
@@ -108,9 +108,29 @@ export default function ReviewAndPayStep() {
     run();
   }, [instance]);
 
+  useEffect(() => {
+    const run = async () => {
+      const { signature, recipient } = await APIHelpers.post(
+        `/api/campaigns/${instance.campaignId}/sign`,
+        {
+          body: {
+            tokenId: instance.tokenId,
+            contractAddress: instance.contractAddress,
+            networkId: instance.nftNetworkId,
+          },
+        }
+      );
+
+      setSignature(signature);
+      setRecipient(recipient);
+    };
+
+    run();
+  }, [instance]);
+
   return (
     <div className="flex flex-col h-full w-full gap-2">
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 mb-4">
         <h1>Review and Pay</h1>
         <div className="bg-black p-4 rounded-md flex flex-col items-start gap-2 w-full">
           <a
@@ -167,7 +187,7 @@ export default function ReviewAndPayStep() {
           <div className="flex flex-row justify-between w-full text-neutral-400">
             <div>Gas fee</div>
 
-            <div>${gasFee}</div>
+            <div>Free</div>
           </div>
           {tipAmountInUSD > 0 && (
             <div className="flex flex-row justify-between w-full text-neutral-400">
@@ -179,33 +199,23 @@ export default function ReviewAndPayStep() {
           <div className="flex flex-row justify-between w-full text-xl font-bold">
             <div>You pay</div>
 
-            <div>${(gasFee + tipAmountInUSD).toFixed(2)}</div>
+            <div>
+              {" "}
+              {tipAmountInUSD > 0
+                ? `$${(gasFee + tipAmountInUSD).toFixed(2)}`
+                : "Free"}
+            </div>
           </div>
         </div>
       </div>
 
       {!!recipient &&
-      !!signature &&
       !!campaign?.binderContract &&
       !!campaign.networkId &&
       !!instance.orderId ? (
-        serverPay ? (
-          <MintButtonServer
-            campaignNetworkId={nameToNetwork(campaign.networkId)}
-            signature={signature}
-            recipient={recipient}
-            binderContract={campaign.binderContract}
-          />
-        ) : authenticated ? (
-          <MintButton
-            campaignNetworkId={nameToNetwork(campaign.networkId)}
-            signature={signature}
-            recipient={recipient}
-            binderContract={campaign.binderContract}
-          />
-        ) : (
-          <LoginButton />
-        )
+        <MintButtonServer
+          campaignNetworkId={nameToNetwork(campaign.networkId)}
+        />
       ) : (
         <div className="flex flex-row justify-center">
           <Loader />
