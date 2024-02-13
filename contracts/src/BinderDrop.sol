@@ -77,10 +77,10 @@ contract BinderDrop is ERC721, RecoverTokens {
       require(_verifyHash(hash, signature), "Hash verification failed");
 
       ++tokenCount;
-      _safeMint(recipient, tokenCount);
-      _setTokenURI(tokenCount, uri);
       nonceMapping[nonce] = true;
 
+      _safeMint(recipient, tokenCount);
+      _setTokenURI(tokenCount, uri);
       emit AutographCreated(msg.sender, orderId, recipient, tokenCount, hash);
     }
 
