@@ -7,16 +7,24 @@ import ErrorDisplay from "@/app/components/ErrorDisplay";
 import { BINDER_DROP_ABI } from "@/abi";
 import { useWrite } from "@/hooks/web3";
 
-export default function BatchMintButton({
-  revealedTokenIdBoundary,
+export default function BatchMint({
+  orderIds,
   revealedURI,
   campaignNetworkId,
   binderContract,
+  recipients,
+  signature,
+  uris,
+  nonce,
 }: {
+  orderIds: string[];
   campaignNetworkId: number;
-  revealedTokenIdBoundary: number;
   revealedURI: string;
   binderContract: string;
+  recipients: string[];
+  signature: string;
+  uris: string[];
+  nonce: string;
 }) {
   const { instance, setInstance } = useInstance();
   const {
@@ -32,8 +40,8 @@ export default function BatchMintButton({
     networkId: campaignNetworkId,
     contractAddress: binderContract,
     abi: BINDER_DROP_ABI,
-    functionName: "revealTokens",
-    args: [revealedTokenIdBoundary, revealedURI],
+    functionName: "mintToBatch",
+    args: [orderIds, recipients, signature, revealedURI, uris, nonce],
   });
 
   async function mint() {

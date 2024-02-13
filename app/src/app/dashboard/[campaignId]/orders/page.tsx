@@ -17,12 +17,17 @@ import formatLongURL from "@/utils/formatLongURL";
 import { BiCopy } from "react-icons/bi";
 import { Credenza, CredenzaContent } from "@/components/ui/credenza";
 import CollectorDisplay from "@/app/components/SignaturePad/CollectorDisplay";
+import APIHelpers from "@/lib/apiHelper";
+import BatchMint from "@/app/components/dashboard/orders/BatchMintButton";
 
 export default function Orders({ params }: { params: { campaignId: string } }) {
   const [hostname, setHostname] = useState<string>("https://app.signed.gg");
   const COLLECTOR_LINK = `${hostname}/collector/${params.campaignId}/home`;
   // const COLLECTOR_LINK = `${hostname}`;
   const [isCopied, setIsCopied] = useState<boolean>(false);
+  const [signature, setSignature] = useState<string>();
+  const [recipients, setRecipients] = useState<string[]>();
+  const [nonce, setNonce] = useState<string>();
 
   useEffect(() => {
     try {
@@ -64,6 +69,35 @@ export default function Orders({ params }: { params: { campaignId: string } }) {
     setModalOpen(false);
     refetchOrders();
   }
+
+  useEffect(() => {
+    async function run() {
+      if (campaign.manifestUrl) {
+        const confirmedOrders = orders?.filter(
+          (order) => order.status === NetworkStatus.CONFIRMED
+        );
+        const tokenMappings = confirmedOrders?.map((order) => ({
+          contractAddress: order.collectionAddress,
+          tokenId: order.selectedTokenId,
+        }));
+        const { recipients, signature, nonce } = await APIHelpers.post(
+          `/api/campaigns/${params.campaignId}/batchSign`,
+          {
+            body: {
+              networkId: 1,
+              tokenMappings,
+            },
+          }
+        );
+
+        setSignature(signature);
+        setRecipients(recipients);
+        setNonce(nonce);
+      }
+    }
+    run();
+  }, [orders]);
+
   return (
     <AuthenticatedPage
       homeRoute={`/dashboard/${params.campaignId}`}
@@ -145,19 +179,20 @@ export default function Orders({ params }: { params: { campaignId: string } }) {
         {campaign &&
           campaign.binderContract &&
           !!orders &&
-          campaign.manifestUrl && (
+          campaign.manifestUrl &&
+          signature &&
+          nonce &&
+          recipients && (
             <div className="w-full sticky bottom-0  pt-8 pb-8 mt-8 backdrop-blur-lg shadow-lg">
               <div className="h-full w-full flex flex-col items-center">
-                <TokenUriUpdateButton
-                  revealedTokenIdBoundary={
-                    orders
-                      .filter((order) => order.mintedTokenId)
-                      .map((order) => Number(order.mintedTokenId))
-                      .sort((a, b) => b - a)[0] || 0 // get the largest tokenId
-                  }
+                <BatchMint
                   revealedURI={campaign.manifestUrl}
                   campaignNetworkId={nameToNetwork(campaign.networkId)}
                   binderContract={campaign.binderContract}
+                  signature={signature}
+                  recipients={recipients}
+                  uris={orders.map((order) => order.manifestUrl)}
+                  nonce={nonce}
                 />
               </div>
             </div>

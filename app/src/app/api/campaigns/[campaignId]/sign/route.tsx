@@ -1,6 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { keccak256, Wallet, getBytes, Signature, AbiCoder } from "ethers";
-import { getCampaignWhiteList } from "@/utils/prisma";
 import { TokenboundClient } from "@tokenbound/sdk";
 import {
   ARTIST_COLLECTION_ADDRESS,
