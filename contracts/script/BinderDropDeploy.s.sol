@@ -5,11 +5,13 @@ import "forge-std/Script.sol";
 import "../src/BinderDrop.sol";
 
 contract BinderDropDeployScript is Script {
-    address server = 0xCD56df7B4705A99eBEBE2216e350638a1582bEC4;
     function run() external {
+        // NOTE:  THIS PRIVATE KEY WILL BE THE FIRST ADMIN OF THE CONTRACT
+        // THIS ADMIN CAN ADD MORE ADMINS
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
         vm.startBroadcast(deployerPrivateKey);
-        new BinderDrop(server, 'https://binderdrop.com/api/token/');
+        // NOTE: ADD DEFAULT BASE URI
+        new BinderDrop('https://binderdrop.com/api/token/');
         vm.stopBroadcast();
     }
 }
