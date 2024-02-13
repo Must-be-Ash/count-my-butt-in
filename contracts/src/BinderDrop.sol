@@ -88,7 +88,7 @@ contract BinderDrop is ERC721, RecoverTokens {
       require(nonceMapping[nonce] == false, "Nonce already used");
       require(recipients.length == uris.length, "Recipient and URI arrays must have the same length");
 
-      bytes32 payloadhash = keccak256(abi.encode(recipient, nonce));
+      bytes32 payloadhash = keccak256(abi.encode(recipients, nonce));
       bytes32 hash = keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", payloadhash));
 
       require(_verifyHash(hash, signature), "Hash verification failed");
