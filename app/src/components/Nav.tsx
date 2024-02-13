@@ -36,7 +36,7 @@ const LoginOrUserWidget = () => {
     <div className="flex flex-row gap-2 items-center w-full justify-between pb-6">
       <UserInfo />
         <div className="flex flex-row gap-2">
-        {!isOnDashboard && <ViewAllCampaignsButton />}
+        {isOnDashboard && <ViewAllCampaignsButton />}
         <LogoutButton size="sm" />
       </div>
     </div>
