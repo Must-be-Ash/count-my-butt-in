@@ -11,7 +11,7 @@ contract BinderDropDeployScript is Script {
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
         vm.startBroadcast(deployerPrivateKey);
         // NOTE: ADD DEFAULT BASE URI
-        new BinderDrop('https://binderdrop.com/api/token/');
+        new BinderDrop();
         vm.stopBroadcast();
     }
 }

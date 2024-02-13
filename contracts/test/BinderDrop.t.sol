@@ -12,7 +12,7 @@ contract BinderDropTest is Test {
 
     function setUp() public {
       deployer = address(this);
-      binderDrop = new BinderDrop('https://binderdrop.com/api/token/');
+      binderDrop = new BinderDrop();
     }
 
     function test_adminSetUp() public {
