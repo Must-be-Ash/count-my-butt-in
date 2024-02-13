@@ -49,7 +49,7 @@ const NFTFeedProfile = ({
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<any>();
-  const theNetwork = 1;
+  const theNetwork = networkId ?? 1;
 
   async function nextPage() {
     const isLastPage = Object.keys(pageToKeysMapping).every(

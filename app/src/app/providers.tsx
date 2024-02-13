@@ -10,6 +10,7 @@ import APIHelpers from "@/lib/apiHelper";
 import { blo } from "blo";
 import { getENS } from "@/hooks/useAuthentication";
 import { CampaignSelectedOrderProvider } from "@/context/campaignSelectedOrderContext";
+import { Analytics } from "@vercel/analytics/react";
 
 const PRIVY_APP_ID = process.env.NEXT_PUBLIC_PRIVY_APP_ID;
 
@@ -85,6 +86,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
               >
                 <div vaul-drawer-wrapper="" className="">
                   {children}
+                  <Analytics />
                 </div>
               </ThemeProvider>
             </CampaignSelectedOrderProvider>
