@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import BigLoginDisplayPage from "@/app/components/BigLoginDisplayPage";
 import { useAuthentication } from "@/hooks/useAuthentication";
+import { DEFAULT_NETWORK } from "@/utils/common";
 
 export default function Dashboard({ params }: { params: { campaignId: string } }) {
   const { ready, authenticated, authenticatedUser } = useAuthentication();
@@ -14,5 +15,5 @@ export default function Dashboard({ params }: { params: { campaignId: string } }
     }
   }, [ready, authenticated, router, params.campaignId, authenticatedUser]);
 
-  return <BigLoginDisplayPage />;
+  return <BigLoginDisplayPage networkId={DEFAULT_NETWORK} />;
 }

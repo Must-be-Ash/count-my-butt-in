@@ -2,7 +2,7 @@ import { getOrder, updateOrder } from "@/utils/prisma";
 import { NextResponse, type NextRequest } from "next/server";
 import { ethers } from "ethers";
 import { BINDER_DROP_ABI } from "@/abi";
-import { SUPPORTED_NETWORKS, getProvider } from "@/utils/common";
+import { getProvider } from "@/utils/common";
 import { EventLog } from "ethers";
 import { networkToName } from "@/lib/utils";
 import { Network, NetworkStatus } from "@prisma/client";

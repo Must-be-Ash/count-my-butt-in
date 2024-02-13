@@ -106,7 +106,7 @@ export function networkIdToString(networkId: number) {
   return `eip155:${networkId}`;
 }
 
-export const SUPPORTED_NETWORKS = [10, 11155111];
+export const DEFAULT_NETWORK = 8453;
 
 export const goerliProvider = new JsonRpcProvider(
   `https://eth-goerli.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_GOERLI}`
