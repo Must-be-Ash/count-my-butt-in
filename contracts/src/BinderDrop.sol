@@ -4,8 +4,8 @@ pragma solidity 0.8.20;
 import "openzeppelin-contracts/contracts/token/ERC721/ERC721.sol";
 import "openzeppelin-contracts/contracts/utils/cryptography/ECDSA.sol";
 import "openzeppelin-contracts/contracts/proxy/utils/Initializable.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "openzeppelin-contracts/contracts/access/Ownable.sol";
 
 error NonExistentToken();
 error IsSoulbound();
@@ -34,7 +34,7 @@ contract BinderDrop is ERC721, ERC721URIStorage, Ownable {
       defaultURI = _defaultURI;
     }
 
-    function _baseURI() internal pure override returns (string memory) {
+    function _baseURI() view internal override returns (string memory) {
         return defaultURI;
     }
 
@@ -58,10 +58,10 @@ contract BinderDrop is ERC721, ERC721URIStorage, Ownable {
     }
 
     // soulbound
-    function transferFrom(address from, address to, uint256 tokenId) public override {
+    function transferFrom(address from, address to, uint256 tokenId) public override (ERC721, IERC721) {
       // tokens are only mintable, not transferrable
       require(from == address(0) || to == address(0), "This a Soulbound token. It cannot be transferred. It can only be burned by the token owner.");
-    
+
       super.transferFrom(from, to, tokenId);
     }
 
@@ -73,7 +73,7 @@ contract BinderDrop is ERC721, ERC721URIStorage, Ownable {
     function _verifyHash(bytes32 hash, bytes memory signature) internal view returns (bool) {
         return owner() == ECDSA.recover(hash, signature);
     }
-   
+
     function mintTo(string memory orderId, address recipient, bytes memory signature, string memory uri, bytes32 nonce) public payable {
       if (publicMintsPaused) {
         revert PublicMintsPaused();
