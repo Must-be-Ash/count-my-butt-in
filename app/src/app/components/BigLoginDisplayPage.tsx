@@ -9,6 +9,8 @@ import { useRouter } from "next/navigation";
 import { BINDER_DROP_TOKEN } from "@/utils/common";
 import { networkToName } from "@/lib/utils";
 import { isEmpty, isNil } from "lodash";
+import Loader from "./Loader";
+import Link from "next/link";
 
 export default function BigLoginDisplayPage({ networkId }: { networkId: number }) {
   const { authenticated, authenticatedUser } = useAuthentication();
@@ -55,9 +57,11 @@ export default function BigLoginDisplayPage({ networkId }: { networkId: number }
 
   // if campaign id set, redirect to the dashboard
   useEffect(() => {
+    setIsLoading(true);
     if(campaignId) {
       router.push(`/dashboard/${campaignId}/orders`);
     }
+    setIsLoading(false);
   }, [campaignId])
 
   return (
@@ -65,7 +69,18 @@ export default function BigLoginDisplayPage({ networkId }: { networkId: number }
       <div className="relative flex place-items-center z-[-1]">
         <BinderMainLogo />
       </div>
-      <LoginButton />
+      {
+        !authenticated && <LoginButton />
+      }
+      {
+        loading && <Loader />
+      }
+      {
+        !loading && campaignId &&
+        <Link href={`/dashboard/${campaignId}/orders`} className="py-8 underline">
+          Click here if you&apos;re not redirected automatically.
+        </Link>
+      }
     </main>
   );
 }
