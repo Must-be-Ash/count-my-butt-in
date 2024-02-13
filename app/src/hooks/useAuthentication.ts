@@ -2,7 +2,6 @@ import APIHelpers from "@/lib/apiHelper";
 import { Campaign, User } from "@prisma/client";
 import { usePrivy, useWallets } from "@privy-io/react-auth";
 import { useEffect, useState } from "react";
-import { blo } from "blo";
 import { getAlchemy } from "@/lib/alchemy";
 
 /*

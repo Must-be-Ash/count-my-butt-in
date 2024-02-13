@@ -97,7 +97,7 @@ export default function Orders({ params }: { params: { campaignId: string } }) {
 
   return (
     <AuthenticatedPage
-      homeRoute={`/dashboard/${params.campaignId}`}
+      homeRoute={`/`}
       requiredUserId={campaign?.userId}
     >
       <Main>
