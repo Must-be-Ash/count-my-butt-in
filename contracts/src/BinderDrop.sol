@@ -106,7 +106,7 @@ contract BinderDrop is ERC721, RecoverTokens {
           }
       }
 
-      emit AutographCreated(msg.sender, orderId, recipient, tokenCount, hash);
+      emit AutographCreated(msg.sender, orderId, recipients, tokenCount, hash);
     }
 
 
