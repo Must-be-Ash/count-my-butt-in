@@ -110,7 +110,7 @@ export default function Campaigns() {
           </div>
 
           <Table>
-            <TableCaption>List of all your Campaigns</TableCaption>
+            <TableCaption>List of all your Campaigns (most recent on top)</TableCaption>
             <TableHeader>
               <TableRow>
                 {/* <TableHead className="w-[100px]">ID</TableHead> */}
