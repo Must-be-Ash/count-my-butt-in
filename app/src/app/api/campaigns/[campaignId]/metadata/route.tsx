@@ -1,6 +1,7 @@
 import { uploadMetadata } from "@/lib/ipfs";
+import { nameToNetwork } from "@/lib/utils";
 import { DEFAULT_METADATA } from "@/utils/common";
-import { getOrders, updateCampaign, updateOrder } from "@/utils/prisma";
+import { getCampaign, getOrders, updateCampaign, updateOrder } from "@/utils/prisma";
 import { NextResponse, type NextRequest } from "next/server";
 
 /*
@@ -13,6 +14,8 @@ export async function POST(
   const { twitterUsername } = await request.json();
   // get all pending orders
   const pendingOrders = await getOrders(params.campaignId, "PENDING");
+  // get campaign
+  const campaign = await getCampaign(params.campaignId);
   // do not trigger upload until all orders are confirmed
   if (pendingOrders.length) {
     return NextResponse.json({ manifestUrl: "" });
@@ -66,8 +69,7 @@ export async function POST(
           : undefined,
         image: order.toUpload,
         image_url: order.toUpload,
-        // @todo add parent contract details
-        // animation_url: `https://iframe-ten-tau.vercel.app/PARENT_CONTRACT_ADDRESS/PARENT_TOKEN_ID/PARENT_CHAIN_ID?childNetwork=CHILD_NETWORK_ID&flip=true`,
+        animation_url: `https://iframe-ten-tau.vercel.app/${order.collectionAddress}/${order.selectedTokenId}/${nameToNetwork(campaign.networkId)}?childNetwork=${order.mintedNetworkId}&flip=true`,
         image_canvas_data: order.autographData,
         parent_base_image: order.nftImageURL
       }))
