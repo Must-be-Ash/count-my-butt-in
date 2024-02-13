@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BinderButton from "@/app/components/BinderButton";
 import APIHelpers from "@/lib/apiHelper";
 import Link from "next/link";
@@ -14,6 +14,12 @@ export default function DeployButton({ networkId }: { networkId: number }) {
   const [campaignId, setCampaignId] = useState<string>();
   const router = useRouter();
   const [loading, setIsLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (campaignId) {
+      router.push(`/dashboard/${campaignId}/orders`);
+    }
+  }, [campaignId])
 
   const createCampaign = async () => {
     setIsLoading(true);
@@ -35,9 +41,9 @@ export default function DeployButton({ networkId }: { networkId: number }) {
 
   return (
     <>
-      <BinderButton onClick={() => createCampaign()} >
+      {!campaignId && <BinderButton onClick={() => createCampaign()} >
         Start a Campaign
-      </BinderButton>
+      </BinderButton>}
       {campaignId && (
         <div className="cursor-pointer">
           <Link
