@@ -1,30 +1,15 @@
+"use client"
 /**
  * this is the landing page of a particular campaign for
  * an artist, based on
  */
-import { headers } from 'next/headers'
-import CampaignLanding from './components/CampaignLanding';
 import BigLoginDisplayPage from './components/BigLoginDisplayPage';
-import getArtistAndCampaignFromHost from '@/utils/getArtistFromHost';
+import { useSearchParams } from 'next/navigation';
 
-async function getArtist() {
-  'use server'
-  const headersList = headers();
-  const host = headersList.get('host');
-  const res = getArtistAndCampaignFromHost(host);
-  return res;
-}
-
-export default async function Home() {
-  const data = await getArtist();
-
-  if (!data) {
-    return <BigLoginDisplayPage />
-  }
-
+export default function Home() {
+  const searchParams = useSearchParams()
+  const chain = searchParams.get("chain") ?? "8453";
   return (
-    <div>
-      <CampaignLanding artist={data.artist} campaign={data.campaign} />
-    </div>
+    <BigLoginDisplayPage networkId={parseInt(chain)} />
   )
 }

@@ -221,14 +221,19 @@ export async function getUser(id: string) {
     },
   });
   if (user && user.id) {
-    const campaign = await prisma.campaign.findFirst({
-      where: {
-        userId: user.id,
-      },
-    });
+    const campaign = await getLastCampaign(user.id)
     return { ...user, campaign };
   }
   return user;
+}
+
+export async function getLastCampaign(userId: string) {
+  const campaign = await prisma.campaign.findMany({
+    where: {userId},
+    orderBy: { createdAt: "desc" }
+  });
+  if (campaign.length > 0) return campaign[0];
+  return {};
 }
 
 export async function getUserByPrivyId(privyId: string) {

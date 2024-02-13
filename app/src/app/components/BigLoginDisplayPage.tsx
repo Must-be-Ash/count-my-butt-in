@@ -3,55 +3,67 @@
 import BinderMainLogo from "./BinderMainLogo";
 import LoginButton from "./LoginButton";
 import { useAuthentication } from "@/hooks/useAuthentication";
-import {
-  DropdownMenuItem,
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import { useWallets } from "@privy-io/react-auth";
-import DeployButton from "./admin/deploy/DeployButton";
-import { SUPPORTED_NETWORKS } from "@/utils/common";
-
+import { useEffect, useState } from "react";
+import APIHelpers from "@/lib/apiHelper";
+import { useRouter } from "next/navigation";
+import { BINDER_DROP_TOKEN } from "@/utils/common";
 import { networkToName } from "@/lib/utils";
-import { useState } from "react";
-export default function BigLoginDisplayPage() {
-  const { authenticated } = useAuthentication();
-  const { wallets } = useWallets();
-  const [network, setNetwork] = useState<number | undefined>(10);
+import { isEmpty, isNil } from "lodash";
+
+export default function BigLoginDisplayPage({ networkId }: { networkId: number }) {
+  const { authenticated, authenticatedUser } = useAuthentication();
+  const [campaignId, setCampaignId] = useState<string | undefined>(undefined);
+  const [loading, setIsLoading] = useState<boolean>(false);
+  const router = useRouter();
+
+  const createCampaign = async () => {
+    setIsLoading(true);
+    const result = await APIHelpers.post("/api/campaigns", {
+      body: {
+        binderContract: BINDER_DROP_TOKEN,
+        networkId: networkToName(networkId).toUpperCase(),
+        userId: authenticatedUser?.id
+      },
+    });
+    const campaignId = result.campaign.campaignId;
+    setCampaignId(campaignId);
+    setIsLoading(false);
+  }
+
+  // if user found & no last campaign found
+  // fetch their last campaign and set in state
+  useEffect(() => {
+    if (
+      authenticated
+      && isEmpty(authenticatedUser?.campaign)
+      && isNil(campaignId)
+      && authenticatedUser
+      && authenticatedUser.id
+    ) {
+      createCampaign();
+    }
+
+    if (
+      authenticated
+      && !isEmpty(authenticatedUser?.campaign)
+      && authenticatedUser
+    ) {
+      setCampaignId(authenticatedUser?.campaign.campaignId);
+    }
+
+  }, [authenticatedUser, authenticated, campaignId])
+
+  // if campaign id set, redirect to the dashboard
+  useEffect(() => {
+    if(campaignId) {
+      router.push(`/dashboard/${campaignId}/orders`);
+    }
+  }, [campaignId])
 
   return (
     <main className="flex flex-col items-center justify-between">
       <div className="relative flex place-items-center z-[-1]">
         <BinderMainLogo />
-      </div>
-      <div className="flex flex-col items-center gap-3 mb-4">
-        {authenticated && wallets.length > 0 && (
-          <>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild className="mb-4 w-full p-4">
-                <Button variant="outline" size="icon">
-                  <span>
-                    {network ? networkToName(network) : "Choose Network"}
-                  </span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                {SUPPORTED_NETWORKS.map((network) => (
-                  <div key={network}>
-                    <DropdownMenuItem onClick={() => setNetwork(network)}>
-                      {networkToName(network)}
-                    </DropdownMenuItem>
-                  </div>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-            {network && (
-              <DeployButton networkId={network} />
-            )}
-          </>
-        )}
       </div>
       <LoginButton />
     </main>
