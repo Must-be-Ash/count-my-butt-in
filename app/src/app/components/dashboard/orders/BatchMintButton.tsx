@@ -36,7 +36,7 @@ export default function BatchMint({
     parsed,
   } = useWrite({
     networkId: campaignNetworkId,
-    contractAddress: "0xafEC54C54A1a326ebe61357eAaFfD4A73eA1abE6",
+    contractAddress: binderContract,
     abi: BINDER_DROP_ABI,
     functionName: "mintToBatch",
     args: [orderIds, recipients, signature, uris, nonce],
