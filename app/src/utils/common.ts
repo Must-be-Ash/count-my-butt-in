@@ -212,3 +212,6 @@ export const PAYMENT_WALLET: Record<number, string> = {
   [10]: "0xb3485416bb361093188529bacd5551ac420013ab",
   [11155111]: "0xb3485416bb361093188529bacd5551ac420013ab",
 };
+
+export const dayNames = ["Sun", "Mon", "Tues", "Weds", "Thurs", "Fri", "Sat"]
+export const monthNames = ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"];

@@ -12,7 +12,7 @@ import { getNftMetadata } from "@/lib/alchemy";
 import { useCampaign } from "@/hooks/useCampaign";
 import { AuthenticatedPage } from "@/app/components/page/AuthenticatedPage";
 import { IoCheckmark } from "react-icons/io5";
-import formatLongURL from "@/utils/formatLongURL";
+import formatLongString from "@/utils/formatLongString";
 import { BiCopy } from "react-icons/bi";
 import { Credenza, CredenzaContent } from "@/components/ui/credenza";
 import APIHelpers from "@/lib/apiHelper";
@@ -69,7 +69,6 @@ export default function Orders({ params }: { params: { campaignId: string } }) {
   }
 
   const pendingOrders = orders?.sort((a, b) => a.createdAt - b.createdAt);
-  console.log("the orders", pendingOrders);
   useEffect(() => {
     async function run() {
       if (campaign?.manifestUrl) {
@@ -116,7 +115,7 @@ export default function Orders({ params }: { params: { campaignId: string } }) {
           onClick={() => copyText(COLLECTOR_LINK)}
         >
           <div className="py-2 flex-1 text-xs pl-4">
-            {formatLongURL(COLLECTOR_LINK, 22, 15)}
+            {formatLongString(COLLECTOR_LINK, 22, 15)}
           </div>
           <div
             className={`rounded-full p-[6px] text-lg text-gray-600 ${

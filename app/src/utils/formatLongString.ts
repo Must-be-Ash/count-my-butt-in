@@ -1,4 +1,4 @@
-export default function formatLongURL(
+export default function formatLongString(
   url?: string | null,
   endPrefix?: number,
   endSuffix?: number

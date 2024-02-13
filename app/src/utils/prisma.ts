@@ -7,6 +7,7 @@ import {
 } from "@prisma/client";
 import { z } from "zod";
 import { ethers } from "ethers";
+import { filter } from "lodash";
 
 /**
  * Zod schema
@@ -142,12 +143,35 @@ export function getCampaign(campaignId: string) {
   });
 }
 
-export function getCampaignForUser(userId: string) {
-  return prisma.campaign.findMany({
+/**
+ *
+ * @param userId
+ * @returns array of all campaigns, including the
+ * associated orders
+ */
+export async function getCampaignsForUser(userId: string) {
+  const campaigns = await prisma.campaign.findMany({
     where: {
       userId,
     },
+    orderBy: {
+      createdAt: "desc"
+    }
   });
+  const orders = await prisma.order.findMany({
+    where: {
+      campaignId: {
+        in: campaigns.map((c: any) => c.campaignId)
+      }
+    }
+  })
+  const parsed = campaigns.map((c: any) => {
+    return {
+      ...c,
+      orders: filter(orders, (o:any) => o.campaignId === c.campaignId)
+    }
+  })
+  return [...parsed]
 }
 
 export function updateCampaign(
@@ -243,12 +267,8 @@ export async function getUserByPrivyId(privyId: string) {
     },
   });
   if (user && user.id) {
-    const campaign = await prisma.campaign.findFirst({
-      where: {
-        userId: user.id,
-      },
-    });
-    return { ...user, campaign: campaign };
+    const campaign = await getLastCampaign(user.id);
+    return { ...user, campaign };
   }
   return user;
 }

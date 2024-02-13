@@ -6,9 +6,7 @@ import DefaultPfp from "public/assets/defaults/pfp.jpg";
 import Image from "next/image";
 import Loader from "./Loader";
 import { User } from "@prisma/client";
-import { FaXTwitter } from "react-icons/fa6";
-import { TbCurrencyEthereum } from "react-icons/tb";
-import { FaWallet } from "react-icons/fa";
+import Link from "next/link";
 
 export default function UserInfo({ overrideUser }: { overrideUser?: User }) {
   const { authenticatedUser } = useAuthentication();
@@ -20,17 +18,20 @@ export default function UserInfo({ overrideUser }: { overrideUser?: User }) {
 
   return (
     <span className="flex flex-row gap-2 items-center">
-      <Image
-        src={userToDisplay?.imageUrl || DefaultPfp}
-        alt="profile picture"
-        className="rounded-full w-8 h-8"
-        width={32}
-        height={32}
-      />
-      <div className="font-sans font-bold uppercase text-sm">
-        {userToDisplay?.nickname || display}
-      </div>
-      {userToDisplay?.nickname?.includes("@") && (
+      <Link className="flex flex-row gap-1 cursor-pointer items-center" href={"/dashboard"}>
+        <Image
+          src={userToDisplay?.imageUrl || DefaultPfp}
+          alt="profile picture"
+          className="rounded-full w-8 h-8"
+          width={32}
+          height={32}
+        />
+        <div className="font-sans font-bold uppercase text-sm">
+          {userToDisplay?.nickname || display}
+        </div>
+      </Link>
+
+      {/* {userToDisplay?.nickname?.includes("@") && (
         <a
           href={`https://twitter.com/${userToDisplay?.nickname}`}
           target="_blank"
@@ -56,7 +57,7 @@ export default function UserInfo({ overrideUser }: { overrideUser?: User }) {
         >
           <TbCurrencyEthereum />
         </a>
-      )}
+      )} */}
     </span>
   );
 }
