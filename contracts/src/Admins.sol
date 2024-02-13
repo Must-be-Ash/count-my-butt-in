@@ -6,8 +6,6 @@ error CallerNotAdmin();
 error ZeroAddressNotAllowed();
 
 contract Admins {
-    address internal server;
-
     event NewAdminAdded(address indexed admin);
     event AdminRenounced(address indexed admin);
 
@@ -54,6 +52,6 @@ contract Admins {
     }
 
     function isAdmin(address addr) public view returns (bool) {
-        return admins[addr] || addr == server;
+        return admins[addr];
     }
 }
