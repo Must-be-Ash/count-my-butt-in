@@ -1,6 +1,11 @@
 import { uploadMetadata } from "@/lib/ipfs";
 import { nameToNetwork } from "@/lib/utils";
-import { getCampaign, getOrders, updateCampaign, updateOrder } from "@/utils/prisma";
+import {
+  getCampaign,
+  getOrders,
+  updateCampaign,
+  updateOrder,
+} from "@/utils/prisma";
 import { NextResponse, type NextRequest } from "next/server";
 
 /*
@@ -32,9 +37,7 @@ export async function POST(
   const manifestUrl = await uploadMetadata(
     "defaultMetadata",
     ordersToUpload
-      .sort(
-        (a: any, b: any) => Number(a.mintedTokenId) - Number(b.mintedTokenId)
-      )
+      .sort((a: any, b: any) => a.createdAt - b.createdAt)
       .map((order: any) => ({
         name: "Signed Autograph",
         description: twitterUsername
@@ -68,9 +71,13 @@ export async function POST(
           : undefined,
         image: order.toUpload,
         image_url: order.toUpload,
-        animation_url: `https://iframe-ten-tau.vercel.app/${order.collectionAddress}/${order.selectedTokenId}/${nameToNetwork(campaign.networkId)}?childNetwork=${order.mintedNetworkId}&flip=true`,
+        animation_url: `https://iframe-ten-tau.vercel.app/${
+          order.collectionAddress
+        }/${order.selectedTokenId}/${nameToNetwork(
+          campaign.networkId
+        )}?childNetwork=${order.mintedNetworkId}&flip=true`,
         image_canvas_data: order.autographData,
-        parent_base_image: order.nftImageURL
+        parent_base_image: order.nftImageURL,
       }))
   );
   // update metadata url of each order

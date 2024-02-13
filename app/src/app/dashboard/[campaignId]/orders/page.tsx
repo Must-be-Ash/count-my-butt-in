@@ -9,14 +9,12 @@ import NFTDisplayFull from "@/app/components/NftDisplayFull";
 import { nameToNetwork } from "@/lib/utils";
 import { NetworkStatus, Order } from "@prisma/client";
 import { getNftMetadata } from "@/lib/alchemy";
-import TokenUriUpdateButton from "@/app/components/dashboard/orders/TokenUriUpdateButton";
 import { useCampaign } from "@/hooks/useCampaign";
 import { AuthenticatedPage } from "@/app/components/page/AuthenticatedPage";
 import { IoCheckmark } from "react-icons/io5";
 import formatLongURL from "@/utils/formatLongURL";
 import { BiCopy } from "react-icons/bi";
 import { Credenza, CredenzaContent } from "@/components/ui/credenza";
-import CollectorDisplay from "@/app/components/SignaturePad/CollectorDisplay";
 import APIHelpers from "@/lib/apiHelper";
 import BatchMint from "@/app/components/dashboard/orders/BatchMintButton";
 
@@ -70,13 +68,12 @@ export default function Orders({ params }: { params: { campaignId: string } }) {
     refetchOrders();
   }
 
+  const pendingOrders = orders?.sort((a, b) => a.createdAt - b.createdAt);
+  console.log("the orders", pendingOrders);
   useEffect(() => {
     async function run() {
-      if (campaign.manifestUrl) {
-        const confirmedOrders = orders?.filter(
-          (order) => order.status === NetworkStatus.CONFIRMED
-        );
-        const tokenMappings = confirmedOrders?.map((order) => ({
+      if (campaign?.manifestUrl) {
+        const tokenMappings = pendingOrders?.map((order) => ({
           contractAddress: order.collectionAddress,
           tokenId: order.selectedTokenId,
         }));
@@ -178,7 +175,7 @@ export default function Orders({ params }: { params: { campaignId: string } }) {
 
         {campaign &&
           campaign.binderContract &&
-          !!orders &&
+          !!pendingOrders &&
           campaign.manifestUrl &&
           signature &&
           nonce &&
@@ -186,12 +183,14 @@ export default function Orders({ params }: { params: { campaignId: string } }) {
             <div className="w-full sticky bottom-0  pt-8 pb-8 mt-8 backdrop-blur-lg shadow-lg">
               <div className="h-full w-full flex flex-col items-center">
                 <BatchMint
-                  revealedURI={campaign.manifestUrl}
                   campaignNetworkId={nameToNetwork(campaign.networkId)}
+                  orderIds={pendingOrders?.map((order) => order.orderId)}
                   binderContract={campaign.binderContract}
                   signature={signature}
                   recipients={recipients}
-                  uris={orders.map((order) => order.manifestUrl)}
+                  uris={pendingOrders.map(
+                    (order, index) => `${campaign.manifestUrl}/${index + 1}`
+                  )}
                   nonce={nonce}
                 />
               </div>

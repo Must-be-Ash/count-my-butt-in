@@ -9,7 +9,6 @@ import { useWrite } from "@/hooks/web3";
 
 export default function BatchMint({
   orderIds,
-  revealedURI,
   campaignNetworkId,
   binderContract,
   recipients,
@@ -19,7 +18,6 @@ export default function BatchMint({
 }: {
   orderIds: string[];
   campaignNetworkId: number;
-  revealedURI: string;
   binderContract: string;
   recipients: string[];
   signature: string;
@@ -38,10 +36,10 @@ export default function BatchMint({
     parsed,
   } = useWrite({
     networkId: campaignNetworkId,
-    contractAddress: binderContract,
+    contractAddress: "0xafEC54C54A1a326ebe61357eAaFfD4A73eA1abE6",
     abi: BINDER_DROP_ABI,
     functionName: "mintToBatch",
-    args: [orderIds, recipients, signature, revealedURI, uris, nonce],
+    args: [orderIds, recipients, signature, uris, nonce],
   });
 
   async function mint() {

@@ -8,6 +8,10 @@ import {
 } from "@/utils/common";
 import crypto from "crypto";
 
+function generateRandomBytes32() {
+  return "0x" + crypto.randomBytes(32).toString("hex");
+}
+
 export async function POST(
   request: NextRequest,
   { params }: { params: { campaignId: string } }
@@ -57,14 +61,16 @@ export async function POST(
   if (!privateKey) {
     throw new Error("defined WALLET_PRIVATE_KEY in .env");
   }
-  const nonce = crypto.randomBytes(32).toString();
+  const nonce = generateRandomBytes32();
   const wallet = new Wallet(privateKey);
   const signature = Signature.from(
     await wallet.signMessage(
       getBytes(
-        keccak256(new AbiCoder().encode(["address"], [recipients, nonce]))
+        keccak256(
+          new AbiCoder().encode(["address[]", "bytes32"], [recipients, nonce])
+        )
       )
     )
   ).serialized;
-  return NextResponse.json({ signature, recipients });
+  return NextResponse.json({ signature, recipients, nonce });
 }
