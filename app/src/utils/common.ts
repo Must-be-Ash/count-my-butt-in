@@ -156,10 +156,12 @@ export function getProvider(networkId: number) {
 
 export const MINT_FEE = 0.01;
 
-export const binderFactoryContract: Record<number, string> = {
-  [10]: "0x7e7d154dbad3853aeeef8a35e92044795ae56851",
-  [11155111]: "0xc9f8daf5a1d54f6f2b6cfb8049c10111ba8d69a1",
-};
+// export const binderFactoryContract: Record<number, string> = {
+//   [10]: "0x7e7d154dbad3853aeeef8a35e92044795ae56851",
+//   [11155111]: "0xc9f8daf5a1d54f6f2b6cfb8049c10111ba8d69a1",
+// };
+
+export const BINDER_DROP_TOKEN = "0x2bbfcdb30614ac5d018df80e2719f66f642b6637";
 
 export const childrenNetworkIds = [1, 137, 8453, 11155111, 10];
 
@@ -169,37 +171,37 @@ export const ARTIST_COLLECTION_ADDRESS: string | undefined = undefined;
 
 export const ARTIST_WHITELIST_TOKEN_IDS: number[] | undefined = undefined;
 
-export const DEFAULT_METADATA_URL =
-  "https://arweave.net/ckSld6yHJxWxis45HhUxOcaP23Ksym1rv1rcDrz8Z-E"; // CHANGE THIS IF U WANT TO CHANGE THE DEFAULT METADATA
+// export const DEFAULT_METADATA_URL =
+//   "https://arweave.net/ckSld6yHJxWxis45HhUxOcaP23Ksym1rv1rcDrz8Z-E"; // CHANGE THIS IF U WANT TO CHANGE THE DEFAULT METADATA
 
-export const DEFAULT_METADATA = {
-  // DO NOT WORRY ABOUT THIS
-  created_by: "Binder Studio",
-  description: "Binder Signature Drop, Power by [Binder](https://signed.gg/)",
-  external_url: "https://signed.gg",
-  name: "Binder Drop",
-  image_details: {
-    bytes: 314183,
-    format: "PNG",
-    sha256: "6e072dffcd7dddbd8c5a4797d5ca25e6013363d1f899b22b5c01178e3d2c3853",
-    width: 4320,
-    height: 4320,
-  },
-  image: "https://arweave.net/qWfD01lnf6A9dWcNSxZ6ZCWSZ7CgVz5iq99j7QhHW6c",
-  image_url: "https://arweave.net/qWfD01lnf6A9dWcNSxZ6ZCWSZ7CgVz5iq99j7QhHW6c",
-  animation_details: {
-    bytes: 1636135,
-    format: "MP4",
-    duration: 11,
-    sha256: "2f10aab908e915631664eb0a7d5ae04afe85f31fb97bd59b09d676e75753bde0",
-    width: 1080,
-    height: 1080,
-    codecs: ["H.264", "AAC"],
-  },
-  animation: "https://arweave.net/aZBb0n-kqSh7eyNcxw4KhAyCBCcQyGO1GnWbV2e0Hcw",
-  animation_url:
-    "https://arweave.net/aZBb0n-kqSh7eyNcxw4KhAyCBCcQyGO1GnWbV2e0Hcw",
-};
+// export const DEFAULT_METADATA = {
+//   // DO NOT WORRY ABOUT THIS
+//   created_by: "Binder Studio",
+//   description: "Binder Signature Drop, Power by [Binder](https://signed.gg/)",
+//   external_url: "https://signed.gg",
+//   name: "Binder Drop",
+//   image_details: {
+//     bytes: 314183,
+//     format: "PNG",
+//     sha256: "6e072dffcd7dddbd8c5a4797d5ca25e6013363d1f899b22b5c01178e3d2c3853",
+//     width: 4320,
+//     height: 4320,
+//   },
+//   image: "https://arweave.net/qWfD01lnf6A9dWcNSxZ6ZCWSZ7CgVz5iq99j7QhHW6c",
+//   image_url: "https://arweave.net/qWfD01lnf6A9dWcNSxZ6ZCWSZ7CgVz5iq99j7QhHW6c",
+//   animation_details: {
+//     bytes: 1636135,
+//     format: "MP4",
+//     duration: 11,
+//     sha256: "2f10aab908e915631664eb0a7d5ae04afe85f31fb97bd59b09d676e75753bde0",
+//     width: 1080,
+//     height: 1080,
+//     codecs: ["H.264", "AAC"],
+//   },
+//   animation: "https://arweave.net/aZBb0n-kqSh7eyNcxw4KhAyCBCcQyGO1GnWbV2e0Hcw",
+//   animation_url:
+//     "https://arweave.net/aZBb0n-kqSh7eyNcxw4KhAyCBCcQyGO1GnWbV2e0Hcw",
+// };
 
 export const serverPay = true;
 
