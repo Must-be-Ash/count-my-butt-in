@@ -84,8 +84,9 @@ contract BinderDrop is ERC721, RecoverTokens {
       emit AutographCreated(msg.sender, orderId, recipient, tokenCount, hash);
     }
 
-    function mintToBatch(string memory orderId, address recipient, bytes memory signature, string[] memory uris, bytes32 nonce) public payable {
+    function mintToBatch(string memory orderId, address[] recipients, bytes memory signature, string[] memory uris, bytes32 nonce) public payable {
       require(nonceMapping[nonce] == false, "Nonce already used");
+      require(recipients.length == uris.length, "Recipient and URI arrays must have the same length");
 
       bytes32 payloadhash = keccak256(abi.encode(recipient, nonce));
       bytes32 hash = keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", payloadhash));
@@ -98,7 +99,7 @@ contract BinderDrop is ERC721, RecoverTokens {
 
       for (uint256 i; i < uris.length;) {
           uint256 tokenId = firstTokenId + i;
-          _safeMint(recipient, tokenId);
+          _safeMint(recipients[i], tokenId);
           _setTokenURI(tokenId, uris[i]);
           unchecked {
               ++i;
