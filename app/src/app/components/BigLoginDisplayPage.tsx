@@ -12,7 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useWallets } from "@privy-io/react-auth";
 import DeployButton from "./admin/deploy/DeployButton";
-import { SUPPORTED_NETWORKS, binderFactoryContract } from "@/utils/common";
+import { SUPPORTED_NETWORKS } from "@/utils/common";
 
 import { networkToName } from "@/lib/utils";
 import { useState } from "react";
@@ -48,11 +48,7 @@ export default function BigLoginDisplayPage() {
               </DropdownMenuContent>
             </DropdownMenu>
             {network && (
-              <DeployButton
-                networkId={network}
-                contractAddress={binderFactoryContract[network as number]}
-                creatorAddress={wallets[0].address}
-              />
+              <DeployButton networkId={network} />
             )}
           </>
         )}

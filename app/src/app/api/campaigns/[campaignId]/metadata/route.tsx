@@ -1,6 +1,5 @@
 import { uploadMetadata } from "@/lib/ipfs";
 import { nameToNetwork } from "@/lib/utils";
-import { DEFAULT_METADATA } from "@/utils/common";
 import { getCampaign, getOrders, updateCampaign, updateOrder } from "@/utils/prisma";
 import { NextResponse, type NextRequest } from "next/server";
 
@@ -28,10 +27,10 @@ export async function POST(
   }
 
   // hardcoded for now
-  const defaultMetadata = DEFAULT_METADATA;
+  // const defaultMetadata = DEFAULT_METADATA;
   const currentDate = new Date();
   const manifestUrl = await uploadMetadata(
-    defaultMetadata,
+    "defaultMetadata",
     ordersToUpload
       .sort(
         (a: any, b: any) => Number(a.mintedTokenId) - Number(b.mintedTokenId)
