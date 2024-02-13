@@ -70,7 +70,7 @@ export default function BigLoginDisplayPage({ networkId }: { networkId: number }
         <BinderMainLogo />
       </div>
       {
-        !authenticated && <LoginButton />
+        !authenticated && <LoginButton title={`Start Signing ✍️`} />
       }
       {
         loading && <Loader />
