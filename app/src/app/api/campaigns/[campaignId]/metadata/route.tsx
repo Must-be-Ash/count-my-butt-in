@@ -66,6 +66,10 @@ export async function POST(
           : undefined,
         image: order.toUpload,
         image_url: order.toUpload,
+        // @todo add parent contract details
+        // animation_url: `https://iframe-ten-tau.vercel.app/PARENT_CONTRACT_ADDRESS/PARENT_TOKEN_ID/PARENT_CHAIN_ID?childNetwork=CHILD_NETWORK_ID&flip=true`,
+        image_canvas_data: order.autographData,
+        parent_base_image: order.nftImageURL
       }))
   );
   // update metadata url of each order

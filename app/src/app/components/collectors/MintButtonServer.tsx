@@ -92,7 +92,6 @@ export default function MintButtonServer({
       mint();
     }
   }, [transferETHSuccess, mint]);
-  console.log("qwdqwd", instance.tipAmount);
   return (
     <>
       {!instance.tipAmount && (
