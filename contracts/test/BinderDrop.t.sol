@@ -4,34 +4,37 @@ pragma solidity 0.8.20;
 import "forge-std/Test.sol";
 import "../src/BinderDrop.sol";
 
-// contract BinderDropTest is Test, BinderDrop {
-//     using stdStorage for StdStorage;
+contract BinderDropTest is Test {
+    using stdStorage for StdStorage;
 
-//     BinderDrop binderDrop;
-//     address deployer;
+    BinderDrop binderDrop;
+    address deployer;
 
-//     // function setUp() public {
-//     //     deployer = address(this);
-//     //     // add params
-//     //     binderDrop = new BinderDrop('0xCD56df7B4705A99eBEBE2216e350638a1582bEC4', 'https://binderdrop.com/api/token/');
-//     // }
+    function setUp() public {
+      deployer = address(this);
+      binderDrop = new BinderDrop('https://binderdrop.com/api/token/');
+    }
 
-//     // function testMintSuccess() public {
-//     //     // Implement minting test
-//     // }
+    function test_adminSetUp() public {
+      assertEq(binderDrop.isAdmin(deployer), true);
+      // test random address
+      assertEq(binderDrop.isAdmin(address(3)), false);
+    }
 
-//     function testMintRevertOnTransfer() public {
-//         // Use vm.expectRevert() to test soulbound functionality
-//     }
+    function test_addAdmin() public {
+      address alice = address(3);
+      // only an admin can add new admins
+      vm.startPrank(alice);
+      assertEq(binderDrop.isAdmin(alice), false);
+      vm.expectRevert();
+      binderDrop.addNewAdmin(alice);
+      vm.stopPrank();
 
-//     // Other test cases...
+      vm.startPrank(deployer);
+      assertEq(binderDrop.isAdmin(alice), false);
+      binderDrop.addNewAdmin(alice);
+      assertEq(binderDrop.isAdmin(alice), true);
+      vm.stopPrank();
+    }
 
-//     // function test_transfer() public {
-//     //     binderDrop.mintTo(address(1), 1);
-//     //     assertEq(binderDrop.ownerOf(1), address(1));
-//     //     vm.startPrank(address(1));
-//     //     vm.expectRevert(IsSoulbound.selector);
-//     //     binderDrop.transferFrom(address(1), address(2), 1);
-//     //     vm.stopPrank();
-//     // }
-// }
+}

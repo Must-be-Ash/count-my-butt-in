@@ -9,7 +9,7 @@ contract RecoverTokens is Admins {
         IERC20(_tokenContract).transfer(_to, _amount);
     }
 
-    function recoverERC721(
+    function withdrawERC721(
         address tokenAddress,
         address tokenReceiver,
         uint256 tokenId,
