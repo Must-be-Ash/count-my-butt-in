@@ -6,6 +6,8 @@ import { useInstance } from "@/context/InstanceContext";
 import ErrorDisplay from "@/app/components/ErrorDisplay";
 import { BINDER_DROP_ABI } from "@/abi";
 import { useWrite } from "@/hooks/web3";
+import APIHelpers from "@/lib/apiHelper";
+import { BINDER_DROP_TOKEN } from "@/utils/common";
 
 export default function BatchMint({
   orderIds,
@@ -51,6 +53,13 @@ export default function BatchMint({
 
   useEffect(() => {
     if (isSuccess) {
+      // trigger scan
+      APIHelpers.post("/api/batchScan", {
+        body: {
+          contractAddress: BINDER_DROP_TOKEN,
+          networkId: campaignNetworkId,
+        },
+      });
       console.log("success!");
     }
   }, [isSuccess, parsed, setInstance]);

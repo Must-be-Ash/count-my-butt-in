@@ -10,7 +10,7 @@ export const fetchSWR = async (url: string) => {
 
 export function useOrders(campaignId: string) {
   const { data, error, isLoading, mutate } = useSWR<Order[]>(
-    `/api/campaigns/${campaignId}/orders`,
+    `/api/campaigns/${campaignId}/orders?status=PENDING`,
     fetchSWR
   );
 

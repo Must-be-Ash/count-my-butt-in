@@ -67,7 +67,6 @@ export default function SignaturePadTest({
         body: {
           autographData: drawingOn.getSaveData(),
           autographDataURL: drawingOn.getDataURL(),
-          status: NetworkStatus.CONFIRMED,
           nftImageURL: backgroundImage,
         },
       }

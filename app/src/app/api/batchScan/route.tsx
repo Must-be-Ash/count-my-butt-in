@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
           mintedTokenId: theTokenId.toString(),
           mintedContractAddress: contractAddress.toLowerCase(),
           mintedNetworkId: networkToName(networkId).toUpperCase() as Network,
-          status: NetworkStatus.PENDING,
+          status: NetworkStatus.CONFIRMED,
         });
       }
     }

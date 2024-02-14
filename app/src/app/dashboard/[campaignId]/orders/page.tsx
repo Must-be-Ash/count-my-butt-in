@@ -20,7 +20,7 @@ import BatchMint from "@/app/components/dashboard/orders/BatchMintButton";
 import { BINDER_DROP_TOKEN } from "@/utils/common";
 
 export default function Orders({ params }: { params: { campaignId: string } }) {
-  const [hostname, setHostname] = useState<string>("https://app.signed.gg");
+  const [hostname, setHostname] = useState<string>("https://portal.signed.gg");
   const COLLECTOR_LINK = `${hostname}/collector/${params.campaignId}/home`;
   // const COLLECTOR_LINK = `${hostname}`;
   const [isCopied, setIsCopied] = useState<boolean>(false);
@@ -96,10 +96,7 @@ export default function Orders({ params }: { params: { campaignId: string } }) {
   }, [orders]);
 
   return (
-    <AuthenticatedPage
-      homeRoute={`/`}
-      requiredUserId={campaign?.userId}
-    >
+    <AuthenticatedPage homeRoute={`/`} requiredUserId={campaign?.userId}>
       <Main>
         <Credenza open={modalIsOpen} onOpenChange={setModalOpen}>
           <CredenzaContent className="dark:bg-transparent dark:border-0 flex flex-col">

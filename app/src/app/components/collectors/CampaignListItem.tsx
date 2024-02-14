@@ -74,15 +74,20 @@ const CampaignListItem = ({
               tokenId={order.selectedTokenId}
               contractAddress={order.collectionAddress!}
               imageOnly={true}
+              notClickable={notClickable}
             />
             <div className="p-3 text-sm rounded-2xl bg-black text-neutral-500 overflow-clip flex flex-col gap-2 w-full">
-              <div className="text-md font-bold text-white text-sm">
-                Waiting to be ✍️
-              </div>
-              <div className=" overflow-clip text-ellipsis text-sm">
-                {`${
-                  order.status === NetworkStatus.CONFIRMED ? "Signed on " : ""
-                } ${nft.title}`}
+              {order.status === NetworkStatus.PENDING ? (
+                <div className="text-md font-bold text-white text-sm">
+                  Waiting to be ✍️
+                </div>
+              ) : (
+                <div className="text-md font-bold text-white text-sm">✅</div>
+              )}
+              <div className=" overflow-clip text-ellipsis text-sm text-white">
+                {`${order.status === NetworkStatus.CONFIRMED ? "✍️ on " : ""} ${
+                  nft.title
+                }`}
               </div>
             </div>
           </div>
