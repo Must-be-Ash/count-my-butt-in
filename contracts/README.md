@@ -51,6 +51,10 @@ $ anvil
 forge script script/BinderDropFactory.s.sol:BinderDropFactoryDeployScript --rpc-url https://eth-sepolia.g.alchemy.com/v2/<ALCHEMY_KEY> --broadcast --verify -vvvv
 ```
 
+### Verify
+
+forge verify-contract --compiler-version 0.8.20 --optimizer-runs 1000 0x9693ad9Fe3fb08bab0a7491303a296dA706837AD src/BinderDrop.sol:BinderDrop --etherscan-api-key EMQMW4QAHT6JRAI1K4SXEMMVZRP4TYTAPF --verifier-url=https://api.basescan.org/api\? --watch
+
 ### Cast
 
 ```shell
