@@ -125,7 +125,7 @@ export const optimismProvider = new JsonRpcProvider(
 );
 
 export const baseProvider = new JsonRpcProvider(
-  `https://base-mainnet.blastapi.io/${process.env.NEXT_PUBLIC_ALCHEMY_BASE}`
+  `https://base-mainnet.blastapi.io/5d52166f-9250-40f7-8698-a7536f95a1ae`
 );
 
 export const sepoliaProvider = new JsonRpcProvider(
