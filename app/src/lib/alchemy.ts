@@ -117,24 +117,26 @@ export async function injectBinderMetadata(
     const { nft: binderNft } = await APIHelpers.get(
       `/api/nft?networkId=${networkId}&contractAddress=${nft.contract.address}&tokenId=${nft.tokenId}`
     );
-    try {
-      if (binderNft.tokenUri.includes("ipfs")) {
-        // resolve ipfs url
-        const { metadata } = await APIHelpers.post(`/api/nft/ipfs`, {
-          body: {
-            ipfsUrl: binderNft.tokenUri,
-          },
-        });
-        nft.title = metadata.name;
-        if (!nft.media?.length) {
-          nft.media = [{ raw: "", gateway: metadata.image }];
-        } else {
-          nft.media[0].gateway = metadata.image;
+    if (!!binderNft) {
+      try {
+        if (binderNft.tokenUri.includes("ipfs")) {
+          // resolve ipfs url
+          const { metadata } = await APIHelpers.post(`/api/nft/ipfs`, {
+            body: {
+              ipfsUrl: binderNft.tokenUri,
+            },
+          });
+          nft.title = metadata.name;
+          if (!nft.media?.length) {
+            nft.media = [{ raw: "", gateway: metadata.image }];
+          } else {
+            nft.media[0].gateway = metadata.image;
+          }
         }
+      } catch (e) {
+        // non-blocking
+        console.error(e);
       }
-    } catch (e) {
-      // non-blocking
-      console.error(e);
     }
   }
   return nft;
