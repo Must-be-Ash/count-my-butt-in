@@ -1,11 +1,6 @@
 import { uploadMetadata } from "@/lib/ipfs";
 import { nameToNetwork } from "@/lib/utils";
-import {
-  getCampaign,
-  getOrders,
-  updateCampaign,
-  updateOrder,
-} from "@/utils/prisma";
+import { getOrders, updateCampaign, updateOrder } from "@/utils/prisma";
 import { NextResponse, type NextRequest } from "next/server";
 
 /*
@@ -18,8 +13,6 @@ export async function POST(
   const { twitterUsername } = await request.json();
   // get all pending orders
   const pendingOrders = await getOrders(params.campaignId, "PENDING");
-  // get campaign
-  const campaign = await getCampaign(params.campaignId);
   // do not trigger upload until all orders are confirmed
   if (pendingOrders.length) {
     return NextResponse.json({ manifestUrl: "" });
@@ -73,7 +66,9 @@ export async function POST(
         image_url: order.toUpload,
         animation_url: `https://iframe-ten-tau.vercel.app/${
           order.collectionAddress
-        }/${order.selectedTokenId}/${nameToNetwork("ethereum")}?childNetwork=${order.mintedNetworkId}&flip=true`,
+        }/${order.selectedTokenId}/${nameToNetwork("ethereum")}?childNetwork=${
+          order.mintedNetworkId
+        }&flip=true`,
         image_canvas_data: order.autographData,
         parent_base_image: order.nftImageURL,
       }))
