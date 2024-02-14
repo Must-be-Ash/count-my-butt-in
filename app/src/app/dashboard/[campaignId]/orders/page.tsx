@@ -17,6 +17,7 @@ import { BiCopy } from "react-icons/bi";
 import { Credenza, CredenzaContent } from "@/components/ui/credenza";
 import APIHelpers from "@/lib/apiHelper";
 import BatchMint from "@/app/components/dashboard/orders/BatchMintButton";
+import { BINDER_DROP_TOKEN } from "@/utils/common";
 
 export default function Orders({ params }: { params: { campaignId: string } }) {
   const [hostname, setHostname] = useState<string>("https://app.signed.gg");
@@ -173,7 +174,6 @@ export default function Orders({ params }: { params: { campaignId: string } }) {
         </div>
 
         {campaign &&
-          campaign.binderContract &&
           !!pendingOrders &&
           campaign.manifestUrl &&
           signature &&
@@ -184,7 +184,7 @@ export default function Orders({ params }: { params: { campaignId: string } }) {
                 <BatchMint
                   campaignNetworkId={nameToNetwork(campaign.networkId)}
                   orderIds={pendingOrders?.map((order) => order.orderId)}
-                  binderContract={campaign.binderContract}
+                  binderContract={BINDER_DROP_TOKEN}
                   signature={signature}
                   recipients={recipients}
                   uris={pendingOrders.map(

@@ -56,7 +56,7 @@ export default function EnterWalletStep() {
           <NFTFeedProfile
             searchWord={searhWord}
             addresses={[selectedAddress]}
-            networkId={1}
+            networkId={11155111}
             onClickCallback={(
               networkId: string,
               contractAddress: string,

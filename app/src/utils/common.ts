@@ -161,7 +161,7 @@ export const MINT_FEE = 0.01;
 //   [11155111]: "0xc9f8daf5a1d54f6f2b6cfb8049c10111ba8d69a1",
 // };
 
-export const BINDER_DROP_TOKEN = "0x2bbfcdb30614ac5d018df80e2719f66f642b6637";
+export const BINDER_DROP_TOKEN = "0xfbfff11455d562ec156d54df5562c1bc680ebc11";
 
 export const childrenNetworkIds = [1, 137, 8453, 11155111, 10];
 

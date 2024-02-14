@@ -33,6 +33,8 @@ export async function POST(request: NextRequest) {
     const tx = await binderContract.mintTo(orderId, recipient, signature);
     const receipt = await tx.wait();
 
+
+
     const iface = new Interface(BINDER_DROP_ABI);
     let parsed;
     for (const log of receipt.logs) {
@@ -48,6 +50,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ tokenId: tokenId.toString() });
     }
   } catch (e) {
+    console.log(JSON.stringify(e));
     console.error(`Mint failed`);
     console.error(e);
   }

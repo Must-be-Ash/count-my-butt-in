@@ -18,17 +18,17 @@ export async function POST(
 ) {
   const data = await request.json();
 
-  // grab whitelist from campaign
-  // const campaignWhiteLists = await getCampaignWhiteList(params.campaignId);
+  // // grab whitelist from campaign
+  // // const campaignWhiteLists = await getCampaignWhiteList(params.campaignId);
   const { networkId, tokenMappings } = data as {
     networkId: number;
     tokenMappings: { contractAddress: string; tokenId: string }[];
   };
 
-  // if (campaignWhiteLists.length > 0) {
-  if (networkId !== 1) {
-    return NextResponse.json({ error: "Token not found in whitelist" });
-  }
+  // // if (campaignWhiteLists.length > 0) {
+  // if (networkId !== 1) {
+  //   return NextResponse.json({ error: "Token not found in whitelist" });
+  // }
   const recipients = [];
   for (const tokenMapping of tokenMappings) {
     if (
@@ -63,14 +63,11 @@ export async function POST(
   }
   const nonce = generateRandomBytes32();
   const wallet = new Wallet(privateKey);
-  const signature = Signature.from(
-    await wallet.signMessage(
-      getBytes(
-        keccak256(
-          new AbiCoder().encode(["address[]", "bytes32"], [recipients, nonce])
-        )
-      )
+  const payloadHash = keccak256(
+      new AbiCoder().encode(["address[]", "bytes32"], [recipients, nonce])
     )
+  const signature = Signature.from(
+    await wallet.signMessage(getBytes(payloadHash))
   ).serialized;
-  return NextResponse.json({ signature, recipients, nonce });
+  return NextResponse.json({ signature, recipients, nonce, payloadHash });
 }
