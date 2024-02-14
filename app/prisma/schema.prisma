@@ -45,7 +45,7 @@ model User {
   userType        UserType @default(MINION)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
-  domain          String?  @unique // domain name for the artist. eg., jadyn.signed.gg or violetta.signed.gg
+  domain          String?  @unique 
 }
 
 model Order {
