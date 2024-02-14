@@ -71,11 +71,11 @@ export async function POST(
           : undefined,
         image: order.toUpload,
         image_url: order.toUpload,
-        animation_url: `https://iframe-ten-tau.vercel.app/${
-          order.collectionAddress
-        }/${order.selectedTokenId}/${nameToNetwork(
-          campaign.networkId
-        )}?childNetwork=8453&flip=true`,
+        // animation_url: `https://iframe-ten-tau.vercel.app/${
+        //   order.collectionAddress
+        // }/${order.selectedTokenId}/${nameToNetwork(
+        //   campaign.networkId
+        // )}?childNetwork=${order.mintedNetworkId}&flip=true`,
         image_canvas_data: order.autographData,
         parent_base_image: order.nftImageURL,
       }))
