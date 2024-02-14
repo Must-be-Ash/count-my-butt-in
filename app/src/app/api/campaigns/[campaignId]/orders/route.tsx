@@ -21,6 +21,14 @@ export async function GET(
 
 export async function POST(request: NextRequest) {
   const data = await request.json();
+  // Check and limit to only 3 orders per campaign
+  const pendingOrders = await getOrders(data.campaignId, "PENDING");
+  const confirmedOrders = await getOrders(data.campaignId, "CONFIRMED");
+  if (pendingOrders.length + confirmedOrders.length === 3) {
+    return NextResponse.json({
+      error: "Campaign has reached the limit of 3 orders",
+    });
+  }
   const order = await createOrder(data);
   return NextResponse.json({ order });
 }
