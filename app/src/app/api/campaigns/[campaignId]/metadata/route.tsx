@@ -1,6 +1,7 @@
 import { uploadMetadata } from "@/lib/ipfs";
 import { nameToNetwork } from "@/lib/utils";
 import { getOrders, updateCampaign, updateOrder } from "@/utils/prisma";
+import { Order } from "@prisma/client";
 import { NextResponse, type NextRequest } from "next/server";
 
 /*
@@ -12,13 +13,11 @@ export async function POST(
 ) {
   const { twitterUsername } = await request.json();
   // get all pending orders
-  const pendingOrders = await getOrders(params.campaignId, "PENDING");
-  // do not trigger upload until all orders are confirmed
-  if (pendingOrders.length) {
+  const ordersToUpload = await getOrders(params.campaignId, "PENDING");
+  // do not trigger upload until all orders are signed
+  if (ordersToUpload.some((order: Order) => !order.toUpload)) {
     return NextResponse.json({ manifestUrl: "" });
   }
-  // get all confirmed orders
-  const ordersToUpload = await getOrders(params.campaignId, "CONFIRMED");
 
   if (!ordersToUpload.length) {
     return NextResponse.json({ manifestUrl: "" });
