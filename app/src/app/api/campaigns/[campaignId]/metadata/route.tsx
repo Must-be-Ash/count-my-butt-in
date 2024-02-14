@@ -75,7 +75,7 @@ export async function POST(
           order.collectionAddress
         }/${order.selectedTokenId}/${nameToNetwork(
           campaign.networkId
-        )}?childNetwork=${order.mintedNetworkId}&flip=true`,
+        )}?childNetwork=8453&flip=true`,
         image_canvas_data: order.autographData,
         parent_base_image: order.nftImageURL,
       }))
