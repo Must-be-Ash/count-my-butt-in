@@ -32,7 +32,7 @@ export default function ReviewAndPayStep() {
   const { campaign } = useCampaign(instance.campaignId);
   const [tipAmountInUSD, setTipAmountInUSd] = useState(0);
 
-  const gasFee = 0;
+  const gasFee = 0.15;
   const platformFee = 0.9;
 
   useEffect(() => {
@@ -187,7 +187,7 @@ export default function ReviewAndPayStep() {
           <div className="flex flex-row justify-between w-full text-neutral-400">
             <div>Gas fee</div>
 
-            <div>Free</div>
+            <div className="line-through">${gasFee}</div>
           </div>
           {tipAmountInUSD > 0 && (
             <div className="flex flex-row justify-between w-full text-neutral-400">

@@ -161,7 +161,7 @@ export default function Orders({ params }: { params: { campaignId: string } }) {
                       }}
                       className="w-full"
                     >
-                      {order.status === "PENDING" ? "FILL ORDER" : "DONE"}
+                      {!order.toUpload ? "FILL ORDER" : "DONE"}
                     </BinderButton>
                   </div>
                 </div>
