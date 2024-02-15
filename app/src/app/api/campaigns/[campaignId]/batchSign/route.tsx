@@ -20,9 +20,12 @@ export async function POST(
 
   // // grab whitelist from campaign
   // // const campaignWhiteLists = await getCampaignWhiteList(params.campaignId);
-  const { networkId, tokenMappings } = data as {
-    networkId: number;
-    tokenMappings: { contractAddress: string; tokenId: string }[];
+  const { tokenMappings } = data as {
+    tokenMappings: {
+      contractAddress: string;
+      tokenId: string;
+      networkId: number;
+    }[];
   };
 
   // // if (campaignWhiteLists.length > 0) {
@@ -47,7 +50,7 @@ export async function POST(
     }
 
     const tokenboundClient = new TokenboundClient({
-      chainId: networkId,
+      chainId: tokenMapping.networkId,
     });
     recipients.push(
       await tokenboundClient.getAccount({
@@ -64,8 +67,8 @@ export async function POST(
   const nonce = generateRandomBytes32();
   const wallet = new Wallet(privateKey);
   const payloadHash = keccak256(
-      new AbiCoder().encode(["address[]", "bytes32"], [recipients, nonce])
-    )
+    new AbiCoder().encode(["address[]", "bytes32"], [recipients, nonce])
+  );
   const signature = Signature.from(
     await wallet.signMessage(getBytes(payloadHash))
   ).serialized;

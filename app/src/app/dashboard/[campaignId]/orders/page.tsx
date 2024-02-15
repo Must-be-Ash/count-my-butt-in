@@ -74,14 +74,13 @@ export default function Orders({ params }: { params: { campaignId: string } }) {
     async function run() {
       if (campaign?.manifestUrl) {
         const tokenMappings = pendingOrders?.map((order) => ({
-          contractAddress: order.collectionAddress,
+          contractAddress: nameToNetwork(order.collectionNetwork),
           tokenId: order.selectedTokenId,
         }));
         const { recipients, signature, nonce } = await APIHelpers.post(
           `/api/campaigns/${params.campaignId}/batchSign`,
           {
             body: {
-              networkId: 1,
               tokenMappings,
             },
           }
