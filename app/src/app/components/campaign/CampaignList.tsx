@@ -15,7 +15,7 @@ const CampaignList = ({
   return (
     <>
       {!!orders && orders.length > 0 ? (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-28 sm:gap-4">
           {orders.map((order) => (
             <CampaignListItem key={`${order.orderId}`} order={order} />
           ))}
