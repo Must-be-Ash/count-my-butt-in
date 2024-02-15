@@ -63,7 +63,7 @@ export async function POST(
           : undefined,
         image: order.toUpload,
         image_url: order.toUpload,
-        animation_url: `https://iframe-ten-tau.vercel.app/${order.orderId}`,
+        animation_url: `https://iframe-ten-tau.vercel.app/?for=${order.orderId}`,
       }))
   );
   // update metadata url of each order
