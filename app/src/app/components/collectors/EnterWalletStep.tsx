@@ -6,6 +6,7 @@ import { isAddress } from "@ethersproject/address";
 import ErrorDisplay from "@/app/components/ErrorDisplay";
 import { useInstance } from "@/context/InstanceContext";
 import { useSteps } from "@/context/StepsContext";
+import { nameToNetwork } from "@/lib/utils";
 
 export default function EnterWalletStep() {
   const [selectedAddress, setSelectedAddress] = useState<string>("");
@@ -54,7 +55,7 @@ export default function EnterWalletStep() {
         <NFTFeedProfile
           searchWord={searhWord}
           addresses={[selectedAddress]}
-          networkId={1}
+          networkId={nameToNetwork("polygon")}
           onClickCallback={(
             networkId: string,
             contractAddress: string,

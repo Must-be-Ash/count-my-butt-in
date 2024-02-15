@@ -68,22 +68,19 @@ export default function BigLoginDisplayPage({
   }, [campaignId]);
 
   return (
-    <main className="flex flex-col items-center justify-between">
-      <div className="relative flex place-items-center z-[-1]">
-        <BinderMainLogo />
+    <main className="flex flex-col items-center justify-between min-h-screen bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-gray-700 via-gray-900 to-black">
+      <div className="flex flex-col gap-3">
+      <div className="relative flex place-items-center place-self-center">
+          <BinderMainLogo />
       </div>
       {!authenticated && <LoginButton title={`Start Signing ✍️`} />}
-      <a
-        className="text-xs mt-4 cursor-pointer"
-        href="https://binder.studio/"
-        target="_blank"
-        rel="noreferrer"
-      >
-        built by Binder{" "}
-        <span className="font-light italic font-title">Studio</span>
-      </a>
-      {loading && <Loader />}
-      {!loading && campaignId && (
+      <div className="text-xs mt-4 font-extralight z-10 place-self-center">built by&nbsp;
+        <span className="text-sm font-bold">
+          Binder <span className="font-light italic font-title text-[15px]">Studio</span>
+        </span>
+      </div>
+      {loading && <Loader className="place-self-center" />}
+      {loading && campaignId && (
         <Link
           href={`/dashboard/${campaignId}/orders`}
           className="py-8 underline"
@@ -91,6 +88,7 @@ export default function BigLoginDisplayPage({
           Click here if you&apos;re not redirected automatically.
         </Link>
       )}
+      </div>
     </main>
   );
 }
