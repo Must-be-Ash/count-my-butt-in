@@ -63,16 +63,16 @@ export async function POST(
           : undefined,
         image: order.toUpload,
         image_url: order.toUpload,
-        animation_url: `https://iframe-ten-tau.vercel.app/${order.mintedContractAddress}/${order.mintedTokenId}/${nameToNetwork(order.mintedNetworkId)}`,
-        image_canvas_data: order.autographData,
-        isTBA: true,
-        // is a TBA
-        parent: {
-          "parent_contract_address": `${order.collectionAddress}`,
-          "parent_token_id": `${order.selectedTokenId}`,
-          "parent_chain_id": `${nameToNetwork("polygon")}`, // @NOTE !! HARDCODED FOR STEVIE
-          "parent_base_image": `${order.nftImageURL}`,
-        }
+        // animation_url: `https://iframe-ten-tau.vercel.app/${order.mintedContractAddress}/${order.mintedTokenId}/${nameToNetwork("base")}`,
+        // image_canvas_data: order.autographData,
+        // isTBA: true, // is a TBA (used in the iframe)
+        // parent details - used in the iframe
+        // parent: {
+        //   "parent_contract_address": `${order.collectionAddress}`,
+        //   "parent_token_id": `${order.selectedTokenId}`,
+        //   "parent_chain_id": `${nameToNetwork("ethereum")}`, // @NOTE !! HARDCODED FOR STEVIE
+        //   "parent_base_image": `${order.nftImageURL}`,
+        // }
       }))
   );
   // update metadata url of each order
