@@ -38,7 +38,7 @@ export function SuccessStep() {
       </div>
       <div className="w-full flex flex-row justify-center items-center mt-4 gap-6">
         {authenticated && (
-          <Link href={`/collector`} className="w-full">
+          <Link href={`/collector/home`} className="w-full">
             <BinderButton className="w-full">Go Home</BinderButton>
           </Link>
         )}

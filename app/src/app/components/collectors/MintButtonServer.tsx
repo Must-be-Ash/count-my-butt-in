@@ -63,9 +63,10 @@ export default function MintButtonServer({
       submitOrder();
     }
   }, [transferETHSuccess, submitOrder]);
+  console.log("qwdqwd", instance.tipAmount);
   return (
     <>
-      {!instance.tipAmount && (
+      {(!instance.tipAmount || instance.tipAmount == 0) && (
         <BinderButton isLoading={loading} onClick={() => submitOrder()}>
           {"Get it now"}
         </BinderButton>
