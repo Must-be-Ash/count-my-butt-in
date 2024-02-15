@@ -63,13 +63,16 @@ export async function POST(
           : undefined,
         image: order.toUpload,
         image_url: order.toUpload,
-        animation_url: `https://iframe-ten-tau.vercel.app/${
-          order.collectionAddress
-        }/${order.selectedTokenId}/${nameToNetwork("ethereum")}?childNetwork=${
-          order.mintedNetworkId
-        }&flip=true`,
+        animation_url: `https://iframe-ten-tau.vercel.app/${order.mintedContractAddress}/${order.mintedTokenId}/${nameToNetwork(order.mintedNetworkId)}`,
         image_canvas_data: order.autographData,
-        parent_base_image: order.nftImageURL,
+        isTBA: true,
+        // is a TBA
+        parent: {
+          "parent_contract_address": `${order.collectionAddress}`,
+          "parent_token_id": `${order.selectedTokenId}`,
+          "parent_chain_id": `${nameToNetwork("polygon")}`, // @NOTE !! HARDCODED FOR STEVIE
+          "parent_base_image": `${order.nftImageURL}`,
+        }
       }))
   );
   // update metadata url of each order
