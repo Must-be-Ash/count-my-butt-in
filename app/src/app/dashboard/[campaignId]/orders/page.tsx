@@ -74,7 +74,8 @@ export default function Orders({ params }: { params: { campaignId: string } }) {
     async function run() {
       if (campaign?.manifestUrl) {
         const tokenMappings = pendingOrders?.map((order) => ({
-          contractAddress: nameToNetwork(order.collectionNetwork),
+          networkId: nameToNetwork(order.collectionNetwork),
+          contractAddress: order.collectionAddress,
           tokenId: order.selectedTokenId,
         }));
         const { recipients, signature, nonce } = await APIHelpers.post(
