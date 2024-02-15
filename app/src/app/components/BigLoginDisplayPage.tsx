@@ -73,7 +73,15 @@ export default function BigLoginDisplayPage({
         <BinderMainLogo />
       </div>
       {!authenticated && <LoginButton title={`Start Signing ✍️`} />}
-      <div className="text-xs mt-4 italic">built by binder studio</div>
+      <a
+        className="text-xs mt-4 cursor-pointer"
+        href="https://binder.studio/"
+        target="_blank"
+        rel="noreferrer"
+      >
+        built by Binder{" "}
+        <span className="font-light italic font-title">Studio</span>
+      </a>
       {loading && <Loader />}
       {!loading && campaignId && (
         <Link

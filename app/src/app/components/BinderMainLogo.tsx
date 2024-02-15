@@ -7,13 +7,11 @@ const BinderMainLogo = () => {
         <Image
           src="/assets/signed_gg_logo.png"
           alt="binder-logo"
-          width="300"
-          height="300"
+          width="250"
+          height="250"
           sizes="100vw"
         />
-        <div className="text-2xl font-bold">
-          Binder <span className="font-light italic font-title">Studio</span>
-        </div>
+        <div className="text-2xl font-bold">signed.gg</div>
         <div className="text-sm mt-2">autographs for digital media</div>
       </div>
     </div>
