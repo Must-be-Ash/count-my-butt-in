@@ -35,16 +35,12 @@ export async function POST(
         description: twitterUsername
           ? `Signed by [@${twitterUsername}](https://twitter.com/${twitterUsername}). ${
               order.collectionAddress && order.selectedTokenId
-                ? `Look it up at [Binder](https://app.signed.gg/asset/${order.collectionNetwork.toLowercase()}/${
-                    order.collectionAddress
-                  }/${order.selectedTokenId})`
+                ? `Look it up at [Binder](https://app.signed.gg/asset/polygon/${order.collectionAddress}/${order.selectedTokenId})`
                 : ""
             }`
           : `Signed Autograph. ${
               order.collectionAddress && order.selectedTokenId
-                ? `Look it up at [Binder](https://app.signed.gg/asset/${order.collectionNetwork.toLowercase()}/${
-                    order.collectionAddress
-                  }/${order.selectedTokenId})`
+                ? `Look it up at [Binder](https://app.signed.gg/asset/polygon/${order.collectionAddress}/${order.selectedTokenId})`
                 : ""
             }`,
         attributes: twitterUsername
