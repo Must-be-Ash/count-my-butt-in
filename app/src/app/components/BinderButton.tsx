@@ -21,7 +21,7 @@ export default function BinderButton({
       <Button {...props} className={className}>
         <Loader height={"5"} color="#fffff" />
       </Button>
-    )
+    );
   }
   return (
     <Button {...props} className={className}>
