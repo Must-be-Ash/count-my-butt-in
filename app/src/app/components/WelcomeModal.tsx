@@ -9,6 +9,7 @@ import WelcomeModalPage2 from "./WelcomeModalPage2";
 import WelcomeModalPage3 from "./WelcomeModalPage3";
 import WelcomeModalPage4 from "./WelcomeModalPage4";
 import WelcomeModalPage5 from "./WelcomeModalPage5";
+import { AnimatePresence } from "framer-motion";
 
 export default function WelcomeModal() {
   const hasOpened = localStorage.getItem("hasOpened");
@@ -40,13 +41,15 @@ export default function WelcomeModal() {
             <div className="transition-all relative flex place-items-center place-self-center">
               <div className="flex flex-row">
                 <div className="flex flex-col items-center justify-center rounded-lg bg-neutral-90 hover:cursor-pointer flex-1 mx-5">
-                  <div className="transition-all ease-in-out delay-150 mt-4 flex flex-col items-center gap-4 text-center bg-black p-4 rounded-lg">
-                    {page === 1 && <WelcomeModalPage1 />}
-                    {page === 2 && <WelcomeModalPage2 />}
-                    {page === 3 && <WelcomeModalPage3 />}
-                    {page === 4 && <WelcomeModalPage4 />}
-                    {page === 5 && <WelcomeModalPage5 />}
-                  </div>
+                  <AnimatePresence>
+                    <div className="transition-all ease-in-out delay-150 mt-4 flex flex-col items-center gap-4 text-center bg-black p-4 rounded-lg">
+                      {page === 1 && <WelcomeModalPage1 />}
+                      {page === 2 && <WelcomeModalPage2 />}
+                      {page === 3 && <WelcomeModalPage3 />}
+                      {page === 4 && <WelcomeModalPage4 />}
+                      {page === 5 && <WelcomeModalPage5 />}
+                    </div>
+                  </AnimatePresence>
                   <BinderButton
                     className="w-full mt-6"
                     onClick={() =>
