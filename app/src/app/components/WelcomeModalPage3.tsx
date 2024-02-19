@@ -30,7 +30,7 @@ export default function WelcomeModalPage3() {
           src="/assets/wait_icon.png
       "
           alt=""
-          className="rounded-lg h-40 sm:h-40"
+          className="rounded-lg h-28"
         />
         <div className="text-xl ">Step 2</div>
         <div>Wait until the requests come in. it shouldn’t take long</div>

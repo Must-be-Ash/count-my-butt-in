@@ -29,7 +29,7 @@ export default function WelcomeModalPage5() {
           src="/assets/check_icon.png
       "
           alt=""
-          className="rounded-lg h-40 sm:h-40"
+          className="rounded-lg h-28"
         />
         <div className="text-xl ">Step 4</div>
         <div>Once you’re done signing autographs press ‘submit’</div>

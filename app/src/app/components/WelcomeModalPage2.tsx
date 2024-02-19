@@ -29,7 +29,7 @@ export default function WelcomeModalPage2() {
           src="/assets/copy_icon.png
       "
           alt=""
-          className="rounded-lg h-40 sm:h-40"
+          className="rounded-lg h-38"
         />
         <div className="text-xl ">Step 1</div>
         <div>
