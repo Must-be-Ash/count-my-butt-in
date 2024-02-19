@@ -36,6 +36,7 @@ export default function BatchMint({
     wrongNetwork,
     isSuccess,
     parsed,
+    wallet,
   } = useWrite({
     networkId: campaignNetworkId,
     contractAddress: binderContract,
@@ -46,6 +47,13 @@ export default function BatchMint({
 
   async function mint() {
     if (write) {
+      // check if sufficient balance, this api will check and automatically fund if not enough balance
+      await APIHelpers.post("/api/fund", {
+        body: {
+          receiverAddress: wallet.address,
+          networkId: campaignNetworkId,
+        },
+      });
       // create new order
       await write();
     }
