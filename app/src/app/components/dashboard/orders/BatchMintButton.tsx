@@ -17,6 +17,7 @@ export default function BatchMint({
   signature,
   uris,
   nonce,
+  campaignId,
 }: {
   orderIds: string[];
   campaignNetworkId: number;
@@ -25,6 +26,7 @@ export default function BatchMint({
   signature: string;
   uris: string[];
   nonce: string;
+  campaignId: string;
 }) {
   const { instance, setInstance } = useInstance();
   const {
@@ -52,6 +54,7 @@ export default function BatchMint({
         body: {
           receiverAddress: wallet.address,
           networkId: campaignNetworkId,
+          campaignId,
         },
       });
       // create new order
@@ -68,7 +71,6 @@ export default function BatchMint({
           networkId: campaignNetworkId,
         },
       });
-      console.log("success!");
     }
   }, [isSuccess, parsed, setInstance]);
 

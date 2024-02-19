@@ -188,6 +188,7 @@ export default function Orders({ params }: { params: { campaignId: string } }) {
                     (order, index) => `${campaign.manifestUrl}/${index + 1}`
                   )}
                   nonce={nonce}
+                  campaignId={params.campaignId}
                 />
               </div>
             </div>
