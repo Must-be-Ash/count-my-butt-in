@@ -74,11 +74,19 @@ export async function getNftMetadata(
 
 export async function getNftsForOwner(
   networkId: number,
-  address: string,
+  walletAddress: string,
   pageKey?: string,
   contractAddresses?: string[] // only query from these specific contractAddresses
 ) {
   const alchemy = getAlchemy(networkId);
+  let address = walletAddress;
+  if (address?.includes(".eth")) {
+    const mainnetAlchemy = getAlchemy(1);
+    const theAddress = await mainnetAlchemy.core.resolveName(walletAddress);
+    if (theAddress) {
+      address = theAddress;
+    }
+  }
   const ownedNfts = await alchemy.nft.getNftsForOwner(address, {
     contractAddresses: contractAddresses,
     pageKey,
