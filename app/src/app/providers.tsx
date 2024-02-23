@@ -51,7 +51,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
           const { user: createdUser } = await APIHelpers.post(`/api/users`, {
             body: {
               privyId: user.id,
-              email: user.email,
+              email: user.email?.address,
               walletAddresses: [walletAddress],
               imageUrl,
               nickname,
