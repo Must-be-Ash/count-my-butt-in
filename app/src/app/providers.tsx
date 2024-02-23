@@ -64,7 +64,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
         }
       }}
       config={{
-        loginMethods: ["twitter", "wallet", "email"],
+        loginMethods: ["twitter", "wallet"],
         appearance: {
           theme: "light",
           accentColor: "#458f68",
