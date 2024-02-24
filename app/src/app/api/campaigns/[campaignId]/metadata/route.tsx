@@ -30,17 +30,21 @@ export async function POST(
     "defaultMetadata",
     ordersToUpload
       .sort((a: any, b: any) => a.createdAt - b.createdAt)
-      .map((order: any) => ({
+      .map((order: Order) => ({
         name: "Signed Autograph",
         description: twitterUsername
           ? `Signed by [@${twitterUsername}](https://twitter.com/${twitterUsername}). ${
               order.collectionAddress && order.selectedTokenId
-                ? `Look it up at [Binder](https://app.signed.gg/asset/polygon/${order.collectionAddress}/${order.selectedTokenId})`
+                ? `Look it up at [Binder](https://app.signed.gg/asset/${order.collectionNetwork.toLowerCase()}/${
+                    order.collectionAddress
+                  }/${order.selectedTokenId})`
                 : ""
             }`
           : `Signed Autograph. ${
               order.collectionAddress && order.selectedTokenId
-                ? `Look it up at [Binder](https://app.signed.gg/asset/polygon/${order.collectionAddress}/${order.selectedTokenId})`
+                ? `Look it up at [Binder](https://app.signed.gg/asset/${order.collectionNetwork.toLowerCase()}/${
+                    order.collectionAddress
+                  }/${order.selectedTokenId})`
                 : ""
             }`,
         attributes: twitterUsername
