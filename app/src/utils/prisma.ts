@@ -155,23 +155,23 @@ export async function getCampaignsForUser(userId: string) {
       userId,
     },
     orderBy: {
-      createdAt: "desc"
-    }
+      createdAt: "desc",
+    },
   });
   const orders = await prisma.order.findMany({
     where: {
       campaignId: {
-        in: campaigns.map((c: any) => c.campaignId)
-      }
-    }
-  })
+        in: campaigns.map((c: any) => c.campaignId),
+      },
+    },
+  });
   const parsed = campaigns.map((c: any) => {
     return {
       ...c,
-      orders: filter(orders, (o:any) => o.campaignId === c.campaignId)
-    }
-  })
-  return [...parsed]
+      orders: filter(orders, (o: any) => o.campaignId === c.campaignId),
+    };
+  });
+  return [...parsed];
 }
 
 export function updateCampaign(
@@ -245,7 +245,7 @@ export async function getUser(id: string) {
     },
   });
   if (user && user.id) {
-    const campaign = await getLastCampaign(user.id)
+    const campaign = await getLastCampaign(user.id);
     return { ...user, campaign };
   }
   return user;
@@ -253,8 +253,8 @@ export async function getUser(id: string) {
 
 export async function getLastCampaign(userId: string) {
   const campaign = await prisma.campaign.findMany({
-    where: {userId},
-    orderBy: { createdAt: "desc" }
+    where: { userId },
+    orderBy: { createdAt: "desc" },
   });
   if (campaign.length > 0) return campaign[0];
   return {};

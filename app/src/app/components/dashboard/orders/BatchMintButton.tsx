@@ -8,6 +8,7 @@ import { BINDER_DROP_ABI } from "@/abi";
 import { useWrite } from "@/hooks/web3";
 import APIHelpers from "@/lib/apiHelper";
 import { BINDER_DROP_TOKEN } from "@/utils/common";
+import { useAuthentication } from "@/hooks/useAuthentication";
 
 export default function BatchMint({
   orderIds,
@@ -28,6 +29,7 @@ export default function BatchMint({
   nonce: string;
   campaignId: string;
 }) {
+  const { authenticatedUser } = useAuthentication();
   const { instance, setInstance } = useInstance();
   const {
     write,
@@ -55,6 +57,7 @@ export default function BatchMint({
           receiverAddress: wallet.address,
           networkId: campaignNetworkId,
           campaignId,
+          userId: authenticatedUser.id,
         },
       });
       // create new order

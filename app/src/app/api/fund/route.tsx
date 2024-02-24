@@ -4,10 +4,19 @@ import { getProvider } from "@/utils/common";
 import { formatEther, parseUnits } from "ethers";
 
 import { Wallet } from "ethers";
-import { getOrders } from "@/utils/prisma";
+import { getOrders, getUser, updateUser } from "@/utils/prisma";
 
 export async function POST(request: NextRequest) {
-  const { receiverAddress, networkId, campaignId } = await request.json();
+  const { receiverAddress, networkId, campaignId, userId } =
+    await request.json();
+  // Check if user been funded
+  const user = await getUser(userId);
+  if (user.funded) {
+    return NextResponse.json({
+      success: false,
+      message: "Already funded",
+    });
+  }
   // double check if there are ongoing orders in this campaign
   const orders = await getOrders(campaignId, "PENDING");
   if (!orders.length) {
@@ -35,6 +44,10 @@ export async function POST(request: NextRequest) {
   await wallet.sendTransaction({
     to: receiverAddress,
     value: parseUnits("0.00094", "ether"),
+  });
+
+  await updateUser(userId, {
+    funded: true,
   });
   return NextResponse.json({ success: true });
 }
