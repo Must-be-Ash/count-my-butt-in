@@ -6,7 +6,15 @@ import { isAddress } from "@ethersproject/address";
 import ErrorDisplay from "@/app/components/ErrorDisplay";
 import { useInstance } from "@/context/InstanceContext";
 import { useSteps } from "@/context/StepsContext";
-import { nameToNetwork } from "@/lib/utils";
+import { nameToNetwork, networkToName } from "@/lib/utils";
+import {
+  DropdownMenuItem,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { SUPPORTED_NETWORKS } from "@/utils/common";
 
 export default function EnterWalletStep() {
   const [selectedAddress, setSelectedAddress] = useState<string>("");
@@ -15,6 +23,7 @@ export default function EnterWalletStep() {
   const [error, setError] = useState<string>("");
   const { setInstance } = useInstance();
   const { setCurrentStepIndex } = useSteps();
+  const [networkId, setNetworkId] = useState<number | undefined>(1);
 
   function selectAddress(address: string) {
     setError("");
@@ -28,7 +37,26 @@ export default function EnterWalletStep() {
 
   return (
     <div className="flex flex-col gap-4 grow w-full justify-start">
-      <h1>Enter a wallet address</h1>
+      <h1>Pick the network your nfts are on</h1>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild className="mb-4 w-full p-4">
+          <Button variant="outline" size="icon">
+            <span>
+              {networkId ? networkToName(networkId) : "Choose Network"}
+            </span>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          {SUPPORTED_NETWORKS.map((network) => (
+            <div key={network}>
+              <DropdownMenuItem onClick={() => setNetworkId(network)}>
+                {networkToName(network)}
+              </DropdownMenuItem>
+            </div>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
+
       <div>Enter the wallet address that contains the NFT you want signed</div>
       <div className="flex flex-row w-full">
         <div className="grow">
@@ -55,7 +83,7 @@ export default function EnterWalletStep() {
         <NFTFeedProfile
           searchWord={searhWord}
           addresses={[selectedAddress]}
-          networkId={nameToNetwork("mainnet")}
+          networkId={networkId}
           onClickCallback={(
             networkId: string,
             contractAddress: string,

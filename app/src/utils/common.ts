@@ -228,3 +228,5 @@ export const monthNames = [
   "Nov",
   "Dec",
 ];
+
+export const SUPPORTED_NETWORKS = [1, 137, 10, 8453];
