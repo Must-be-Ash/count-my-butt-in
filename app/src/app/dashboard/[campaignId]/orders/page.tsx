@@ -195,7 +195,7 @@ export default function Orders({ params }: { params: { campaignId: string } }) {
                 )}
                 {!!confirmedOrders && confirmedOrders.length === 3 && (
                   <div className="text-xl font-bold text-center">
-                    Campaign has reached limit 💀. Please contact us at{" "}
+                    Campaign has reached limit. Please contact us at{" "}
                     <a
                       href="https://twitter.com/signed_gg"
                       target="_blank"
