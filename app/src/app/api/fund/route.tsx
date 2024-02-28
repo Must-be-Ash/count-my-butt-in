@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
     receiverAddress
   );
   const balanceInEther = formatEther(balance);
-  if (parseFloat(balanceInEther) > 0.00094) {
+  if (parseFloat(balanceInEther) > 0.001) {
     return NextResponse.json({
       success: true,
       message: "Balance is sufficient",
@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
   // Send a transaction
   await wallet.sendTransaction({
     to: receiverAddress,
-    value: parseUnits("0.00094", "ether"),
+    value: parseUnits("0.001", "ether"),
   });
 
   await updateUser(userId, {
