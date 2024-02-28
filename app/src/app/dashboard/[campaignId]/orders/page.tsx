@@ -70,7 +70,9 @@ export default function Orders({ params }: { params: { campaignId: string } }) {
     refetchOrders();
   }
 
-  const pendingOrders = orders?.sort((a, b) => a.createdAt - b.createdAt);
+  const pendingOrders = orders?.sort(
+    (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+  );
   useEffect(() => {
     async function run() {
       if (campaign?.manifestUrl) {
@@ -79,6 +81,7 @@ export default function Orders({ params }: { params: { campaignId: string } }) {
           contractAddress: order.collectionAddress,
           tokenId: order.selectedTokenId,
         }));
+
         const { recipients, signature, nonce } = await APIHelpers.post(
           `/api/campaigns/${params.campaignId}/batchSign`,
           {
