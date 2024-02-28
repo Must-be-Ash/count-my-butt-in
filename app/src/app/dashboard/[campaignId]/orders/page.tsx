@@ -4,7 +4,7 @@ import SignaturePadTest from "@/app/components/SignaturePad/SignaturePad";
 import BinderButton from "@/app/components/BinderButton";
 import Main from "@/app/layouts/Main";
 import { useEffect, useState } from "react";
-import { useOrders } from "@/hooks/useOrders";
+import { useConfirmedOrders, useOrders } from "@/hooks/useOrders";
 import NFTDisplayFull from "@/app/components/NftDisplayFull";
 import { nameToNetwork } from "@/lib/utils";
 import { NetworkStatus, Order } from "@prisma/client";
@@ -53,6 +53,7 @@ export default function Orders({ params }: { params: { campaignId: string } }) {
   }, [isCopied]);
 
   const { orders, refetchOrders } = useOrders(params.campaignId);
+  const { orders: confirmedOrders } = useConfirmedOrders(params.campaignId);
   const { campaign } = useCampaign(params.campaignId);
   const [selectedOrder, setSelectedOrder] = useState<Order>();
   const [imageUrl, setImageUrl] = useState<string>("");
@@ -178,18 +179,34 @@ export default function Orders({ params }: { params: { campaignId: string } }) {
           recipients && (
             <div className="w-full sticky bottom-0  pt-8 pb-8 mt-8 backdrop-blur-lg shadow-lg">
               <div className="h-full w-full flex flex-col items-center">
-                <BatchMint
-                  campaignNetworkId={nameToNetwork(campaign.networkId)}
-                  orderIds={pendingOrders?.map((order) => order.orderId)}
-                  binderContract={BINDER_DROP_TOKEN}
-                  signature={signature}
-                  recipients={recipients}
-                  uris={pendingOrders.map(
-                    (order, index) => `${campaign.manifestUrl}/${index + 1}`
-                  )}
-                  nonce={nonce}
-                  campaignId={params.campaignId}
-                />
+                {(!confirmedOrders || confirmedOrders.length < 3) && (
+                  <BatchMint
+                    campaignNetworkId={nameToNetwork(campaign.networkId)}
+                    orderIds={pendingOrders?.map((order) => order.orderId)}
+                    binderContract={BINDER_DROP_TOKEN}
+                    signature={signature}
+                    recipients={recipients}
+                    uris={pendingOrders.map(
+                      (order, index) => `${campaign.manifestUrl}/${index + 1}`
+                    )}
+                    nonce={nonce}
+                    campaignId={params.campaignId}
+                  />
+                )}
+                {!!confirmedOrders && confirmedOrders.length === 3 && (
+                  <div className="text-xl font-bold text-center">
+                    Campaign has reached limit 💀. Please contact us at{" "}
+                    <a
+                      href="https://twitter.com/signed_gg"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="underline"
+                    >
+                      signed.gg
+                    </a>{" "}
+                    to extend.
+                  </div>
+                )}
               </div>
             </div>
           )}
