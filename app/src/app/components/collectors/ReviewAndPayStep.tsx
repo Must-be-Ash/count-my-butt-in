@@ -31,6 +31,7 @@ export default function ReviewAndPayStep() {
   const [recipient, setRecipient] = useState<string>();
   const { campaign } = useCampaign(instance.campaignId);
   const [tipAmountInUSD, setTipAmountInUSd] = useState(0);
+  const [error, setError] = useState<string>();
 
   const gasFee = 0.15;
   const platformFee = 0.9;
@@ -51,6 +52,7 @@ export default function ReviewAndPayStep() {
 
   useEffect(() => {
     const run = async () => {
+      setError(undefined);
       // create new order and save to BE
       const result = await APIHelpers.post(
         `/api/campaigns/${instance.campaignId}/orders`,
@@ -68,6 +70,12 @@ export default function ReviewAndPayStep() {
           },
         }
       );
+
+      if (!result.order.orderId) {
+        console.log("qwdqwd");
+        setError("Campaign ended");
+        return;
+      }
       // update userId and priviUserId, for some reason, these cannot be updated upon creation
       await APIHelpers.patch(
         `/api/campaigns/${instance.campaignId}/orders/${result.order.orderId}`,
@@ -217,8 +225,25 @@ export default function ReviewAndPayStep() {
           campaignNetworkId={nameToNetwork(campaign.networkId)}
         />
       ) : (
-        <div className="flex flex-row justify-center">
-          <Loader />
+        !error && (
+          <div className="flex flex-row justify-center">
+            <Loader />
+          </div>
+        )
+      )}
+      {error && (
+        <div className="text-center">
+          Campaign ended, please contact the creator directly. Feel free to
+          reach out to us at{" "}
+          <a
+            href="https://twitter.com/signed_gg"
+            target="_blank"
+            rel="noreferrer"
+            className="mx-auto text-center underline"
+          >
+            signed.gg
+          </a>{" "}
+          for any question!{" "}
         </div>
       )}
     </div>
