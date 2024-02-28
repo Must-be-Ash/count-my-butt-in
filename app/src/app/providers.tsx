@@ -8,7 +8,7 @@ import { configureChainsConfig } from "@/lib/wagmi";
 import { ThemeProvider } from "@/components/theme-provider";
 import APIHelpers from "@/lib/apiHelper";
 import { blo } from "blo";
-import { getENS } from "@/hooks/useAuthentication";
+import { getENS } from "@/utils/common";
 import { CampaignSelectedOrderProvider } from "@/context/campaignSelectedOrderContext";
 import { Analytics } from "@vercel/analytics/react";
 

@@ -1,3 +1,4 @@
+import { getAlchemy } from "@/lib/alchemy";
 import { JsonRpcProvider } from "ethers";
 
 export function getOpenseaLink(
@@ -230,3 +231,15 @@ export const monthNames = [
 ];
 
 export const SUPPORTED_NETWORKS = [1, 137, 10, 8453];
+
+export async function getENS(walletAddress: string) {
+  const ensContractAddress = "0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85"; // END mainnet address
+  const alchemy = getAlchemy(1);
+  const nfts = await alchemy.nft.getNftsForOwner(walletAddress, {
+    contractAddresses: [ensContractAddress],
+  });
+  const ensNames = nfts.ownedNfts
+    .map((nft) => nft.title)
+    .filter((name) => name.endsWith(".eth"));
+  return ensNames.length ? ensNames[0] : undefined;
+}

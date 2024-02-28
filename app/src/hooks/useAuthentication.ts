@@ -11,9 +11,11 @@ import { getAlchemy } from "@/lib/alchemy";
 export function useAuthentication() {
   const privyData = usePrivy();
   const { wallets } = useWallets();
-  const [authenticatedUser, setAuthenticatedUser] = useState<User & {
-    campaign: Campaign
-  }>();
+  const [authenticatedUser, setAuthenticatedUser] = useState<
+    User & {
+      campaign: Campaign;
+    }
+  >();
 
   async function refreshUser() {
     if (!!privyData.user) {
@@ -49,16 +51,4 @@ export function useAuthentication() {
     authenticatedUser,
     refreshUser,
   };
-}
-
-export async function getENS(walletAddress: string) {
-  const ensContractAddress = "0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85"; // END mainnet address
-  const alchemy = getAlchemy(1);
-  const nfts = await alchemy.nft.getNftsForOwner(walletAddress, {
-    contractAddresses: [ensContractAddress],
-  });
-  const ensNames = nfts.ownedNfts
-    .map((nft) => nft.title)
-    .filter((name) => name.endsWith(".eth"));
-  return ensNames.length ? ensNames[0] : undefined;
 }

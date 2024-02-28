@@ -1,5 +1,5 @@
+import { getENS } from "@/utils/common";
 import { uploadMetadata } from "@/lib/ipfs";
-import { nameToNetwork } from "@/lib/utils";
 import { getOrders, updateCampaign, updateOrder } from "@/utils/prisma";
 import { Order } from "@prisma/client";
 import { NextResponse, type NextRequest } from "next/server";
@@ -11,7 +11,14 @@ export async function POST(
   request: NextRequest,
   { params }: { params: { campaignId: string } }
 ) {
-  const { twitterUsername } = await request.json();
+  const { twitterUsername, walletAddress } = await request.json();
+  let ens;
+  try {
+    ens = await getENS(walletAddress);
+  } catch (e) {
+    console.log(`Error getting ens name`);
+    console.log(e);
+  }
   // get all pending orders
   const ordersToUpload = await getOrders(params.campaignId, "PENDING");
   // do not trigger upload until all orders are signed
@@ -26,6 +33,37 @@ export async function POST(
   // hardcoded for now
   // const defaultMetadata = DEFAULT_METADATA;
   const currentDate = new Date();
+  const attributes = [
+    {
+      trait_type: "Date",
+      value: `${
+        currentDate.getMonth() + 1
+      }/${currentDate.getDate()}/${currentDate.getFullYear()}`,
+    },
+  ];
+  if (twitterUsername) {
+    attributes.push({
+      trait_type: "Social",
+      value: "Twitter",
+    });
+    attributes.push({
+      trait_type: "Username",
+      value: twitterUsername,
+    });
+  } else {
+    if (walletAddress) {
+      attributes.push({
+        trait_type: "wallet",
+        value: walletAddress,
+      });
+    }
+    if (ens) {
+      attributes.push({
+        trait_type: "username",
+        value: ens,
+      });
+    }
+  }
   const manifestUrl = await uploadMetadata(
     "defaultMetadata",
     ordersToUpload
@@ -47,24 +85,7 @@ export async function POST(
                   }/${order.selectedTokenId})`
                 : ""
             }`,
-        attributes: twitterUsername
-          ? [
-              {
-                trait_type: "Date",
-                value: `${
-                  currentDate.getMonth() + 1
-                }/${currentDate.getDate()}/${currentDate.getFullYear()}`,
-              },
-              {
-                trait_type: "Social",
-                value: "Twitter",
-              },
-              {
-                trait_type: "Username",
-                value: twitterUsername,
-              },
-            ]
-          : undefined,
+        attributes: attributes ? attributes : undefined,
         image: order.toUpload,
         image_url: order.toUpload,
         animation_url: `https://iframe-ten-tau.vercel.app/?for=${order.orderId}`,

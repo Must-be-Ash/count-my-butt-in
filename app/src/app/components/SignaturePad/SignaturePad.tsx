@@ -75,6 +75,7 @@ export default function SignaturePadTest({
     await APIHelpers.post(`/api/campaigns/${campaignId}/metadata`, {
       body: {
         twitterUsername: user?.twitter?.username,
+        walletAddress: user?.wallet?.address,
       },
     }).then(() => refetchCampaign());
     setLoading(false);
