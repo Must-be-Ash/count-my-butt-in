@@ -7,6 +7,8 @@ import Image from "next/image";
 import Loader from "./Loader";
 import { User } from "@prisma/client";
 import Link from "next/link";
+import { FaWallet, FaXTwitter } from "react-icons/fa6";
+import { CiExport} from "react-icons/ci";
 
 export default function UserInfo({ overrideUser }: { overrideUser?: User }) {
   const { authenticatedUser } = useAuthentication();
@@ -17,7 +19,7 @@ export default function UserInfo({ overrideUser }: { overrideUser?: User }) {
   }
 
   return (
-    <span className="flex flex-row gap-2 items-center">
+    <span className="flex flex-row gap-4 items-center">
       <Link className="flex flex-row gap-1 cursor-pointer items-center" href={"/dashboard"}>
         <Image
           src={userToDisplay?.imageUrl || DefaultPfp}
@@ -31,7 +33,7 @@ export default function UserInfo({ overrideUser }: { overrideUser?: User }) {
         </div>
       </Link>
 
-      {/* {userToDisplay?.nickname?.includes("@") && (
+      {userToDisplay?.nickname?.includes("@") && (
         <a
           href={`https://twitter.com/${userToDisplay?.nickname}`}
           target="_blank"
@@ -49,15 +51,14 @@ export default function UserInfo({ overrideUser }: { overrideUser?: User }) {
           <FaWallet />
         </a>
       )}
-      {userToDisplay?.campaign?.binderContract && (
-        <a
-          href={`https://etherscan.io/address/${userToDisplay?.campaign?.binderContract}`}
-          target="_blank"
-          className="cursor-pointer"
+      {userToDisplay?.walletAddresses[0] && (
+        <Link
+          href='/export'
         >
-          <TbCurrencyEthereum />
-        </a>
-      )} */}
+          <CiExport />
+        </Link>
+      )}
+
     </span>
   );
 }
